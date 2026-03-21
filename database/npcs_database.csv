@@ -1,4 +1,4 @@
-id,mapid,npcTemplateId,cellid,orientation,isMovable
+id,mapid,npc_template_id,cellid,orientation,is_movable
 1,1,16000,284,3,0
 2,1,10036,310,3,0
 3,1,472,311,5,0
