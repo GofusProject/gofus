@@ -17,10 +17,10 @@ var player_response_texts: Array[String]  = []
 
 
 
-func _init(p_dialog_question_data: Dictionary, p_dialog_question_lang: Dictionary, p_dialog_title: String) -> void:
+func _init(p_dialog_question_data: Dictionary, p_dialog_question_text: String, p_dialog_title: String) -> void:
 	dialog_question_id = int(p_dialog_question_data["id"])
 	dialog_title = p_dialog_title
-	dialog_question_text = p_dialog_question_lang["text"]
+	dialog_question_text = p_dialog_question_text
 	params = p_dialog_question_data["params"]
 	cond = p_dialog_question_data["cond"]
 	if_false = int(p_dialog_question_data["if_false"])
@@ -34,7 +34,7 @@ func _init(p_dialog_question_data: Dictionary, p_dialog_question_lang: Dictionar
 			player_response_ids.append(id_str.to_int())
 
 
-func initialize_response(player_response_data: Dictionary, player_response_lang: Dictionary) -> void:
-	var action_resource = ActionResource.new((int(player_response_data["type"])), int(player_response_data["args"]))
+func initialize_response(p_player_response_data: Dictionary, p_player_response_text: String) -> void:
+	var action_resource = ActionResource.new((int(p_player_response_data["type"])), int(p_player_response_data["args"]))
 	player_response_action_resources.append(action_resource)
-	player_response_texts.append(player_response_lang["text"])
+	player_response_texts.append(p_player_response_text)

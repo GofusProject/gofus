@@ -1,153 +1,78 @@
 extends Node
 
 
-const NPC_TEMPLATE_CSV_PATH : String = "res://lang/npctemplate_fr_1130.csv"
-const INTERACTIONS_CSV_PATH : String = "res://lang/npc_interactions_fr_1.csv"
-const NPC_DIALOG_CSV_PATH : String = "res://lang/npc_dialog_fr_1.csv"
-const NPC_DIALOG_PLAYER_RESPONSES_CSV_PATH : String = "res://lang/npc_dialog_player_responses_fr_1.csv"
 
+const NPC_TEMPLATE_CSV_PATH:           String = "res://lang/npc_template_lang.csv"
+const NPC_INTERACTIONS_CSV_PATH:       String = "res://lang/npc_interactions_lang.csv"
+const DIALOG_QUESTIONS_CSV_PATH:       String = "res://lang/dialog_questions_lang.csv"
+const DIALOG_RESPONSES_CSV_PATH:       String = "res://lang/dialog_responses_lang.csv"
 
-var _npc_templates_cache: Dictionary = {}
-var _npc_interactions_cache: Dictionary = {}
-var _npc_dialogs_cache: Dictionary = {}
-var _npc_dialog_player_responses_cache: Dictionary = {}
+# For now langage switching is not implemented (only fr is loaded)
+var _npc_templates_cache:              Dictionary[int, String] = {}
+var _npc_interactions_cache:           Dictionary[int, String] = {}
+var _dialog_questions_cache:           Dictionary[int, String] = {}
+var _dialog_responses_cache:           Dictionary[int, String] = {}
+
 
 
 func _ready() -> void:
-	_load_all_npc_templates()
-	_load_all_npc_interactions()
-	_load_all_npc_dialogs()
-	_load_all_npc_dialog_player_responses()
+	print("[Translator] Initializing...")
+	var build_start_time: int = Time.get_ticks_usec()
+	var mem_before : float = Performance.get_monitor(Performance.MEMORY_STATIC)
+
+	_load_csv_into_cache(NPC_TEMPLATE_CSV_PATH,     _npc_templates_cache)
+	_load_csv_into_cache(NPC_INTERACTIONS_CSV_PATH, _npc_interactions_cache)
+	_load_csv_into_cache(DIALOG_QUESTIONS_CSV_PATH, _dialog_questions_cache)
+	_load_csv_into_cache(DIALOG_RESPONSES_CSV_PATH, _dialog_responses_cache)
+
+	var build_end_time: int = Time.get_ticks_usec()
+	var build_time_sec: float = (build_end_time - build_start_time) / 1_000_000.0
+	print("[Translator] Ready (took %.2f sec)" % build_time_sec)
+	var mem_after : float = Performance.get_monitor(Performance.MEMORY_STATIC)
+	var mem_used : float = mem_after - mem_before
+	var mb: float = mem_used / (1024.0 * 1024.0)
+	print("[Translator] Approximate cache memory size: %.3f MB" % mb)
 
 
-## Load all npc_template data from CSV file
-## Flow: CSV file → Dictionary of npc_template dictionaries
-func _load_all_npc_templates() -> void:
-	print("[GofusTranslater] Loading npc_templates from CSV: %s" % NPC_TEMPLATE_CSV_PATH)
-	var file: FileAccess = FileAccess.open(NPC_TEMPLATE_CSV_PATH, FileAccess.READ)
+func _load_csv_into_cache(csv_path: String, cache: Dictionary[int, String]) -> void:
+	print("[Translator] Loading from CSV: %s" % csv_path)
+	var file: FileAccess = FileAccess.open(csv_path, FileAccess.READ)
 	if not file:
-		push_error("[GofusTranslater] Failed to open npc_templates CSV: " + NPC_TEMPLATE_CSV_PATH)
+		push_error("[Translator] Failed to open CSV: " + csv_path)
 		return
-	# Read header
-	var header: PackedStringArray = file.get_csv_line()
-	# Parse rows
+
 	var count: int = 0
+
 	while not file.eof_reached():
 		var row: PackedStringArray = file.get_csv_line()
-		if row.size() < 2:  # Skip empty/invalid rows, used to skip the last row get (empty)
+		if row[0] == "": # csv try to read the row after the last row
 			continue
-		var npc_template_data: Dictionary = {
-			"id": 		int(row[0]),
-			"name": 	row[1],
-		}
-		_npc_templates_cache[npc_template_data.id] = npc_template_data
+		var text: String = row[1] # fr text
+		cache[int(row[0])] = text
 		count += 1
+
 	file.close()
-	print("[DofusTranslator] Loaded %d npc_templates from CSV" % count)
+	print("[Translator] Loaded %d entries from CSV" % count)
 
 
-func _load_all_npc_interactions() -> void:
-	print("[GofusTranslater] Loading npc_templates from CSV: %s" % INTERACTIONS_CSV_PATH)
-	var file: FileAccess = FileAccess.open(INTERACTIONS_CSV_PATH, FileAccess.READ)
-	if not file:
-		push_error("[GofusTranslater] Failed to open npc_templates CSV: " + INTERACTIONS_CSV_PATH)
-		return
-	# Read header
-	var header: PackedStringArray = file.get_csv_line()
-	# Parse rows
-	var count: int = 0
-	while not file.eof_reached():
-		var row: PackedStringArray = file.get_csv_line()
-		if row.size() < 2:  # Skip empty/invalid rows, used to skip the last row get (empty)
-			continue
-		var npc_actions_data: Dictionary = {
-			"id": 		int(row[0]),
-			"name": 	row[1],
-		}
-		_npc_interactions_cache[npc_actions_data.id] = npc_actions_data
-		count += 1
-	file.close()
-	print("[DofusTranslator] Loaded %d npc_actions from CSV" % count)
+func _get_from_cache(cache: Dictionary, id: int, label: String) -> String:
+	if not cache.has(id):
+		push_error("[Translator] %s %d not found in cache" % [label, id])
+		return ""
+	return cache[id]
 
 
-func _load_all_npc_dialogs() -> void:
-	print("[GofusTranslater] Loading npc_templates from CSV: %s" % NPC_DIALOG_CSV_PATH)
-	var file: FileAccess = FileAccess.open(NPC_DIALOG_CSV_PATH, FileAccess.READ)
-	if not file:
-		push_error("[GofusTranslater] Failed to open npc_templates CSV: " + NPC_DIALOG_CSV_PATH)
-		return
-	# Read header
-	var header: PackedStringArray = file.get_csv_line()
-	# Parse rows
-	var count: int = 0
-	while not file.eof_reached():
-		var row: PackedStringArray = file.get_csv_line()
-		if row.size() < 2:  # Skip empty/invalid rows, used to skip the last row get (empty)
-			continue
-		var npc_dialog_data: Dictionary = {
-			"id": 		int(row[0]),
-			"text": 	row[1],
-		}
-		_npc_dialogs_cache[npc_dialog_data.id] = npc_dialog_data
-		count += 1
-	file.close()
-	print("[DofusTranslator] Loaded %d npc_actions from CSV" % count)
+func get_npc_template_name(p_template_id: int) -> String:
+	return _get_from_cache(_npc_templates_cache, p_template_id, "NpcTemplate")
 
 
-func _load_all_npc_dialog_player_responses() -> void:
-	print("[GofusTranslater] Loading npc_templates from CSV: %s" % NPC_DIALOG_PLAYER_RESPONSES_CSV_PATH)
-	var file: FileAccess = FileAccess.open(NPC_DIALOG_PLAYER_RESPONSES_CSV_PATH, FileAccess.READ)
-	if not file:
-		push_error("[GofusTranslater] Failed to open npc_templates CSV: " + NPC_DIALOG_PLAYER_RESPONSES_CSV_PATH)
-		return
-	# Read header
-	var header: PackedStringArray = file.get_csv_line()
-	# Parse rows
-	var count: int = 0
-	while not file.eof_reached():
-		var row: PackedStringArray = file.get_csv_line()
-		if row.size() < 2:  # Skip empty/invalid rows, used to skip the last row get (empty)
-			continue
-		var npc_dialog_player_response_data: Dictionary = {
-			"id": 		int(row[0]),
-			"text": 	row[1],
-		}
-		_npc_dialog_player_responses_cache[npc_dialog_player_response_data.id] = npc_dialog_player_response_data
-		count += 1
-	file.close()
-	print("[DofusTranslator] Loaded %d npc_actions from CSV" % count)
+func get_npc_interaction_text(p_npc_interaction_id: int) -> String:
+	return _get_from_cache(_npc_interactions_cache, p_npc_interaction_id, "NpcInteraction")
 
 
-
-## Retrieve npc_template data from cache using template_id as key
-## Flow: template_id → raw npc_template data dictionary
-func get_npc_template_lang(template_id: int) -> Dictionary:
-	if not _npc_templates_cache.has(template_id):
-		push_error("[GofusTranslater] NpcTemplate %d not found in cache" % template_id)
-		return {}
-	
-	return _npc_templates_cache[template_id]
+func get_dialog_question_text(p_dialog_question_id: int) -> String:
+	return _get_from_cache(_dialog_questions_cache, p_dialog_question_id, "DialogQuestion")
 
 
-func get_npc_interaction_lang(npc_interaction_id: int) -> Dictionary:
-	if not _npc_interactions_cache.has(npc_interaction_id):
-		push_error("[GofusTranslater] NpcAction %d not found in cache" % npc_interaction_id)
-		return {}
-	
-	return _npc_interactions_cache[npc_interaction_id]
-
-
-func get_npc_dialog_lang(npc_dialog_id: int) -> Dictionary:
-	if not _npc_dialogs_cache.has(npc_dialog_id):
-		push_error("[GofusTranslater] NpcAction %d not found in cache" % npc_dialog_id)
-		return {}
-	
-	return _npc_dialogs_cache[npc_dialog_id]
-
-
-func get_npc_dialog_player_response_lang(npc_dialog_player_response_id: int) -> Dictionary:
-	if not _npc_dialog_player_responses_cache.has(npc_dialog_player_response_id):
-		push_error("[GofusTranslater] NpcAction %d not found in cache" % npc_dialog_player_response_id)
-		return {}
-	
-	return _npc_dialog_player_responses_cache[npc_dialog_player_response_id]
+func get_dialog_response_text(p_dialog_response_id: int) -> String:
+	return _get_from_cache(_dialog_responses_cache, p_dialog_response_id, "DialogResponse")

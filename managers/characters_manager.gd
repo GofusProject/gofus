@@ -36,12 +36,12 @@ func create_npcs() -> void:
 			return
 
 
-		var npc_template_lang = GofusTranslator.get_npc_template_lang(int(npc_data.npc_template_id))
-		if npc_template_lang.is_empty():
+		var npc_template_name = GofusTranslator.get_npc_template_name(int(npc_data.npc_template_id))
+		if npc_template_name.is_empty():
 			push_error("[CharacterManager] Npc template lang data empty for npc template lang id %d" % npc_data.npc_template_id)
 			return
 
-		var non_playable_character_resource = NonPlayableCharacterResource.new(npc_data, npc_template_data, npc_template_lang)
+		var non_playable_character_resource = NonPlayableCharacterResource.new(npc_data, npc_template_data, npc_template_name)
 		var character_id: int = Datacenter.add_character_resource(non_playable_character_resource)
 
 		Battlefield.render_character_sprite(
@@ -73,16 +73,16 @@ func open_character_popup_menu(p_character_id: int) -> void:
 	Ui.close_character_popup_menu()
 
 	var npc_interaction_ids: Array[int] = Datacenter.get_character_resource(p_character_id).interaction_ids
-	var npc_interaction_names: Array[String] = []
+	var npc_interaction_texts: Array[String] = []
 	for npc_interaction_id in npc_interaction_ids:
-		var interaction_lang = GofusTranslator.get_npc_interaction_lang(npc_interaction_id)
-		npc_interaction_names.append(interaction_lang["name"])
+		var interaction_text = GofusTranslator.get_npc_interaction_text(npc_interaction_id)
+		npc_interaction_texts.append(interaction_text)
 
 	var npc_interaction_data: Array[Dictionary] = []
 	for i in npc_interaction_ids.size():
 		npc_interaction_data.append({
 			"id": npc_interaction_ids[i],
-			"name": npc_interaction_names[i]
+			"name": npc_interaction_texts[i]
 		})
 
 	Ui.open_npc_popup_menu(npc_interaction_data)

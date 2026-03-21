@@ -16,10 +16,10 @@ var path
 var informations
 
 
-func _init(p_npc_data: Dictionary, p_npc_template_data: Dictionary,	p_npc_template_lang: Dictionary) -> void:
+func _init(p_npc_data: Dictionary, p_npc_template_data: Dictionary,	p_npc_template_name: String) -> void:
 
 	super(
-		p_npc_template_lang["name"],
+		p_npc_template_name,
 		int(p_npc_data["cellid"]),
 		int(p_npc_data["mapid"]),
 		int(p_npc_template_data["gfx_id"]),
