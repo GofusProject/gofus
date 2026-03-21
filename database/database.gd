@@ -10,6 +10,7 @@ const NPC_TEMPLATE_CSV_PATH: String = "res://database/npc_template_database.csv"
 const NPCS_CSV_PATH: String = "res://database/npcs_database.csv"
 const DIALOG_QUESTIONS_CSV_PATH: String = "res://database/dialog_questions_database.csv"
 const DIALOG_RESPONSE_ACTIONS_CSV_PATH: String = "res://database/dialog_response_actions_database.csv"
+const PLAYER_CSV_PATH: String = "res://database/player_database.csv"
 
 
 # I tried to use arrays instead, but very little gains in the end
@@ -17,7 +18,9 @@ var _npc_template_cache: Dictionary[int, Dictionary] = {}
 var _npcs_cache: Dictionary[int, Dictionary] = {}
 var _maps_cache: Dictionary[int, Dictionary] = {} 
 var _dialog_questions_cache: Dictionary[int, Dictionary] = {} 
-var _dialog_player_response_actions_cache: Dictionary[int, Dictionary] = {} 
+var _dialog_response_actions_cache: Dictionary[int, Dictionary] = {} 
+var _player_cache: Dictionary[int, Dictionary] = {} 
+
 
 
 func _ready() -> void:
@@ -30,7 +33,8 @@ func _ready() -> void:
 	_load_csv_into_cache(NPC_TEMPLATE_CSV_PATH, _npc_template_cache)
 	_load_csv_into_cache(NPCS_CSV_PATH, _npcs_cache)
 	_load_csv_into_cache(DIALOG_QUESTIONS_CSV_PATH, _dialog_questions_cache)
-	_load_csv_into_cache(DIALOG_RESPONSE_ACTIONS_CSV_PATH, _dialog_player_response_actions_cache)
+	_load_csv_into_cache(DIALOG_RESPONSE_ACTIONS_CSV_PATH, _dialog_response_actions_cache)
+	_load_csv_into_cache(PLAYER_CSV_PATH, _player_cache)
 
 	var build_end_time : int = Time.get_ticks_usec()
 	var build_time_sec : float = (build_end_time - build_start_time) / 1_000_000.0
@@ -92,4 +96,8 @@ func get_dialog_question_data(p_npc_dialog_id: int) -> Dictionary:
 
 
 func get_dialog_response_action_data(p_npc_dialog_player_response_id: int) -> Dictionary:
-	return _get_from_cache(_dialog_player_response_actions_cache, p_npc_dialog_player_response_id, "NpcDialogPlayerResponse")
+	return _get_from_cache(_dialog_response_actions_cache, p_npc_dialog_player_response_id, "DialogResponseActions")
+
+
+func get_player_data(p_player_id: int) -> Dictionary:
+	return _get_from_cache(_player_cache, p_player_id, "Player")
