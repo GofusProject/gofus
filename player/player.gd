@@ -33,9 +33,8 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed:
-		print("_unhandled_input pressed")
 		if event.button_index == MOUSE_BUTTON_LEFT:
-			print("left")
+			print("MapManager.get_cell_id_from_mouse_position(): ", str(MapManager.get_cell_id_from_mouse_position()))
 			CharactersManager.close_character_popup_menu()
 
 

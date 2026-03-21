@@ -33,3 +33,10 @@ func create_map(map_id: int) -> bool:
 func clear_map() -> void:
 	Datacenter.current_map_resource = null
 	Battlefield.clear_map()
+
+
+func get_cell_id_from_mouse_position() -> int:
+	var map_resource = Datacenter.current_map_resource
+	var cell_resources: Array[CellResource] = map_resource.cell_resources
+
+	return Battlefield.get_cell_id_from_world_position(cell_resources)
