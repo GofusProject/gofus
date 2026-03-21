@@ -8,6 +8,7 @@ extends Node
 var current_map_resource: MapResource = null
 var _character_resources: Array[CharacterResource] = []
 var dialog_resource: DialogResource = null
+var playable_character_resource = PlayablePlayerResource # equivalent of LocalPlayer.as
 
 
 ## Emitted when the current map changes

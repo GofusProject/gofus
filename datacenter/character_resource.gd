@@ -1,6 +1,6 @@
 ## Data structure data model that holds every character data
 ##
-## Has no real equivalent in Dofus.
+## Has no real equivalent in Dofus, close to Sprite.as
 ## Extended by PlayableCharacter and NonPlayableCharacter
 ## Holded in Datacenter.CharacterResources
 
@@ -19,9 +19,10 @@ var direction: int
 var color1: int
 var color2: int
 var color3: int
+var size: int = 1 # in pourcentage
 
 
-func _init(p_name: String, p_cell_id: int, p_map_id: int, p_sprite_frames_id: int, p_direction: int, p_color1: int, p_color2: int, p_color3: int) -> void:
+func _init(p_name: String, p_cell_id: int, p_map_id: int, p_sprite_frames_id: int, p_direction: int, p_color1: int, p_color2: int, p_color3: int, p_size = 1) -> void:
     name = p_name
     cell_id = p_cell_id
     map_id = p_map_id
