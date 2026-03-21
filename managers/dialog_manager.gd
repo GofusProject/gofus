@@ -29,7 +29,7 @@ func leave_dialog() -> void:
 
 func _create_dialog_resource(p_dialog_title: String, p_dialog_question_id: int) -> DialogResource:
 	# Create npc_dialog_resource from p_dialog_question_id
-	var dialog_question_data: Dictionary = Database.get_npc_dialog_data(p_dialog_question_id)
+	var dialog_question_data: Dictionary = Database.get_dialog_question_data(p_dialog_question_id)
 	var dialog_question_lang: Dictionary = GofusTranslator.get_npc_dialog_lang(p_dialog_question_id)
 	if dialog_question_data.is_empty() or dialog_question_lang.is_empty():
 		print("[CharactersManager] Npc init dialog data or lang is empty for id ", p_dialog_question_id)
@@ -40,7 +40,7 @@ func _create_dialog_resource(p_dialog_title: String, p_dialog_question_id: int) 
 
 	# Add player_response_texts
 	for player_response_id in dialog_resource.player_response_ids:
-		var player_response_data = Database.get_npc_dialog_player_response_data(player_response_id)
+		var player_response_data = Database.get_dialog_response_action_data(player_response_id)
 		var player_response_lang = GofusTranslator.get_npc_dialog_player_response_lang(player_response_id)
 		if player_response_data.is_empty() or player_response_lang.is_empty():
 			printerr("[CharactersManager] Player response dictionary or lang is empty for id ", player_response_id)

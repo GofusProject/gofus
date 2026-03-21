@@ -16,8 +16,8 @@ const DIALOG_RESPONSE_ACTIONS_CSV_PATH: String = "res://database/dialog_response
 var _npc_template_cache: Dictionary[int, Dictionary] = {}
 var _npcs_cache: Dictionary[int, Dictionary] = {}
 var _maps_cache: Dictionary[int, Dictionary] = {} 
-var _npc_dialogs_cache: Dictionary[int, Dictionary] = {} 
-var _npc_dialogs_player_responses_cache: Dictionary[int, Dictionary] = {} 
+var _dialog_questions_cache: Dictionary[int, Dictionary] = {} 
+var _dialog_player_response_actions_cache: Dictionary[int, Dictionary] = {} 
 
 
 func _ready() -> void:
@@ -29,8 +29,8 @@ func _ready() -> void:
 	_load_csv_into_cache(MAPS_CSV_PATH, _maps_cache)
 	_load_csv_into_cache(NPC_TEMPLATE_CSV_PATH, _npc_template_cache)
 	_load_csv_into_cache(NPCS_CSV_PATH, _npcs_cache)
-	_load_csv_into_cache(DIALOG_QUESTIONS_CSV_PATH, _npc_dialogs_cache)
-	_load_csv_into_cache(DIALOG_RESPONSE_ACTIONS_CSV_PATH, _npc_dialogs_player_responses_cache)
+	_load_csv_into_cache(DIALOG_QUESTIONS_CSV_PATH, _dialog_questions_cache)
+	_load_csv_into_cache(DIALOG_RESPONSE_ACTIONS_CSV_PATH, _dialog_player_response_actions_cache)
 
 	var build_end_time : int = Time.get_ticks_usec()
 	var build_time_sec : float = (build_end_time - build_start_time) / 1_000_000.0
@@ -68,40 +68,28 @@ func _load_csv_into_cache(csv_path: String,	cache: Dictionary[int, Dictionary]) 
 	print("[Database] Loaded %d entries from CSV" % count)
 
 
-func get_map_data(map_id: int) -> Dictionary:
-	if not _maps_cache.has(map_id):
-		push_error("[Database] Map %d not found in cache" % map_id)
+func _get_from_cache(cache: Dictionary, id: int, label: String) -> Dictionary:
+	if not cache.has(id):
+		push_error("[Database] %s %d not found in cache" % [label, id])
 		return {}
-	return _maps_cache[map_id]
+	return cache[id]
 
 
-func get_npc_template_data(template_id: int) -> Dictionary:
-	if not _npc_template_cache.has(template_id):
-		push_error("[Database] NpcTemplate %d not found in cache" % template_id)
-		return {}
-	
-	return _npc_template_cache[template_id]
+func get_map_data(p_map_id: int) -> Dictionary:
+	return _get_from_cache(_maps_cache, p_map_id, "Map")
+
+
+func get_npc_template_data(p_template_id: int) -> Dictionary:
+	return _get_from_cache(_npc_template_cache, p_template_id, "NpcTemplate")
 
 
 func get_npc_data(p_npc_id: int) -> Dictionary:
-	if not _npcs_cache.has(p_npc_id):
-		push_error("[Database] Npc %d not found in cache" % p_npc_id)
-		return {}
-	
-	return _npcs_cache[p_npc_id]
+	return _get_from_cache(_npcs_cache, p_npc_id, "Npc")
 
 
-func get_npc_dialog_data(p_npc_dialog_id: int) -> Dictionary:
-	if not _npc_dialogs_cache.has(p_npc_dialog_id):
-		push_error("[Database] Npc dialog %d not found in cache" % p_npc_dialog_id)
-		return {}
-	
-	return _npc_dialogs_cache[p_npc_dialog_id]
+func get_dialog_question_data(p_npc_dialog_id: int) -> Dictionary:
+	return _get_from_cache(_dialog_questions_cache, p_npc_dialog_id, "NpcDialog")
 
 
-func get_npc_dialog_player_response_data(p_npc_dialog_player_response_id: int) -> Dictionary:
-	if not _npc_dialogs_player_responses_cache.has(p_npc_dialog_player_response_id):
-		push_error("[Database] Player response %d not found in cache" % p_npc_dialog_player_response_id)
-		return {}
-	
-	return _npc_dialogs_player_responses_cache[p_npc_dialog_player_response_id]
+func get_dialog_response_action_data(p_npc_dialog_player_response_id: int) -> Dictionary:
+	return _get_from_cache(_dialog_player_response_actions_cache, p_npc_dialog_player_response_id, "NpcDialogPlayerResponse")
