@@ -105,6 +105,10 @@ func get_world_position_from_cell_id(cell_id: int) -> Vector2i:
 	return map_handler.get_cell_world_position_from_cell_id(cell_id)
 
 
+func get_cell_id_from_world_position(p_cell_resources: Array[CellResource]) -> int:
+	return map_handler.get_cell_id_from_world_position(get_global_mouse_position(), p_cell_resources)
+
+
 func display_cell_ids() -> void:
 	map_handler.display_cell_ids()
 
