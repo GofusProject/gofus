@@ -1,0 +1,64 @@
+[gd_scene load_steps=5 format=3 uid="uid://bxukehr107abn"]
+
+[ext_resource type="Script" uid="uid://dhkypjuhxiu6h" path="res://graphics/ui/gofus_popup_menu.gd" id="1_0omad"]
+[ext_resource type="Theme" uid="uid://bojre3ca5rdyj" path="res://assets/popup_menu_theme.tres" id="1_m3nqj"]
+
+[sub_resource type="Theme" id="Theme_popup"]
+default_font_size = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vv5tp"]
+bg_color = Color(0.32156864, 0.2901961, 0.23529412, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 1)
+
+[node name="PopupMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+theme = SubResource("Theme_popup")
+script = ExtResource("1_0omad")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+offset_right = 117.0
+offset_bottom = 61.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_vv5tp")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 1
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_right = 1
+theme_override_constants/margin_bottom = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("1_m3nqj")
+text = "Corne de Bouftou"
+
+[node name="Button" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("1_m3nqj")
+text = "Insérer dans le chat"
+alignment = 0
+
+[node name="Button2" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("1_m3nqj")
+text = "Recettes associées"
+alignment = 0
+
+[node name="Button3" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("1_m3nqj")
+text = "Détruire l'objet"
+alignment = 0

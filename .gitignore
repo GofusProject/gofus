@@ -1,0 +1,6 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+_tools/sprites_extractor/extract_sprites_test_output
+_tools/sprites_extractor/extract_sprites_test_input
+_tools/sprites_extractor/sprite_sheet_generator_output

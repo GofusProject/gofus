@@ -1,0 +1,7 @@
+2026-03-07 15:24:00 | 10.swf | emote13R | [WinError 32] The process cannot access the file because it is being used by another process: 'extract_sprites_test_output\\10\\frames\\emote13R\\DefineSprite_381\\25.png'
+2026-03-07 15:24:55 | 10.swf | dieR | [WinError 32] The process cannot access the file because it is being used by another process: 'extract_sprites_test_output\\10\\frames\\dieR\\DefineSprite_485\\8.png'
+2026-03-07 15:27:55 | 100.swf | emote13R | [WinError 32] The process cannot access the file because it is being used by another process: 'extract_sprites_test_output\\100\\frames\\emote13R\\DefineSprite_402\\91.png'
+2026-03-07 15:39:32 | 110.swf | emote21R | [WinError 32] The process cannot access the file because it is being used by another process: 'extract_sprites_test_output\\110\\frames\\emote21R\\DefineSprite_320\\26.png'
+2026-03-07 15:40:01 | 110.swf | emote13R | [WinError 32] The process cannot access the file because it is being used by another process: 'extract_sprites_test_output\\110\\frames\\emote13R\\DefineSprite_397\\36.png'
+2026-03-07 15:48:33 | 120.swf | emote18R | [WinError 32] The process cannot access the file because it is being used by another process: 'extract_sprites_test_output\\120\\frames\\emote18R\\DefineSprite_433\\71.png'
+2026-03-07 15:52:58 | 121.swf | emote13L | [WinError 32] The process cannot access the file because it is being used by another process: 'extract_sprites_test_output\\121\\frames\\emote13L\\DefineSprite_421\\100.png'

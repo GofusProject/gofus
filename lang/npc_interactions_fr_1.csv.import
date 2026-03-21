@@ -1,0 +1,17 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://nqj0xmpxe3ul"
+
+[deps]
+
+files=["res://lang/npc_interactions_fr_1.name.translation"]
+
+source_file="res://lang/npc_interactions_fr_1.csv"
+dest_files=["res://lang/npc_interactions_fr_1.name.translation"]
+
+[params]
+
+compress=true
+delimiter=0

@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://c8cn6820dgrgc"]
+
+[ext_resource type="Script" uid="uid://bcthqckxp6s4s" path="res://_tools/sprites_extractor/sprite_frames_generator_atlas.gd" id="1_br8gk"]
+[ext_resource type="Script" uid="uid://6x07gvjx7owu" path="res://_tools/coloring_helper.gd" id="2_br8gk"]
+
+[node name="EditorTools" type="Node2D"]
+
+[node name="CharacterSpriteFramesCreatorAtlas" type="Node" parent="."]
+script = ExtResource("1_br8gk")
+character_sprites_metadata_path = "res://assets/graphics/characters/character_sprite_metadata.json"
+characters_root_path = "res://assets/graphics/characters/"
+
+[node name="ColoringHelper" type="Node" parent="."]
+script = ExtResource("2_br8gk")
+sprite_frames_id = "41"
+anim_name = "staticR"
+sprite_frames_id_to_create = "681"
+metadata/_custom_type_script = "uid://6x07gvjx7owu"

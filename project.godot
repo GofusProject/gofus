@@ -1,0 +1,52 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Gofus"
+run/main_scene="uid://dru7f1sd1acty"
+config/features=PackedStringArray("4.5", "Forward Plus")
+run/max_fps=48
+boot_splash/bg_color=Color(0, 0, 0, 1)
+
+[autoload]
+
+Database="*res://database/database.gd"
+Datacenter="*res://datacenter/datacenter.gd"
+AssetLoader="*res://assets/asset_loader.gd"
+Compressor="*res://utils/compressor.gd"
+GofusTranslator="*res://lang/gofus_translator.gd"
+Battlefield="*res://graphics/battlefield/scenes/Battlefield.tscn"
+Ui="*res://graphics/ui/scenes/ui.tscn"
+MapManager="*res://managers/map_manager.gd"
+DialogManager="*res://managers/dialog_manager.gd"
+CharactersManager="*res://managers/characters_manager.gd"
+Console="*res://addons/console/console.gd"
+ConsoleCommandAdder="*res://_tools/console_command_adder.gd"
+Game="*res://Game.tscn"
+Player="*res://player/player.gd"
+
+[debug]
+
+gdscript/warnings/unused_variable=0
+gdscript/warnings/unused_local_constant=0
+gdscript/warnings/unused_private_class_variable=0
+gdscript/warnings/unused_parameter=0
+gdscript/warnings/unused_signal=0
+
+[display]
+
+window/size/viewport_width=1484
+window/size/viewport_height=1112
+window/stretch/mode="canvas_items"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/console/plugin.cfg")

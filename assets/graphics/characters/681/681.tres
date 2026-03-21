@@ -1,0 +1,18 @@
+[gd_resource type="SpriteFrames" load_steps=3 format=3 uid="uid://c0ax3d8jmrkad"]
+
+[ext_resource type="Texture2D" uid="uid://bhdw8qkjixb15" path="res://assets/graphics/characters/681/staticR.png" id="1_iigbw"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ctgk2"]
+atlas = ExtResource("1_iigbw")
+region = Rect2(0, 0, 38, 90)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ctgk2")
+}],
+"loop": true,
+"name": &"staticR",
+"speed": 48.0
+}]

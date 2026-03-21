@@ -1,0 +1,31 @@
+[gd_resource type="SpriteFrames" load_steps=5 format=3 uid="uid://dqmxqxmuy788c"]
+
+[ext_resource type="Texture2D" uid="uid://b81r2fo5hvs05" path="res://assets/graphics/characters/9039/staticL.png" id="1_dvxf7"]
+[ext_resource type="Texture2D" uid="uid://bha2iaqvtuoh3" path="res://assets/graphics/characters/9039/staticR.png" id="2_cpliw"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ctbw0"]
+atlas = ExtResource("1_dvxf7")
+region = Rect2(0, 0, 52, 72)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_buioq"]
+atlas = ExtResource("2_cpliw")
+region = Rect2(0, 0, 54, 73)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ctbw0")
+}],
+"loop": true,
+"name": &"staticL",
+"speed": 48.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_buioq")
+}],
+"loop": true,
+"name": &"staticR",
+"speed": 48.0
+}]

@@ -1,0 +1,105 @@
+[gd_scene load_steps=8 format=3 uid="uid://d1kx3o1esqh4i"]
+
+[ext_resource type="Script" uid="uid://jc2c58hq2vhl" path="res://graphics/ui/dialog.gd" id="1_3flak"]
+[ext_resource type="FontFile" uid="uid://bnkt1p76hh2wx" path="res://graphics/verdana-bold.ttf" id="1_vtiau"]
+[ext_resource type="FontFile" uid="uid://b6or5e8ck6u2d" path="res://graphics/verdana.ttf" id="2_7xbd7"]
+[ext_resource type="Texture2D" uid="uid://ciq8h1jj44kfd" path="res://assets/graphics/ui/npc_dialogue_pic.png" id="5_mfj6m"]
+[ext_resource type="Texture2D" uid="uid://dn54cwnwg2vuc" path="res://assets/graphics/ui/npc_dialogue_cross.png" id="6_p5hn6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qevoa"]
+bg_color = Color(0.9019608, 0.9019608, 0.7294118, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kx1g2"]
+bg_color = Color(1, 1, 0.80784315, 1)
+
+[node name="NpcDialog" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_3flak")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(680, 0)
+layout_mode = 0
+offset_left = 22.0
+offset_top = 266.0
+offset_right = 702.0
+offset_bottom = 368.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_qevoa")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Panel" type="Panel" parent="PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_kx1g2")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_vtiau")
+theme_override_font_sizes/font_size = 25
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/MarginContainer/VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="PanelContainer/MarginContainer/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_constants/paragraph_separation = 10
+theme_override_fonts/normal_font = ExtResource("2_7xbd7")
+theme_override_font_sizes/normal_font_size = 20
+fit_content = true
+scroll_active = false
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 282.0
+offset_top = 232.0
+offset_right = 346.0
+offset_bottom = 275.0
+texture = ExtResource("5_mfj6m")
+
+[node name="NpcDialogueCrossButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 665.545
+offset_top = 282.735
+offset_right = 685.545
+offset_bottom = 302.735
+size_flags_horizontal = 8
+size_flags_vertical = 0
+texture_normal = ExtResource("6_p5hn6")
+stretch_mode = 0

@@ -1,0 +1,255 @@
+[gd_scene load_steps=9 format=3 uid="uid://huwqe7gm1kfl"]
+
+[ext_resource type="Theme" uid="uid://cvkr51skiigks" path="res://addons/rich_text_button/rich_text_button_theme.tres" id="1_4w627"]
+[ext_resource type="FontFile" uid="uid://bnkt1p76hh2wx" path="res://graphics/verdana-bold.ttf" id="1_46jyl"]
+[ext_resource type="Script" uid="uid://bxlpdrhar4mgf" path="res://addons/rich_text_button/rich_text_button.gd" id="2_46jyl"]
+[ext_resource type="FontFile" uid="uid://b6or5e8ck6u2d" path="res://graphics/verdana.ttf" id="2_yfiv4"]
+[ext_resource type="Texture2D" uid="uid://ciq8h1jj44kfd" path="res://assets/graphics/ui/npc_dialogue_pic.png" id="5_djgs1"]
+[ext_resource type="Texture2D" uid="uid://dn54cwnwg2vuc" path="res://assets/graphics/ui/npc_dialogue_cross.png" id="5_vqc0e"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qevoa"]
+bg_color = Color(0.9019608, 0.9019608, 0.7294118, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kx1g2"]
+bg_color = Color(1, 1, 0.80784315, 1)
+
+[node name="NpcDialog" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(680, 0)
+layout_mode = 0
+offset_left = 22.0
+offset_top = 266.0
+offset_right = 702.0
+offset_bottom = 804.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_qevoa")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Panel" type="Panel" parent="PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_kx1g2")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_46jyl")
+theme_override_font_sizes/font_size = 25
+text = "Fée Risette"
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/MarginContainer/VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="PanelContainer/MarginContainer/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_constants/paragraph_separation = 10
+theme_override_fonts/normal_font = ExtResource("2_yfiv4")
+theme_override_font_sizes/normal_font_size = 20
+text = "Bonjour, la D?esse Eniripsa m'a donn? le pouvoir d'aider les jeunes ?mes ? r?parer leurs erreurs de jeunesse.\\n
+Lorsque tu n'auras plus acc?s ? Incarnam, les seuls moyens que tu auras ? ta disposition pour d?sapprendre un sort ou r?partir ? nouveau tes points de caract?ristiques seront de combattre les dopeuls de temple ou de qu?rir l'aide de l'alchimiste Otoma?. 
+Attention ! Avec les dopeuls, tu ne pourras faire le changement de caract?ristiques qu'une seule fois. Seul Otoma? conna?t le moyen de le faire plusieurs fois sur une ?me exp?riment?e.
+"
+fit_content = true
+scroll_active = false
+
+[node name="RichTextButton" type="BaseButton" parent="PanelContainer/MarginContainer/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer"]
+_import_path = NodePath("")
+unique_name_in_owner = false
+process_mode = 0
+process_priority = 0
+process_physics_priority = 0
+process_thread_group = 0
+physics_interpolation_mode = 2
+auto_translate_mode = 0
+editor_description = ""
+visible = true
+modulate = Color(1, 1, 1, 1)
+self_modulate = Color(1, 1, 1, 1)
+show_behind_parent = false
+top_level = false
+clip_children = 0
+light_mask = 1
+visibility_layer = 1
+z_index = 0
+z_as_relative = true
+y_sort_enabled = false
+texture_filter = 0
+texture_repeat = 0
+material = null
+use_parent_material = false
+clip_contents = false
+custom_minimum_size = Vector2(0, 60)
+layout_direction = 0
+layout_mode = 2
+size_flags_horizontal = 1
+size_flags_vertical = 1
+size_flags_stretch_ratio = 1.0
+localize_numeral_system = true
+tooltip_text = ""
+tooltip_auto_translate_mode = 0
+focus_neighbor_left = NodePath("")
+focus_neighbor_top = NodePath("")
+focus_neighbor_right = NodePath("")
+focus_neighbor_bottom = NodePath("")
+focus_next = NodePath("")
+focus_previous = NodePath("")
+focus_mode = 2
+focus_behavior_recursive = 0
+mouse_filter = 0
+mouse_behavior_recursive = 0
+mouse_force_pass_scroll_events = true
+mouse_default_cursor_shape = 0
+accessibility_name = ""
+accessibility_description = ""
+accessibility_live = 0
+accessibility_controls_nodes = Array[NodePath]([])
+accessibility_described_by_nodes = Array[NodePath]([])
+accessibility_labeled_by_nodes = Array[NodePath]([])
+accessibility_flow_to_nodes = Array[NodePath]([])
+theme = ExtResource("1_4w627")
+theme_type_variation = &""
+disabled = false
+toggle_mode = false
+button_pressed = false
+action_mode = 1
+button_mask = 1
+keep_pressed_outside = false
+button_group = null
+shortcut = null
+shortcut_feedback = true
+shortcut_in_tooltip = true
+script = ExtResource("2_46jyl")
+bbcode_enabled = true
+text = "[left][ul]Désapprendre un sort.[/ul][/left]"
+flat = true
+metadata/_custom_type_script = "uid://bxlpdrhar4mgf"
+
+[node name="RichTextButton3" type="BaseButton" parent="PanelContainer/MarginContainer/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer"]
+_import_path = NodePath("")
+unique_name_in_owner = false
+process_mode = 0
+process_priority = 0
+process_physics_priority = 0
+process_thread_group = 0
+physics_interpolation_mode = 2
+auto_translate_mode = 0
+editor_description = ""
+visible = true
+modulate = Color(1, 1, 1, 1)
+self_modulate = Color(1, 1, 1, 1)
+show_behind_parent = false
+top_level = false
+clip_children = 0
+light_mask = 1
+visibility_layer = 1
+z_index = 0
+z_as_relative = true
+y_sort_enabled = false
+texture_filter = 0
+texture_repeat = 0
+material = null
+use_parent_material = false
+clip_contents = false
+custom_minimum_size = Vector2(0, 60)
+layout_direction = 0
+layout_mode = 2
+size_flags_horizontal = 1
+size_flags_vertical = 1
+size_flags_stretch_ratio = 1.0
+localize_numeral_system = true
+tooltip_text = ""
+tooltip_auto_translate_mode = 0
+focus_neighbor_left = NodePath("")
+focus_neighbor_top = NodePath("")
+focus_neighbor_right = NodePath("")
+focus_neighbor_bottom = NodePath("")
+focus_next = NodePath("")
+focus_previous = NodePath("")
+focus_mode = 2
+focus_behavior_recursive = 0
+mouse_filter = 0
+mouse_behavior_recursive = 0
+mouse_force_pass_scroll_events = true
+mouse_default_cursor_shape = 0
+accessibility_name = ""
+accessibility_description = ""
+accessibility_live = 0
+accessibility_controls_nodes = Array[NodePath]([])
+accessibility_described_by_nodes = Array[NodePath]([])
+accessibility_labeled_by_nodes = Array[NodePath]([])
+accessibility_flow_to_nodes = Array[NodePath]([])
+theme = ExtResource("1_4w627")
+theme_type_variation = &""
+disabled = false
+toggle_mode = false
+button_pressed = false
+action_mode = 1
+button_mask = 1
+keep_pressed_outside = false
+button_group = null
+shortcut = null
+shortcut_feedback = true
+shortcut_in_tooltip = true
+script = ExtResource("2_46jyl")
+bbcode_enabled = true
+text = "[left][ul]Remettre à zéro les caractéristiques.[/ul][/left]"
+flat = true
+metadata/_custom_type_script = "uid://bxlpdrhar4mgf"
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 282.0
+offset_top = 232.0
+offset_right = 346.0
+offset_bottom = 275.0
+texture = ExtResource("5_djgs1")
+
+[node name="NpcDialogueCross" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 665.545
+offset_top = 282.735
+offset_right = 665.545
+offset_bottom = 282.735
+size_flags_horizontal = 8
+size_flags_vertical = 0
+texture = ExtResource("5_vqc0e")
+expand_mode = 1
+stretch_mode = 2
