@@ -42,10 +42,4 @@ func change_map(p_map_id: int):
 
 
 func create_player(p_player_id) -> void:
-	var player_data = Database.get_player_data(p_player_id)
-	if player_data.is_empty():
-		push_error("[Game] Player data empty for player id %d" % p_player_id)
-		return
-
-	var playable_character_resource = PlayablePlayerResource.new(player_data)
-	Datacenter.playable_character_resource = playable_character_resource
+	CharactersManager.create_playable_character(p_player_id)

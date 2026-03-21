@@ -17,6 +17,23 @@ func _ready() -> void:
 	Battlefield.animated_character_sprite_2d_clicked.connect(_on_battlefield_animated_character_sprite_2d_clicked)
 
 
+func create_playable_character(p_player_id) -> void:
+	var player_data = Database.get_player_data(p_player_id)
+	if player_data.is_empty():
+		push_error("[Game] Player data empty for player id %d" % p_player_id)
+		return
+
+	var playable_character_resource = PlayablePlayerResource.new(player_data)
+	Datacenter.playable_character_resource = playable_character_resource
+	var character_id = Datacenter.add_character_resource(playable_character_resource)
+
+	Battlefield.render_character_sprite(
+		character_id,
+		playable_character_resource.sprite_frames_id,
+		playable_character_resource.direction,
+		playable_character_resource.cell_id)
+
+
 func create_npcs() -> void:
 
 	var map_resource = Datacenter.get_current_map()
@@ -72,20 +89,25 @@ func hide_character_over_head() -> void:
 func open_character_popup_menu(p_character_id: int) -> void:
 	Ui.close_character_popup_menu()
 
-	var npc_interaction_ids: Array[int] = Datacenter.get_character_resource(p_character_id).interaction_ids
-	var npc_interaction_texts: Array[String] = []
-	for npc_interaction_id in npc_interaction_ids:
-		var interaction_text = GofusTranslator.get_npc_interaction_text(npc_interaction_id)
-		npc_interaction_texts.append(interaction_text)
+	var character_resource = Datacenter.get_character_resource(p_character_id)
 
-	var npc_interaction_data: Array[Dictionary] = []
-	for i in npc_interaction_ids.size():
-		npc_interaction_data.append({
-			"id": npc_interaction_ids[i],
-			"name": npc_interaction_texts[i]
-		})
+	# Match can't handle "character_resource is NonPlayableCharacterResource"
+	if character_resource is NonPlayableCharacterResource:
+		var npc_interaction_ids: Array[int] = character_resource.interaction_ids
+		var npc_interaction_texts: Array[String] = []
+		for npc_interaction_id in npc_interaction_ids:
+			var interaction_text = GofusTranslator.get_npc_interaction_text(npc_interaction_id)
+			npc_interaction_texts.append(interaction_text)
+		var npc_interaction_data: Array[Dictionary] = []
+		for i in npc_interaction_ids.size():
+			npc_interaction_data.append({
+				"id": npc_interaction_ids[i],
+				"name": npc_interaction_texts[i]
+			})
+		Ui.open_npc_popup_menu(npc_interaction_data)
 
-	Ui.open_npc_popup_menu(npc_interaction_data)
+	elif character_resource is PlayablePlayerResource:
+		Ui.close_character_popup_menu()
 
 
 func close_character_popup_menu() -> void:
