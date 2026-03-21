@@ -13,7 +13,7 @@ func _ready() -> void:
 func create_map(map_id: int) -> bool:
 	print("[MapManager] Creating map %d..." % map_id)
 	
-	var map_dict: Dictionary = Database.get_map_dict(map_id)
+	var map_dict: Dictionary = Database.get_map_data(map_id)
 	if map_dict.is_empty():
 		push_error("[MapManager] No map dictionary for map %d" % map_id)
 		return false
