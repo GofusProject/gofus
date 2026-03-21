@@ -5,6 +5,7 @@ extends Node2D
 var map_handler: MapHandler
 var character_sprite_handler: CharacterSpriteHandler
 var over_head_handler: OverHeadHandler
+var grid_handler: GridHandler
 
 const CELL_WIDTH: int = 106
 const CELL_HALF_WIDTH: float = 53
@@ -21,6 +22,7 @@ var interaction_layer: Node2D
 var cell_ids_layer: Node2D
 var character_sprites: Node2D
 var over_head_layer: Node2D
+var grid_layer: Node2D
 
 const ANIMATED_CHARACTER_SPRITE_2D_SCENE: PackedScene = preload("res://graphics/battlefield/scenes/AnimatedCharacterSprite2D.tscn")
 const TEXT_OVER_HEAD_SCENE: PackedScene = preload("res://graphics/battlefield/scenes/TextOverHead.tscn")
@@ -34,9 +36,11 @@ signal animated_character_sprite_2d_clicked(animated_character_sprite_2d: Animat
 ## Initializes dependencies and event listening
 func _ready() -> void:
 
+
 	map_handler = MapHandler.new()
 	character_sprite_handler = CharacterSpriteHandler.new()
 	over_head_handler = OverHeadHandler.new()
+	grid_handler = GridHandler.new()
 
 
 	background = get_node_or_null("Background")
@@ -47,8 +51,11 @@ func _ready() -> void:
 	cell_ids_layer = get_node_or_null("CellIDSLayer")
 	character_sprites = get_node_or_null("CharacterSprites")
 	over_head_layer = get_node_or_null("OverHeadLayer")
+	grid_layer = get_node_or_null("GridLayer")
 
 	background.centered = false
+
+
 
 
 #region CharacterSpriteHandler
@@ -92,6 +99,7 @@ func render_map() -> void:
 	var render_start_time : int = Time.get_ticks_usec()
 	_clear()
 	map_handler.render_map()
+	_draw_grid()
 	var render_end_time : int = Time.get_ticks_usec()
 	var render_time_sec : float = (render_end_time - render_start_time) / 1_000_000.0
 	print("[Battlefield] Map rendered (took %.2f sec)" % render_time_sec)
@@ -106,7 +114,7 @@ func get_world_position_from_cell_id(cell_id: int) -> Vector2i:
 
 
 func get_cell_id_from_world_position(p_cell_resources: Array[CellResource]) -> int:
-	return map_handler.get_cell_id_from_world_position(get_global_mouse_position(), p_cell_resources)
+	return map_handler.get_cell_id_from_world_position(get_local_mouse_position(), p_cell_resources)
 
 
 func highlight_cell() -> void:
@@ -115,6 +123,14 @@ func highlight_cell() -> void:
 
 func display_cell_ids() -> void:
 	map_handler.display_cell_ids()
+
+#endregion
+
+
+#region GridHandler
+
+func _draw_grid() -> void:
+	grid_handler.draw_grid()
 
 #endregion
 

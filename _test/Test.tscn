@@ -1,10 +1,12 @@
-[gd_scene load_steps=3 format=3 uid="uid://dro2ypphiyigq"]
+[gd_scene load_steps=4 format=3 uid="uid://dro2ypphiyigq"]
 
 [ext_resource type="Script" uid="uid://d1jvr3vhxdplm" path="res://_test/test.gd" id="1_5kc3e"]
 [ext_resource type="Texture2D" uid="uid://gou8bvl717ge" path="res://_test/UI_Banner.png" id="2_ss573"]
+[ext_resource type="Script" uid="uid://b8u2b2105arey" path="res://_test/grid_handler_test.gd" id="3_m74j2"]
 
-[node name="Test" type="Node2D"]
+[node name="Test" type="Node2D" node_paths=PackedStringArray("draw_test")]
 script = ExtResource("1_5kc3e")
+draw_test = NodePath("DrawTest")
 
 [node name="UI" type="Control" parent="."]
 z_index = 6
@@ -34,3 +36,10 @@ offset_bottom = 148.0
 fit_content = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="Node2D" type="Node2D" parent="."]
+visible = false
+script = ExtResource("3_m74j2")
+cell_count = 315
+
+[node name="DrawTest" type="Node2D" parent="."]

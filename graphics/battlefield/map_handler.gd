@@ -99,7 +99,7 @@ func _reset_pools() -> void:
 
 ## Build full visual representation of the map
 func render_map() -> void:
-	
+
 	var col: int = -1
 	var row: int = 0
 	var x_offset: float = 0
@@ -234,6 +234,8 @@ func render_map() -> void:
 		cell_id_label.position.x -= 10  # Approximate centering offset
 		cell_id_label.position.y -= 6
 
+
+	# TO REMOVE #
 	cell_pointer = Sprite2D.new()
 	cell_pointer.texture = load("res://assets/graphics/gfx/cell_pointer.png")
 	cell_pointer.z_index = 1
@@ -295,10 +297,11 @@ func get_cell_id_from_world_position(p_world_position: Vector2, p_cell_resources
 	return -1
 
 
-func update_cell_pointer_position(p_local_position: Vector2) -> void:
-	var grid_pos: Vector2i = get_grid_position_from_world_position(p_local_position)
+func update_cell_pointer_position(p_world_position: Vector2) -> void:
+	var grid_pos: Vector2i = get_grid_position_from_world_position(p_world_position) # c'est celle là qui marche pas
 	var clamped_world_pos: Vector2 = get_cell_world_position_from_grid_position(grid_pos)
 	cell_pointer.position = clamped_world_pos
+
 
 
 ## Toggle visibility of cell ID labels
