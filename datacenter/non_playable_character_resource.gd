@@ -22,7 +22,7 @@ func _init(p_npc_data: Dictionary, p_npc_template_data: Dictionary,	p_npc_templa
 		p_npc_template_lang["name"],
 		int(p_npc_data["cellid"]),
 		int(p_npc_data["mapid"]),
-		int(p_npc_template_data["gfxID"]),
+		int(p_npc_template_data["gfx_id"]),
 		int(p_npc_data["orientation"]),
 		int(p_npc_template_data["color1"]),
 		int(p_npc_template_data["color2"]),
@@ -31,10 +31,10 @@ func _init(p_npc_data: Dictionary, p_npc_template_data: Dictionary,	p_npc_templa
 
 	npc_id           = int(p_npc_data["id"])
 	npc_template_id  = int(p_npc_template_data["id"])
-	bonusValue       = p_npc_template_data["bonusValue"]
+	bonusValue       = p_npc_template_data["bonus_value"]
 	sex              = p_npc_template_data["sex"]
-	extraClip        = p_npc_template_data["extraClip"]
-	custom_artwork   = int(p_npc_template_data["customArtwork"])
+	extraClip        = p_npc_template_data["extra_clip"]
+	custom_artwork   = int(p_npc_template_data["custom_artwork"])
 	ventes           = p_npc_template_data["ventes"]
 	quests           = p_npc_template_data["quests"]
 	exchanges        = p_npc_template_data["exchanges"]
@@ -43,10 +43,10 @@ func _init(p_npc_data: Dictionary, p_npc_template_data: Dictionary,	p_npc_templa
 
 
 	# Dialog ids
-	if p_npc_template_data["initQuestion"] == "":
+	if p_npc_template_data["init_question"] == "":
 		init_dialog_map_to_id = {}
 	else:
-		var dialog_parts = p_npc_template_data["initQuestion"].split("|")
+		var dialog_parts = p_npc_template_data["init_question"].split("|")
 		if dialog_parts.size() == 1:
 			# Single dialog format, ex: 3154 
 			init_dialog_map_to_id = { -1: int(dialog_parts[0])} # -1 is used to indicate that there is no map condition

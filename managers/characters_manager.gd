@@ -25,20 +25,20 @@ func create_npcs() -> void:
 
 	for npc_id in npc_ids:
 
-		var npc_data: Dictionary = Database.get_npc_dict(npc_id)
+		var npc_data: Dictionary = Database.get_npc_data(npc_id)
 		if npc_data.is_empty():
 			push_error("[CharacterManager] Npc data empty for npc id %d" % npc_id)
 			return
 
-		var npc_template_data = Database.get_npc_template_dict(int(npc_data.npcTemplateId))
+		var npc_template_data = Database.get_npc_template_data(int(npc_data.npc_template_id))
 		if npc_template_data.is_empty():
-			push_error("[CharacterManager] Npc template data empty for npc template id %d" % npc_data.npcTemplateId)
+			push_error("[CharacterManager] Npc template data empty for npc template id %d" % npc_data.npc_template_id)
 			return
 
 
-		var npc_template_lang = GofusTranslator.get_npc_template_lang(int(npc_data.npcTemplateId))
+		var npc_template_lang = GofusTranslator.get_npc_template_lang(int(npc_data.npc_template_id))
 		if npc_template_lang.is_empty():
-			push_error("[CharacterManager] Npc template lang data empty for npc template lang id %d" % npc_data.npcTemplateId)
+			push_error("[CharacterManager] Npc template lang data empty for npc template lang id %d" % npc_data.npc_template_id)
 			return
 
 		var non_playable_character_resource = NonPlayableCharacterResource.new(npc_data, npc_template_data, npc_template_lang)

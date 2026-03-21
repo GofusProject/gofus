@@ -11,7 +11,7 @@ var map_data: String
 var npc_ids: Array[int]
 var monsters: String
 var capabilities: int
-var mappos: String
+var map_pos: String
 var numgroup: int
 var min_size: int
 var fix_size: int
@@ -27,7 +27,7 @@ var cell_resources: Array[CellResource]
 var cell_count: int
 
 func _init(map_dict: Dictionary) -> void:
-	map_id        = int(map_dict["map_id"])
+	map_id        = int(map_dict["id"])
 	date          = str(map_dict["date"])
 	width         = int(map_dict["width"])
 	height        = int(map_dict["height"])
@@ -36,7 +36,7 @@ func _init(map_dict: Dictionary) -> void:
 	map_data      = str(map_dict["map_data"])
 	monsters      = str(map_dict["monsters"])
 	capabilities  = int(map_dict["capabilities"])
-	mappos        = str(map_dict["mappos"])
+	map_pos        = str(map_dict["map_pos"])
 	numgroup      = int(map_dict["numgroup"])
 	min_size      = int(map_dict["min_size"])
 	fix_size      = int(map_dict["fix_size"])
@@ -45,7 +45,7 @@ func _init(map_dict: Dictionary) -> void:
 	sniffed       = int(map_dict["sniffed"])
 	music_id      = int(map_dict["music_id"])
 	ambiance_id   = int(map_dict["ambiance_id"])
-	background_id = int(map_dict["bg_id"])
+	background_id = int(map_dict["background_id"])
 	out_door      = int(map_dict["out_door"])
 	max_merchant  = int(map_dict["max_merchant"])
 	
