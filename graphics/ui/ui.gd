@@ -19,6 +19,9 @@ const NPC_DIALOG_SCENE = preload("res://graphics/ui/scenes/dialog_scene.tscn")
 # Layers
 @onready var gofus_popup_menu_layer: Control = $GofusPopupMenuLayer
 @onready var dialog: Dialog = $Dialog
+@onready var grid_label_x: Label = $VBoxContainer/GridLabel
+@onready var grid_label_y: Label = $VBoxContainer/GridLabel2
+@onready var cell_id: Label = $VBoxContainer/GridLabel3
 
 
 func _ready() -> void:

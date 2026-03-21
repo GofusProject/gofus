@@ -40,3 +40,7 @@ func get_cell_id_from_mouse_position() -> int:
 	var cell_resources: Array[CellResource] = map_resource.cell_resources
 
 	return Battlefield.get_cell_id_from_world_position(cell_resources)
+
+
+func highlight_cell() -> void:
+	Battlefield.highlight_cell()

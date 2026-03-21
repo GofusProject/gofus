@@ -32,3 +32,5 @@ texture = ExtResource("2_ss573")
 offset_right = 381.0
 offset_bottom = 148.0
 fit_content = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]

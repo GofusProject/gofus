@@ -109,6 +109,10 @@ func get_cell_id_from_world_position(p_cell_resources: Array[CellResource]) -> i
 	return map_handler.get_cell_id_from_world_position(get_global_mouse_position(), p_cell_resources)
 
 
+func highlight_cell() -> void:
+	map_handler.update_cell_pointer_position(get_local_mouse_position())
+
+
 func display_cell_ids() -> void:
 	map_handler.display_cell_ids()
 

@@ -6,6 +6,8 @@ extends Node2D
 class_name MapHandler
   
 
+var cell_pointer: Sprite2D
+
 # Object pools - arrays of reusable nodes
 var _ground_sprite_pool: Array[Sprite2D] = []
 var _object1_sprite_pool: Array[Sprite2D] = []
@@ -40,10 +42,12 @@ func _get_ground_sprite2D() -> Sprite2D:
 	_ground_pool_index += 1
 	return sprite
 
+
 func _get_object1_sprite2D() -> Sprite2D:
 	var sprite : Sprite2D = _get_pooled_sprite2D(_object1_sprite_pool, _object1_pool_index, Battlefield.object1_layer)
 	_object1_pool_index += 1
 	return sprite
+
 
 func _get_object2_sprite2D() -> Sprite2D:
 	var sprite : Sprite2D = _get_pooled_sprite2D(_object2_sprite_pool, _object2_pool_index, Battlefield.object2_layer)
@@ -229,6 +233,11 @@ func render_map() -> void:
 		cell_id_label.position = cell_position
 		cell_id_label.position.x -= 10  # Approximate centering offset
 		cell_id_label.position.y -= 6
+
+	cell_pointer = Sprite2D.new()
+	cell_pointer.texture = load("res://assets/graphics/gfx/cell_pointer.png")
+	cell_pointer.z_index = 1
+	Battlefield.ground_layer.add_child(cell_pointer)
 	
 
 func clear_map() -> void:
@@ -240,6 +249,31 @@ func clear_map() -> void:
 	_reset_pools()
 
 
+## cell world pos -> grid pos 
+func get_grid_position_from_world_position(world_pos: Vector2) -> Vector2i:
+	# With ground_level = 7, the Y offset cancels out:
+	# cell_world_y = row * CELL_HALF_HEIGHT - LEVEL_HEIGHT * (7 - 7)
+	#              = row * CELL_HALF_HEIGHT
+	var row: int = roundi(world_pos.y / Battlefield.CELL_HALF_HEIGHT)
+
+	# Determine x_offset for this row using the same isometric alternating logic.
+	# Even rows have x_offset = 0, odd rows have x_offset = CELL_HALF_WIDTH.
+	var x_offset: float = Battlefield.CELL_HALF_WIDTH if row % 2 == 1 else 0.0
+
+	var col: int = roundi((world_pos.x - x_offset) / Battlefield.CELL_WIDTH)
+
+	return Vector2i(col, row)
+
+
+## grid pos -> cell world pos
+func get_cell_world_position_from_grid_position(grid_pos: Vector2i) -> Vector2:
+	var x_offset: float = Battlefield.CELL_HALF_WIDTH if grid_pos.y % 2 == 1 else 0.0
+	var world_x: float = grid_pos.x * Battlefield.CELL_WIDTH + x_offset
+	var world_y: float = grid_pos.y * Battlefield.CELL_HALF_HEIGHT
+	return Vector2(world_x, world_y)
+
+
+## cell id -> cell world pos
 func get_cell_world_position_from_cell_id(p_cell_id: int) -> Vector2:
 	var cell_resource: CellResource = Datacenter.current_map_resource.cell_resources[p_cell_id]
 	var world_pos = Vector2(cell_resource.x, cell_resource.y)
@@ -249,6 +283,7 @@ func get_cell_world_position_from_cell_id(p_cell_id: int) -> Vector2:
 	return Vector2(cell_resource.x, cell_resource.y)
 
 
+## cell world pos -> cell id
 func get_cell_id_from_world_position(p_world_position: Vector2, p_cell_resources: Array[CellResource]) -> int:
 
 	for cell_resource in p_cell_resources:
@@ -259,6 +294,11 @@ func get_cell_id_from_world_position(p_world_position: Vector2, p_cell_resources
 	push_error("[MapHandler] Cell ID could not be retrieved for world position ", str(p_world_position))
 	return -1
 
+
+func update_cell_pointer_position(p_local_position: Vector2) -> void:
+	var grid_pos: Vector2i = get_grid_position_from_world_position(p_local_position)
+	var clamped_world_pos: Vector2 = get_cell_world_position_from_grid_position(grid_pos)
+	cell_pointer.position = clamped_world_pos
 
 
 ## Toggle visibility of cell ID labels
