@@ -73,54 +73,41 @@ func uncompress_cell_data(cell_data: String, cell_id: int) -> Dictionary:
 	cell.num = cell_id
 	cell.raw_data = cell_data
 	
-	# === SERVER-SIDE PROPERTIES (from Java CryptManager) ===
-	# Active status
+
 	cell.is_active = ((bytes[0] & 0x20) >> 5) != 0
-	
-	# Line of sight
 	cell.line_of_sight = (bytes[0] & 1) != 0
-	
-	# Ground level (elevation)
-	cell.cell_level = bytes[1] & 0x0F
-	
-	# Movement/is_walkable (with special case checks)
 	cell.movement = (bytes[2] & 0x38) >> 3
 	cell.is_walkable = (cell.movement != 0
 		and cell_data != "bhGaeaaaaa"
 		and cell_data != "Hhaaeaaaaa")
-	
-	# Ground slope
+	# Derived property: Is cell targetable for combat?
+	cell.is_targetable = cell.is_active and cell.is_walkable
+
+
 	cell.cell_slope = (bytes[4] & 0x3C) >> 2
-	
-	# Object layer 2
-	cell.object2_id = ((bytes[0] & 2) << 12) + ((bytes[7] & 1) << 12) + (bytes[8] << 6) + bytes[9]
-	cell.is_object2_interactive = ((bytes[7] & 2) >> 1) != 0
-	
-	# Server-side object logic
-	cell.object = cell.object2_id if cell.is_object2_interactive else -1
-	
-	# === CLIENT-SIDE RENDERING PROPERTIES (from ActionScript Compressor) ===
-	# Ground layer rendering
+	cell.cell_level = bytes[1] & 0x0F
+
+
 	cell.ground_tile_id = ((bytes[0] & 0x18) << 6) + ((bytes[2] & 7) << 6) + bytes[3]
 	cell.ground_tile_rot = (bytes[1] & 0x30) >> 4
 	cell.is_ground_tile_flip = ((bytes[4] & 2) >> 1) != 0
 	
-	# Object layer 1 (static decorations)
 	cell.object1_id = ((bytes[0] & 4) << 11) + ((bytes[4] & 1) << 12) + (bytes[5] << 6) + bytes[6]
 	cell.object1_rot = (bytes[7] & 0x30) >> 4
 	cell.is_object1_flip = ((bytes[7] & 8) >> 3) != 0
-	
-	# Object layer 2 rendering (interactive objects)
+
 	cell.is_object2_flip = ((bytes[7] & 4) >> 2) != 0
-	
+	cell.object2_id = ((bytes[0] & 2) << 12) + ((bytes[7] & 1) << 12) + (bytes[8] << 6) + bytes[9]
+	cell.is_object2_interactive = ((bytes[7] & 2) >> 1) != 0
+	cell.object = cell.object2_id if cell.is_object2_interactive else -1
+
 	# External object layer (initially empty)
 	cell.object_external = ""
 	cell.is_object_external_interactive = false
 	
-	# Permanent level offset (used in rendering calculations)
+
 	cell.permanent_level = 0
 	
-	# Derived property: Is cell targetable for combat?
-	cell.is_targetable = cell.is_active and cell.is_walkable
+
 	
 	return cell
