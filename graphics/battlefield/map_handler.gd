@@ -195,34 +195,29 @@ func render_cell(
 
 
 ## Build full visual representation of the map
-func render_map() -> void:
+func render_map(p_cell_visual_resources: Array[CellVisualResource]) -> void:
 
 	# TO REMOVE
 	var map_resource = Datacenter.current_map_resource
-	var cell_resources = map_resource.cell_resources
-	
 
-	
 	# Background
 	if Battlefield.background != null and map_resource.background_id != 0:
 		Battlefield.background.texture = AssetLoader.get_background_texture(map_resource.background_id)
   
-
-	for cell_resource in cell_resources:
+	for cell_visual_resource in p_cell_visual_resources:
 		render_cell(
-			cell_resource.id,
-			cell_resource.x,
-			cell_resource.y,
-			cell_resource.cell_slope,
-			cell_resource.ground_tile_id,
-			cell_resource.ground_tile_rot,
-			cell_resource.is_ground_tile_flip,
-			cell_resource.object1_id,
-			cell_resource.object1_rot,
-			cell_resource.is_object1_flip,
-			cell_resource.object2_id,
-			cell_resource.is_object2_interactive,
-			cell_resource.is_object2_flip
+			cell_visual_resource.id,
+			cell_visual_resource.x, cell_visual_resource.y,
+			cell_visual_resource.ground_slope,
+			cell_visual_resource.ground_tile_id,
+			cell_visual_resource.ground_tile_rot,
+			cell_visual_resource.is_ground_tile_flip,
+			cell_visual_resource.object1_id,
+			cell_visual_resource.object1_rot,
+			cell_visual_resource.is_object1_flip,
+			cell_visual_resource.object2_id,
+			cell_visual_resource.is_object2_interactive,
+			cell_visual_resource.is_object2_flip
 		)
 
 	# TO REMOVE #

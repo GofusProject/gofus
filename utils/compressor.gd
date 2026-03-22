@@ -84,7 +84,7 @@ func uncompress_cell_data(cell_data: String, cell_id: int) -> Dictionary:
 	cell.is_targetable = cell.is_active and cell.is_walkable
 
 
-	cell.cell_slope = (bytes[4] & 0x3C) >> 2
+	cell.ground_slope = (bytes[4] & 0x3C) >> 2
 	cell.cell_level = bytes[1] & 0x0F
 
 

@@ -94,11 +94,11 @@ func _on_animated_character_sprite_2d_clicked(animated_character_sprite_2d: Anim
 
 #region MapHandler
 
-func render_map() -> void:
+func render_map(p_cell_visual_resources: Array[CellVisualResource]) -> void:
 	print("[Battlefield] Rendering map...")
 	var render_start_time : int = Time.get_ticks_usec()
 	_clear()
-	map_handler.render_map()
+	map_handler.render_map(p_cell_visual_resources)
 	# _draw_grid()
 	var render_end_time : int = Time.get_ticks_usec()
 	var render_time_sec : float = (render_end_time - render_start_time) / 1_000_000.0

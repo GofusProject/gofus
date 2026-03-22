@@ -11,9 +11,8 @@ var is_active: bool
 var line_of_sight: bool
 var movement: int
 var cell_level: int
-var cell_slope: int
 
-
+var ground_slope: int
 var ground_tile_id: int
 var ground_tile_rot: int
 var is_ground_tile_flip: bool
@@ -25,7 +24,7 @@ var is_object1_flip: bool
 var object2_id: int
 var is_object2_interactive: bool
 var is_object2_flip: bool
-var object: int # Derived from object2_id and is_object2_interactive. See DataCompressor for more info
+var object: int # Derived from object2_id and is_object2_interactive. See Compressor for more info
 
 var object_external: String
 var is_object_external_interactive: bool
@@ -49,7 +48,7 @@ func _init(p_id: int, p_raw_data: String) -> void:
 	line_of_sight                     = cell_dict["line_of_sight"]
 	cell_level                      = cell_dict["cell_level"]
 	movement                          = cell_dict["movement"]
-	cell_slope                      = cell_dict["cell_slope"]
+	ground_slope                      = cell_dict["ground_slope"]
 	object2_id                 			= cell_dict["object2_id"]
 	is_object2_interactive         = cell_dict["is_object2_interactive"]
 	object                            = cell_dict["object"]

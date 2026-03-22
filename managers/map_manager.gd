@@ -32,7 +32,14 @@ func create_map(map_id: int) -> bool:
 	print("[MapManager] Current map resource : width=%d, height=%d, bgID=%d, cell count=%d" % [map_resource.width, map_resource.height, map_resource.background_id, map_resource.cell_count])
 	
 	Datacenter.set_current_map_resource(map_resource)
-	Battlefield.render_map()
+
+	var cell_visual_resources: Array[CellVisualResource] = []
+
+	for cell_resource in map_resource.cell_resources:
+		var cell_visual_resource = CellVisualResource.new(cell_resource)
+		cell_visual_resources.append(cell_visual_resource)
+
+	Battlefield.render_map(cell_visual_resources)
 	return true
 
 
