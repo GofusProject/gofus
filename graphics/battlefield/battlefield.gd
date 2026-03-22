@@ -100,7 +100,7 @@ func render_map(p_background_id, p_cell_visual_resources: Array[CellVisualResour
 
 	_clear()
 	if background != null and p_background_id != 0:
-		map_handler.rend_background(p_background_id)
+		map_handler.render_background(p_background_id)
 	for cell_visual_resource in p_cell_visual_resources:
 		map_handler.render_cell(
 			cell_visual_resource.id,

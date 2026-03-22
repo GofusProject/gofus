@@ -39,44 +39,41 @@ func create_map(map_id: int) -> bool:
 	var cell_visual_resources: Array[CellVisualResource] = []
 
 	for cell_resource in map_resource.cell_resources:
-
-		var ground_sprite_texture: Texture2D = null
-		var ground_offset = Vector2.ZERO
-		var ground_hframes: int = 0
-
-		var object1_sprite_texture: Texture2D = null
-		var object1_offset = Vector2.ZERO
-
-		var object2_sprite_texture: Texture2D = null
-		var object2_offset = Vector2.ZERO
+		var cell_visual_resource = CellVisualResource.new(cell_resource)
+		cell_visual_resources.append(cell_visual_resource)
 
 		if cell_resource.ground_tile_id != 0:
-			ground_sprite_texture = AssetLoader.get_ground_tile_texture(cell_resource.ground_tile_id)
+			var ground_texture = AssetLoader.get_ground_tile_texture(cell_resource.ground_tile_id)
 			var ground_sprite_metadata: Dictionary = AssetLoader.get_ground_sprite_metadata(cell_resource.ground_tile_id)
-			ground_offset = Vector2(
+			var ground_offset = Vector2(
 				ground_sprite_metadata["horizontal"],
 				ground_sprite_metadata["vertical"]
 			)
-			ground_hframes = ground_sprite_metadata["frame_count"]
+			var ground_hframes = ground_sprite_metadata["frame_count"]
+			cell_visual_resource.initialize_ground_texture_and_offset(ground_texture, ground_offset, ground_hframes)
+			ground_tiles += 1
 
 		if cell_resource.object1_id != 0:
-			object1_sprite_texture = AssetLoader.get_object_sprite_texture(cell_resource.object1_id)
+			var object1_sprite_texture = AssetLoader.get_object_sprite_texture(cell_resource.object1_id)
 			var object1_bounds_metadata: Dictionary = AssetLoader.get_object_sprite_metadata(cell_resource.object1_id)
-			object1_offset = Vector2(
+			var object1_offset = Vector2(
 				object1_bounds_metadata["horizontal"],
 				object1_bounds_metadata["vertical"]
 			)
+			cell_visual_resource.initialize_object1_texture_and_offset(object1_sprite_texture, object1_offset)
+			object1_tiles += 1
 
 		if cell_resource.object2_id != 0:
-			object2_sprite_texture = AssetLoader.get_object_sprite_texture(cell_resource.object2_id)
+			var object2_sprite_texture = AssetLoader.get_object_sprite_texture(cell_resource.object2_id)
 			var object2_bounds_metadata: Dictionary = AssetLoader.get_object_sprite_metadata(cell_resource.object2_id)
-			object2_offset = Vector2(
+			var object2_offset = Vector2(
 				object2_bounds_metadata["horizontal"],
 				object2_bounds_metadata["vertical"]
 			)
+			cell_visual_resource.initialize_object2_texture_and_offset(object2_sprite_texture, object2_offset)
+			object2_tiles += 1
 
-		var cell_visual_resource = CellVisualResource.new(cell_resource, ground_sprite_texture, ground_offset, ground_hframes, object1_sprite_texture, object1_offset, object2_sprite_texture, object2_offset)
-		cell_visual_resources.append(cell_visual_resource)
+		
 
 	Battlefield.render_map(map_resource.background_id, cell_visual_resources)
 	return true
