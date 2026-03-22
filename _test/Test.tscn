@@ -43,3 +43,7 @@ script = ExtResource("3_m74j2")
 cell_count = 10
 
 [node name="DrawTest" type="Node2D" parent="."]
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D"]
