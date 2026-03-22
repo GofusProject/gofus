@@ -4,6 +4,7 @@ extends Resource
 var id: int
 var x: float
 var y: float
+var movement: int
 
 var ground_slope: int
 var ground_tile_id: int
@@ -32,6 +33,7 @@ func _init(cell_resource: CellResource) -> void:
 	id = cell_resource.id
 	x = cell_resource.x
 	y = cell_resource.y
+	movement = cell_resource.movement
 
 	ground_slope = cell_resource.ground_slope
 	ground_tile_id = cell_resource.ground_tile_id

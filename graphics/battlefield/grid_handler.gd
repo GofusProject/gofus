@@ -23,7 +23,10 @@ const SLOPE_POINTS: Array = [
 ]
 
 
-func render_cell(world_x: float, world_y: float, ground_slope: int) -> void:
+func render_cell(world_x: float, world_y: float, ground_slope: int, movement: int) -> void:
+	if movement == 0:
+		return
+
 	var pos = Vector2(world_x, world_y)
 	var visual_cell = Line2D.new()
 	visual_cell.closed = true

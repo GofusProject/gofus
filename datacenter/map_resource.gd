@@ -98,6 +98,7 @@ func _init(map_dict: Dictionary) -> void:
 		cell_resource.y = cell_position.y
 
 		if not cell_resource.is_active:
+			print("[MapResource] Cell %s is not active" % cell_resource.id)
 			continue
 		
 		active_cells += 1

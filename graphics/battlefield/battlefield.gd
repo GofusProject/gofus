@@ -125,7 +125,8 @@ func render_map(p_background_id, p_cell_visual_resources: Array[CellVisualResour
 
 		grid_handler.render_cell(
 			cell_visual_resource.x, cell_visual_resource.y,
-			cell_visual_resource.ground_slope
+			cell_visual_resource.ground_slope,
+			cell_visual_resource.movement
 		)
 
 	var render_end_time : int = Time.get_ticks_usec()
