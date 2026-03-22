@@ -210,3 +210,4 @@ func _clear() -> void:
 	clear_map()
 	clear_character_sprites()
 	grid_handler.clear()
+	cell_interaction_handler.clear()

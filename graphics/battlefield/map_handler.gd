@@ -127,6 +127,7 @@ func render_cell(
 	if ground_tile_id != 0:
 		# ground_tiles += 1
 		var ground_sprite: Sprite2D = _get_ground_sprite2D()
+		ground_sprite.name = "GroundSprite" + str(id)
 		
 		ground_sprite.hframes = ground_hframes
 		ground_sprite.texture = ground_texture
@@ -148,7 +149,8 @@ func render_cell(
 	if object1_id != 0:
 		# object1_tiles += 1
 		var object1_sprite: Sprite2D = _get_object1_sprite2D()
-		
+		object1_sprite.name = "Object1Sprite" + str(id)
+
 		# Reset sprite properties
 		object1_sprite.hframes = 1  # Reset frame count
 		object1_sprite.texture = object1_texture
@@ -168,6 +170,7 @@ func render_cell(
 	if object2_id != 0:
 		# object2_tiles += 1
 		var object2_sprite: Sprite2D = _get_object2_sprite2D()
+		object2_sprite.name = "Object2Sprite" + str(id)
 		
 		# Reset sprite properties
 		object2_sprite.hframes = 1  # Reset frame count
