@@ -21,10 +21,12 @@ var object1_id: int
 var object1_rot: int
 var is_object1_flip: bool
 
+
 var object2_id: int
 var is_object2_interactive: bool
 var is_object2_flip: bool
 var object: int # Derived from object2_id and is_object2_interactive. See Compressor for more info
+
 
 var object_external: String
 var is_object_external_interactive: bool

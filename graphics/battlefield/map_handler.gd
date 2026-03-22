@@ -108,12 +108,19 @@ func render_cell(
 	ground_tile_id: int,
 	ground_tile_rot: int,
 	is_ground_tile_flip: bool,
+	ground_texture: Texture2D,
+	ground_hframes: int,
+	ground_offset: Vector2,
 	object1_id: int,
 	object1_rot: int,
 	object1_flip: bool,
+	object1_texture: Texture2D,
+	object1_offset: Vector2,
 	object2_id: int,
 	is_object2_interactive: bool,
 	is_object2_flip: bool,
+	object2_texture: Texture2D,
+	object2_offset: Vector2
 	) -> void:
 
 	# Ground layer
@@ -121,15 +128,10 @@ func render_cell(
 		# ground_tiles += 1
 		var ground_sprite: Sprite2D = _get_ground_sprite2D()
 		
-		var ground_sprite_metadata: Dictionary = AssetLoader.get_ground_sprite_metadata(ground_tile_id)
-		ground_sprite.hframes = ground_sprite_metadata["frame_count"]
-		ground_sprite.texture = AssetLoader.get_ground_tile_texture(ground_tile_id)
-		var bounds: Vector2 = Vector2(
-			ground_sprite_metadata["horizontal"],
-			ground_sprite_metadata["vertical"]
-		)
-		
-		ground_sprite.offset = bounds
+		ground_sprite.hframes = ground_hframes
+		ground_sprite.texture = ground_texture
+
+		ground_sprite.offset = ground_offset
 		ground_sprite.position = Vector2(world_x, world_y)
 
 		if ground_slope != 1:
@@ -149,15 +151,9 @@ func render_cell(
 		
 		# Reset sprite properties
 		object1_sprite.hframes = 1  # Reset frame count
-		object1_sprite.texture = AssetLoader.get_object_sprite_texture(object1_id)
-		
-		var object1_bounds_metadata: Dictionary = AssetLoader.get_object_sprite_metadata(object1_id)
-		var bounds: Vector2 = Vector2(
-			object1_bounds_metadata["horizontal"],
-			object1_bounds_metadata["vertical"]
-		)
-		
-		object1_sprite.offset = bounds
+		object1_sprite.texture = object1_texture
+
+		object1_sprite.offset = object1_offset
 		object1_sprite.position = Vector2(world_x, world_y)
 
 		if ground_slope == 1 and object1_rot != 0:
@@ -175,15 +171,8 @@ func render_cell(
 		
 		# Reset sprite properties
 		object2_sprite.hframes = 1  # Reset frame count
-		object2_sprite.texture = AssetLoader.get_object_sprite_texture(object2_id)
-
-		var object2_bounds_metadata: Dictionary = AssetLoader.get_object_sprite_metadata(object2_id)
-		var bounds: Vector2 = Vector2(
-			object2_bounds_metadata["horizontal"],
-			object2_bounds_metadata["vertical"]
-		)
-		
-		object2_sprite.offset = bounds
+		object2_sprite.texture = object2_texture
+		object2_sprite.offset = object2_offset
 		object2_sprite.position = Vector2(world_x, world_y) 
 
 		if is_object2_flip:
@@ -217,7 +206,7 @@ func clear_map() -> void:
 	_reset_pools()
 
 
-## cell world pos -> grid pos 
+## cell world pos -> grid pos / DOESNT WORK
 func get_grid_position_from_world_position(world_pos: Vector2) -> Vector2i:
 	# With ground_level = 7, the Y offset cancels out:
 	# cell_world_y = row * CELL_HALF_HEIGHT - LEVEL_HEIGHT * (7 - 7)

@@ -109,12 +109,19 @@ func render_map(p_background_id, p_cell_visual_resources: Array[CellVisualResour
 			cell_visual_resource.ground_tile_id,
 			cell_visual_resource.ground_tile_rot,
 			cell_visual_resource.is_ground_tile_flip,
+			cell_visual_resource.ground_texture,
+			cell_visual_resource.ground_hframes,
+			cell_visual_resource.ground_offset,
 			cell_visual_resource.object1_id,
 			cell_visual_resource.object1_rot,
 			cell_visual_resource.is_object1_flip,
+			cell_visual_resource.object1_texture,
+			cell_visual_resource.object1_offset,
 			cell_visual_resource.object2_id,
 			cell_visual_resource.is_object2_interactive,
-			cell_visual_resource.is_object2_flip
+			cell_visual_resource.is_object2_flip,
+			cell_visual_resource.object2_texture,
+			cell_visual_resource.object2_offset
 		)
 	# _draw_grid()
 
