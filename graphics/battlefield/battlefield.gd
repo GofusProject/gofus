@@ -55,8 +55,6 @@ func _ready() -> void:
 	background.centered = false
 
 
-
-
 #region CharacterSpriteHandler
 
 func render_character_sprite(p_linked_character_id: int, p_sprite_frames_id: int, p_direction: int, p_cell_id: int) -> void:
@@ -93,40 +91,40 @@ func _on_animated_character_sprite_2d_clicked(animated_character_sprite_2d: Anim
 
 #region MapHandler
 
-func render_map(p_background_id, p_cell_visual_resources: Array[CellVisualResource]) -> void:
+func render_map(p_background_id, p_cell_resources: Array[CellResource]) -> void:
 	print("[Battlefield] Rendering map...")
 	var render_start_time : int = Time.get_ticks_usec()
 
 	_clear()
 	if background != null and p_background_id != 0:
 		map_handler.render_background(p_background_id)
-	for cell_visual_resource in p_cell_visual_resources:
+	for cell_resource in p_cell_resources:
 		map_handler.render_cell(
-			cell_visual_resource.id,
-			cell_visual_resource.x, cell_visual_resource.y,
-			cell_visual_resource.ground_slope,
-			cell_visual_resource.ground_tile_id,
-			cell_visual_resource.ground_tile_rot,
-			cell_visual_resource.is_ground_tile_flip,
-			cell_visual_resource.ground_texture,
-			cell_visual_resource.ground_hframes,
-			cell_visual_resource.ground_offset,
-			cell_visual_resource.object1_id,
-			cell_visual_resource.object1_rot,
-			cell_visual_resource.is_object1_flip,
-			cell_visual_resource.object1_texture,
-			cell_visual_resource.object1_offset,
-			cell_visual_resource.object2_id,
-			cell_visual_resource.is_object2_interactive,
-			cell_visual_resource.is_object2_flip,
-			cell_visual_resource.object2_texture,
-			cell_visual_resource.object2_offset
+			cell_resource.id,
+			cell_resource.x, cell_resource.y,
+			cell_resource.ground_slope,
+			cell_resource.ground_tile_id,
+			cell_resource.ground_tile_rot,
+			cell_resource.is_ground_tile_flip,
+			cell_resource.ground_texture,
+			cell_resource.ground_hframes,
+			cell_resource.ground_offset,
+			cell_resource.object1_id,
+			cell_resource.object1_rot,
+			cell_resource.is_object1_flip,
+			cell_resource.object1_texture,
+			cell_resource.object1_offset,
+			cell_resource.object2_id,
+			cell_resource.is_object2_interactive,
+			cell_resource.is_object2_flip,
+			cell_resource.object2_texture,
+			cell_resource.object2_offset
 		)
 
 		grid_handler.render_cell(
-			cell_visual_resource.x, cell_visual_resource.y,
-			cell_visual_resource.ground_slope,
-			cell_visual_resource.movement
+			cell_resource.x, cell_resource.y,
+			cell_resource.ground_slope,
+			cell_resource.movement
 		)
 
 	var render_end_time : int = Time.get_ticks_usec()
