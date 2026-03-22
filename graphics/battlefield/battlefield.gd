@@ -2,6 +2,11 @@
 extends Node2D
 
 
+
+signal cell_clicked(cell_id: int)
+signal cell_hovered(cell_id: int)
+signal cell_unhovered(cell_id: int)
+
 var map_handler: MapHandler
 var character_sprite_handler: CharacterSpriteHandler
 var over_head_handler: OverHeadHandler
@@ -155,10 +160,9 @@ func render_map(p_background_id, p_cell_resources: Array[CellResource]) -> void:
 		cell_interaction_handler.create_cell_area(
 			cell_resource.x, cell_resource.y,
 			cell_resource.ground_slope,
-			cell_resource.movement
+			cell_resource.movement,
+			cell_resource.id
 		)
-
-
 
 	var render_end_time : int = Time.get_ticks_usec()
 	var render_time_sec : float = (render_end_time - render_start_time) / 1_000_000.0

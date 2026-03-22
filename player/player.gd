@@ -31,20 +31,6 @@ func _ready() -> void:
 	coloring_helper = ColoringHelper.new()
 
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion:
-		var grid_pos: Vector2i = Battlefield.map_handler.get_grid_position_from_world_position(Battlefield.get_local_mouse_position())
-		Ui.grid_label_x.text = "grid_x: %s" % grid_pos.x
-		Ui.grid_label_y.text = "grid_x: %s" % grid_pos.y
-		# Battlefield.queue_redraw()
-		# MapManager.highlight_cell()
-
-	if event is InputEventMouseButton and event.pressed:
-		if event.button_index == MOUSE_BUTTON_LEFT:
-			print("MapManager.get_cell_id_from_mouse_position(): ", str(MapManager.get_cell_id_from_mouse_position()))
-			CharactersManager.close_character_popup_menu()
-
-
 func execute_action(action_resource: ActionResource) -> void:
 	# if action.condition and not action.condition.is_met(character):
 	# 	return

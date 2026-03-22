@@ -196,19 +196,19 @@ func clear_map() -> void:
 
 
 ## cell world pos -> grid pos / DOESNT WORK
-func get_grid_position_from_world_position(world_pos: Vector2) -> Vector2i:
-	# With ground_level = 7, the Y offset cancels out:
-	# cell_world_y = row * CELL_HALF_HEIGHT - LEVEL_HEIGHT * (7 - 7)
-	#              = row * CELL_HALF_HEIGHT
-	var row: int = roundi(world_pos.y / Battlefield.CELL_HALF_HEIGHT)
+# func get_grid_position_from_world_position(world_pos: Vector2) -> Vector2i:
+# 	# With ground_level = 7, the Y offset cancels out:
+# 	# cell_world_y = row * CELL_HALF_HEIGHT - LEVEL_HEIGHT * (7 - 7)
+# 	#              = row * CELL_HALF_HEIGHT
+# 	var row: int = roundi(world_pos.y / Battlefield.CELL_HALF_HEIGHT)
 
-	# Determine x_offset for this row using the same isometric alternating logic.
-	# Even rows have x_offset = 0, odd rows have x_offset = CELL_HALF_WIDTH.
-	var x_offset: float = Battlefield.CELL_HALF_WIDTH if row % 2 == 1 else 0.0
+# 	# Determine x_offset for this row using the same isometric alternating logic.
+# 	# Even rows have x_offset = 0, odd rows have x_offset = CELL_HALF_WIDTH.
+# 	var x_offset: float = Battlefield.CELL_HALF_WIDTH if row % 2 == 1 else 0.0
 
-	var col: int = roundi((world_pos.x - x_offset) / Battlefield.CELL_WIDTH)
+# 	var col: int = roundi((world_pos.x - x_offset) / Battlefield.CELL_WIDTH)
 
-	return Vector2i(col, row)
+# 	return Vector2i(col, row)
 
 
 ## grid pos -> cell world pos

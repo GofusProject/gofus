@@ -12,6 +12,9 @@ var object2_tiles: int = 0
 
 func _ready() -> void:
 	print("[MapManager] Ready")
+	Battlefield.cell_clicked.connect(_on_cell_clicked)
+	Battlefield.cell_hovered.connect(_on_cell_hovered)
+	Battlefield.cell_unhovered.connect(_on_cell_unhovered)
 
 
 ## Orchestrate map creation process
@@ -88,3 +91,15 @@ func get_cell_id_from_mouse_position() -> int:
 
 func highlight_cell() -> void:
 	Battlefield.highlight_cell()
+
+
+func _on_cell_clicked(cell_id: int) -> void:
+	print("[MapManager] Cell clicked: %d" % cell_id)
+
+func _on_cell_hovered(cell_id: int) -> void:
+	# print("[MapManager] Cell hovered: %d" % cell_id)
+	pass
+
+func _on_cell_unhovered(cell_id: int) -> void:
+	# print("[MapManager] Cell unhovered: %d" % cell_id)
+	pass

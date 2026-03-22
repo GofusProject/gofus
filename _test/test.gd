@@ -28,7 +28,9 @@ const CELL_POINT_POS: Array = [
 @export var create_grid_toggle: bool = false:
 	set(v):
 		if v and Engine.is_editor_hint():
-			create_grid()
+			for child in draw_test.get_children():
+				child.free()
+			create_line(Vector2(500, 500))
 		create_grid_toggle = false
 
 

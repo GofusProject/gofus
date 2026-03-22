@@ -7,7 +7,6 @@
 [node name="Test" type="Node2D" node_paths=PackedStringArray("draw_test")]
 script = ExtResource("1_5kc3e")
 draw_test = NodePath("DrawTest")
-cell_count = 615
 
 [node name="UI" type="Control" parent="."]
 z_index = 6
@@ -40,7 +39,7 @@ fit_content = true
 
 [node name="Node2D" type="Node2D" parent="."]
 script = ExtResource("3_m74j2")
-cell_count = 10
+cell_count = 115
 
 [node name="DrawTest" type="Node2D" parent="."]
 
