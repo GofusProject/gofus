@@ -86,54 +86,33 @@ func _load_all_object_sprites_bounds() -> void:
 		}
 
 
-## Get ground tile texture (cached)
+## For pngs
+func _get_cached_texture(cache: Dictionary, base_path: String, asset_id: int, label: String) -> Texture2D:
+	if asset_id == 0:
+		return null
+	if not cache.has(asset_id):
+		var path := base_path + "%d.png" % asset_id
+		if ResourceLoader.exists(path):
+			cache[asset_id] = load(path)
+		else:
+			push_warning("[AssetLoader] %s not found: %s" % [label, path])
+			return null
+	return cache[asset_id]
+
+
 func get_ground_tile_texture(tile_id: int) -> Texture2D:
-	if tile_id == 0:
-		return null
-	
-	if not _ground_tile_cache.has(tile_id):
-		var path: String = GROUND_TILES_PATH + "%d.png" % tile_id
-		if ResourceLoader.exists(path):
-			_ground_tile_cache[tile_id] = load(path)
-		else:
-			push_warning("[AssetLoader] Ground tile not found: " + path)
-			return null
-	
-	return _ground_tile_cache[tile_id]
+	return _get_cached_texture(_ground_tile_cache, GROUND_TILES_PATH, tile_id, "Ground tile")
 
 
-## Get object sprite texture (cached)
 func get_object_sprite_texture(sprite_id: int) -> Texture2D:
-	if sprite_id == 0:
-		return null
-	
-	if not _object_sprite_cache.has(sprite_id):
-		var path: String = OBJECT_SPRITES_PATH + "%d.png" % sprite_id
-		if ResourceLoader.exists(path):
-			_object_sprite_cache[sprite_id] = load(path)
-		else:
-			push_warning("[AssetLoader] Object sprite not found: " + path)
-			return null
-	
-	return _object_sprite_cache[sprite_id]
+	return _get_cached_texture(_object_sprite_cache, OBJECT_SPRITES_PATH, sprite_id, "Object sprite")
 
 
-## Get background texture (cached)
 func get_background_texture(bg_id: int) -> Texture2D:
-	if bg_id == 0:
-		return null
-	
-	if not _background_cache.has(bg_id):
-		var path: String = BACKGROUNDS_PATH + "%d.png" % bg_id
-		if ResourceLoader.exists(path):
-			_background_cache[bg_id] = load(path)
-		else:
-			push_warning("[AssetLoader] Background not found: " + path)
-			return null
-	
-	return _background_cache[bg_id]
+	return _get_cached_texture(_background_cache, BACKGROUNDS_PATH, bg_id, "Background")
 
 
+## Sprite frames
 func get_character_sprite_frames(sprite_frames_id: int) -> SpriteFrames:
 
 	if not _character_sprite_frames_cache.has(sprite_frames_id):
@@ -148,7 +127,8 @@ func get_character_sprite_frames(sprite_frames_id: int) -> SpriteFrames:
 	return _character_sprite_frames_cache[sprite_frames_id]
 
 
-func get_character_sprite_bounds(sprite_frames_id: int, anim: String) -> Vector2:
+# Metadata
+func get_character_sprite_offset(sprite_frames_id: int, anim: String) -> Vector2:
 
 	# Get Sprite frames metadata
 	if not _character_sprite_metadata_cache.has(sprite_frames_id):

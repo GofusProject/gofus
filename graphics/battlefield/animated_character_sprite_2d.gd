@@ -119,7 +119,7 @@ func _is_pixel_opaque(global_mouse: Vector2) -> bool:
 func _on_animation_changed() -> void:
 
 	# update offset. Important to set as offset and not position for y sorting
-	offset = AssetLoader.get_character_sprite_bounds(sprite_frames_id, animation)
+	offset = AssetLoader.get_character_sprite_offset(sprite_frames_id, animation)
 
 	# update area 2D position and collision shape size
 	var tex = sprite_frames.get_frame_texture(animation, frame)
