@@ -97,6 +97,9 @@ func _reset_pools() -> void:
 	_label_pool_index = 0
 
 
+func render_background(p_background_id: int) -> void:
+	Battlefield.background.texture = AssetLoader.get_background_texture(p_background_id)
+
 
 func render_cell(
 	id: int,
@@ -194,37 +197,15 @@ func render_cell(
 	cell_id_label.position.y -= 6
 
 
-## Build full visual representation of the map
-func render_map(p_cell_visual_resources: Array[CellVisualResource]) -> void:
 
-	# TO REMOVE
-	var map_resource = Datacenter.current_map_resource
 
-	# Background
-	if Battlefield.background != null and map_resource.background_id != 0:
-		Battlefield.background.texture = AssetLoader.get_background_texture(map_resource.background_id)
-  
-	for cell_visual_resource in p_cell_visual_resources:
-		render_cell(
-			cell_visual_resource.id,
-			cell_visual_resource.x, cell_visual_resource.y,
-			cell_visual_resource.ground_slope,
-			cell_visual_resource.ground_tile_id,
-			cell_visual_resource.ground_tile_rot,
-			cell_visual_resource.is_ground_tile_flip,
-			cell_visual_resource.object1_id,
-			cell_visual_resource.object1_rot,
-			cell_visual_resource.is_object1_flip,
-			cell_visual_resource.object2_id,
-			cell_visual_resource.is_object2_interactive,
-			cell_visual_resource.is_object2_flip
-		)
-
-	# TO REMOVE #
-	cell_pointer = Sprite2D.new()
-	cell_pointer.texture = load("res://assets/graphics/gfx/cell_pointer.png")
-	cell_pointer.z_index = 1
-	Battlefield.ground_layer.add_child(cell_pointer)
+# ## Build full visual representation of the map
+# func render_map(p_cell_visual_resources: Array[CellVisualResource]) -> void:
+# 	# TO REMOVE #
+# 	cell_pointer = Sprite2D.new()
+# 	cell_pointer.texture = load("res://assets/graphics/gfx/cell_pointer.png")
+# 	cell_pointer.z_index = 1
+# 	Battlefield.ground_layer.add_child(cell_pointer)
 	
 
 func clear_map() -> void:
@@ -282,10 +263,10 @@ func get_cell_id_from_world_position(p_world_position: Vector2, p_cell_resources
 	return -1
 
 
-func update_cell_pointer_position(p_world_position: Vector2) -> void:
-	var grid_pos: Vector2i = get_grid_position_from_world_position(p_world_position) # c'est celle là qui marche pas
-	var clamped_world_pos: Vector2 = get_cell_world_position_from_grid_position(grid_pos)
-	cell_pointer.position = clamped_world_pos
+# func update_cell_pointer_position(p_world_position: Vector2) -> void:
+# 	var grid_pos: Vector2i = get_grid_position_from_world_position(p_world_position) # c'est celle là qui marche pas
+# 	var clamped_world_pos: Vector2 = get_cell_world_position_from_grid_position(grid_pos)
+# 	cell_pointer.position = clamped_world_pos
 
 
 

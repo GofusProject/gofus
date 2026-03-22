@@ -94,12 +94,30 @@ func _on_animated_character_sprite_2d_clicked(animated_character_sprite_2d: Anim
 
 #region MapHandler
 
-func render_map(p_cell_visual_resources: Array[CellVisualResource]) -> void:
+func render_map(p_background_id, p_cell_visual_resources: Array[CellVisualResource]) -> void:
 	print("[Battlefield] Rendering map...")
 	var render_start_time : int = Time.get_ticks_usec()
+
 	_clear()
-	map_handler.render_map(p_cell_visual_resources)
+	if background != null and p_background_id != 0:
+		map_handler.rend_background(p_background_id)
+	for cell_visual_resource in p_cell_visual_resources:
+		map_handler.render_cell(
+			cell_visual_resource.id,
+			cell_visual_resource.x, cell_visual_resource.y,
+			cell_visual_resource.ground_slope,
+			cell_visual_resource.ground_tile_id,
+			cell_visual_resource.ground_tile_rot,
+			cell_visual_resource.is_ground_tile_flip,
+			cell_visual_resource.object1_id,
+			cell_visual_resource.object1_rot,
+			cell_visual_resource.is_object1_flip,
+			cell_visual_resource.object2_id,
+			cell_visual_resource.is_object2_interactive,
+			cell_visual_resource.is_object2_flip
+		)
 	# _draw_grid()
+
 	var render_end_time : int = Time.get_ticks_usec()
 	var render_time_sec : float = (render_end_time - render_start_time) / 1_000_000.0
 	print("[Battlefield] Map rendered (took %.2f sec)" % render_time_sec)

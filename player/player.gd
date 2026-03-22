@@ -36,8 +36,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		var grid_pos: Vector2i = Battlefield.map_handler.get_grid_position_from_world_position(Battlefield.get_local_mouse_position())
 		Ui.grid_label_x.text = "grid_x: %s" % grid_pos.x
 		Ui.grid_label_y.text = "grid_x: %s" % grid_pos.y
-		Battlefield.queue_redraw()
-		MapManager.highlight_cell()
+		# Battlefield.queue_redraw()
+		# MapManager.highlight_cell()
 
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_LEFT:

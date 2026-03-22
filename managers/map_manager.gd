@@ -39,7 +39,7 @@ func create_map(map_id: int) -> bool:
 		var cell_visual_resource = CellVisualResource.new(cell_resource)
 		cell_visual_resources.append(cell_visual_resource)
 
-	Battlefield.render_map(cell_visual_resources)
+	Battlefield.render_map(map_resource.background_id, cell_visual_resources)
 	return true
 
 
