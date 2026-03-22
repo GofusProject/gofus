@@ -99,7 +99,7 @@ func render_map() -> void:
 	var render_start_time : int = Time.get_ticks_usec()
 	_clear()
 	map_handler.render_map()
-	_draw_grid()
+	# _draw_grid()
 	var render_end_time : int = Time.get_ticks_usec()
 	var render_time_sec : float = (render_end_time - render_start_time) / 1_000_000.0
 	print("[Battlefield] Map rendered (took %.2f sec)" % render_time_sec)

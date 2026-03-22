@@ -40,11 +40,11 @@ func draw_grid() -> void:
 		# --- World positioning ---
 		var cell_world_x: float = col * Battlefield.CELL_WIDTH + x_offset
 		var cell_world_y: float = row * Battlefield.CELL_HALF_HEIGHT \
-			- Battlefield.LEVEL_HEIGHT * (cell_resource.ground_level - 7)
+			- Battlefield.LEVEL_HEIGHT * (cell_resource.cell_level - 7)
 
 		var cell_center := Vector2(cell_world_x, cell_world_y)
 
 		var cell: Cell = CELL_SCENE.instantiate()
-		cell.id = cell_resource.cell_id
+		cell.id = cell_resource.id
 		cell.position = cell_center
 		Battlefield.grid_layer.add_child(cell)

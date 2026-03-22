@@ -1,59 +1,66 @@
 extends Resource
 class_name CellResource
 
-var cell_id: int
+var id: int
 var x: float
 var y: float
 var grid_x: int
 var grid_y: int
-var walkable: bool
-var active: bool
+var is_walkable: bool
+var is_active: bool
 var line_of_sight: bool
-var ground_level: int
 var movement: int
-var ground_slope: int
-var layer_object2_num: int
-var layer_object2_interactive: bool
+var cell_level: int
+var cell_slope: int
+
 var object: int
-var layer_ground_num: int
-var layer_ground_rot: int
-var layer_ground_flip: bool
-var layer_object1_num: int
-var layer_object1_rot: int
-var layer_object1_flip: bool
-var layer_object2_flip: bool
-var layer_object_external: String
-var layer_object_external_interactive: bool
+
+var ground_tile_id: int
+var ground_tile_rot: int
+var is_ground_tile_flip: bool
+
+var object1_id: int
+var object1_rot: int
+var is_object1_flip: bool
+
+var object2_id: int
+var is_object2_interactive: bool
+var is_object2_flip: bool
+
+var object_external: String
+var is_object_external_interactive: bool
+
 var permanent_level: int
 var is_targetable: bool
-var raw_data: String
+var raw_data: String # For debug purpose
 
-func _init(p_cell_id: int, p_raw_data: String) -> void:
-	cell_id  = p_cell_id
+
+func _init(p_id: int, p_raw_data: String) -> void:
+	id  = p_id
 	raw_data = p_raw_data
 	
-	var cell_dict: Dictionary = Compressor.uncompress_cell_data(p_raw_data, p_cell_id)
+	var cell_dict: Dictionary = Compressor.uncompress_cell_data(p_raw_data, p_id)
 	if cell_dict.is_empty():
-		push_error("[CellResource] Failed to uncompress data for cell %d" % p_cell_id)
+		push_error("[CellResource] Failed to uncompress data for cell %d" % p_id)
 		return
 	
-	walkable                          = cell_dict["walkable"]
-	active                            = cell_dict["active"]
+	is_walkable                          = cell_dict["is_walkable"]
+	is_active                            = cell_dict["is_active"]
 	line_of_sight                     = cell_dict["line_of_sight"]
-	ground_level                      = cell_dict["ground_level"]
+	cell_level                      = cell_dict["cell_level"]
 	movement                          = cell_dict["movement"]
-	ground_slope                      = cell_dict["ground_slope"]
-	layer_object2_num                 = cell_dict["layer_object2_num"]
-	layer_object2_interactive         = cell_dict["layer_object2_interactive"]
+	cell_slope                      = cell_dict["cell_slope"]
+	object2_id                 			= cell_dict["object2_id"]
+	is_object2_interactive         = cell_dict["is_object2_interactive"]
 	object                            = cell_dict["object"]
-	layer_ground_num                  = cell_dict["layer_ground_num"]
-	layer_ground_rot                  = cell_dict["layer_ground_rot"]
-	layer_ground_flip                 = cell_dict["layer_ground_flip"]
-	layer_object1_num                 = cell_dict["layer_object1_num"]
-	layer_object1_rot                 = cell_dict["layer_object1_rot"]
-	layer_object1_flip                = cell_dict["layer_object1_flip"]
-	layer_object2_flip                = cell_dict["layer_object2_flip"]
-	layer_object_external             = cell_dict["layer_object_external"]
-	layer_object_external_interactive = cell_dict["layer_object_external_interactive"]
+	ground_tile_id                  = cell_dict["ground_tile_id"]
+	ground_tile_rot                  = cell_dict["ground_tile_rot"]
+	is_ground_tile_flip                 = cell_dict["is_ground_tile_flip"]
+	object1_id                 = cell_dict["object1_id"]
+	object1_rot                 = cell_dict["object1_rot"]
+	is_object1_flip                = cell_dict["is_object1_flip"]
+	is_object2_flip                = cell_dict["is_object2_flip"]
+	object_external             = cell_dict["object_external"]
+	is_object_external_interactive = cell_dict["is_object_external_interactive"]
 	permanent_level                   = cell_dict["permanent_level"]
 	is_targetable                     = cell_dict["is_targetable"]

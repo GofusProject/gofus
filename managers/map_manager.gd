@@ -4,6 +4,12 @@
 extends Node
 
 
+# Counters for statistics
+var ground_tiles: int = 0
+var object1_tiles: int = 0
+var object2_tiles: int = 0
+
+
 func _ready() -> void:
 	print("[MapManager] Ready")
 
