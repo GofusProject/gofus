@@ -186,17 +186,6 @@ func render_cell(
 	cell_id_label.position.y -= 6
 
 
-
-
-# ## Build full visual representation of the map
-# func render_map(p_cell_visual_resources: Array[CellVisualResource]) -> void:
-# 	# TO REMOVE #
-# 	cell_pointer = Sprite2D.new()
-# 	cell_pointer.texture = load("res://assets/graphics/gfx/cell_pointer.png")
-# 	cell_pointer.z_index = 1
-# 	Battlefield.ground_layer.add_child(cell_pointer)
-	
-
 func clear_map() -> void:
 	# Clear background
 	if Battlefield.background != null:

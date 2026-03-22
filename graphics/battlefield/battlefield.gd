@@ -36,7 +36,6 @@ signal animated_character_sprite_2d_clicked(animated_character_sprite_2d: Animat
 ## Initializes dependencies and event listening
 func _ready() -> void:
 
-
 	map_handler = MapHandler.new()
 	character_sprite_handler = CharacterSpriteHandler.new()
 	over_head_handler = OverHeadHandler.new()
@@ -123,7 +122,11 @@ func render_map(p_background_id, p_cell_visual_resources: Array[CellVisualResour
 			cell_visual_resource.object2_texture,
 			cell_visual_resource.object2_offset
 		)
-	# _draw_grid()
+
+		grid_handler.render_cell(
+			cell_visual_resource.x, cell_visual_resource.y,
+			cell_visual_resource.ground_slope
+		)
 
 	var render_end_time : int = Time.get_ticks_usec()
 	var render_time_sec : float = (render_end_time - render_start_time) / 1_000_000.0
@@ -152,14 +155,6 @@ func display_cell_ids() -> void:
 #endregion
 
 
-#region GridHandler
-
-func _draw_grid() -> void:
-	grid_handler.draw_grid()
-
-#endregion
-
-
 #region OverHeadHandler
 
 func show_character_over_head(p_character_id: int, p_name: String) -> void:
@@ -178,3 +173,4 @@ func _clear() -> void:
 	hide_character_over_head()
 	clear_map()
 	clear_character_sprites()
+	grid_handler.clear()

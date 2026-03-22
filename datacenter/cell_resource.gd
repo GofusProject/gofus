@@ -10,9 +10,9 @@ var is_walkable: bool
 var is_active: bool
 var line_of_sight: bool
 var movement: int
-var cell_level: int
+var cell_level: int # From 0 to 7 I think. Uused at MapResource init to determine world pos
 
-var ground_slope: int
+var ground_slope: int # slope_id, used for example in grid_handler.SLOPE_POINTS
 var ground_tile_id: int
 var ground_tile_rot: int
 var is_ground_tile_flip: bool

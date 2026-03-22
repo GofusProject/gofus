@@ -33,5 +33,6 @@ y_sort_enabled = true
 z_index = 10
 
 [node name="GridLayer" type="Node2D" parent="."]
+modulate = Color(1, 1, 1, 0.3019608)
 z_index = 10
 script = ExtResource("2_7hm7j")

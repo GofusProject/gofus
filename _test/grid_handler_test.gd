@@ -3,7 +3,7 @@ extends Node2D
 
 ## Isometric Grid Drawer
 ## Replicates the cell loop positioning logic, drawing the grid as diamond tiles.
-
+@onready var draw_test: Node2D = $'../DrawTest'
 # --- Constants (mirror your Battlefield constants) ---
 const CELL_WIDTH: float = 64.0
 const CELL_HALF_WIDTH: float = CELL_WIDTH / 2.0
