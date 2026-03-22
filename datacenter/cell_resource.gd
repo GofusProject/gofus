@@ -65,5 +65,3 @@ func _init(p_id: int, p_raw_data: String) -> void:
 	is_object_external_interactive = cell_dict["is_object_external_interactive"]
 	permanent_level                   = cell_dict["permanent_level"]
 	is_targetable                     = cell_dict["is_targetable"]
-
-	print("[CellResrouce] is_active: ", is_active)

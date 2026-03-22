@@ -3,7 +3,8 @@ extends Node2D
 
 
 const CELL_SCENE: PackedScene = preload("res://graphics/battlefield/scenes/Cell.tscn")
-const SLOPE_POINTS: Array = [
+var slope_points_scaling: int = 2 # ! They are multiplied by 2 to match asset scaling 
+const SLOPE_POINTS: Array = [ 
 	[],
 	[[-26.5,0],[0,-13.5],[26.5,0],[0,13.5]],
 	[[-26.5,-20],[0,-13.5],[26.5,0],[0,13.5]],
@@ -36,7 +37,7 @@ func render_cell(world_x: float, world_y: float, ground_slope: int, movement: in
 	var raw = SLOPE_POINTS[ground_slope]
 	var points = PackedVector2Array()
 	for p in raw:
-		points.append(Vector2(p[0] * 2, p[1] * 2))
+		points.append(Vector2(p[0] * slope_points_scaling, p[1] * slope_points_scaling))
 	visual_cell.points = points
 	Battlefield.grid_layer.add_child(visual_cell)
 
