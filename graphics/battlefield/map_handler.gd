@@ -106,7 +106,7 @@ func render_background(p_background_id: int) -> void:
 ## Called by the Battlefield to render the all map
 func render_cell(
 	id: int,
-	world_x: int, world_y: int,
+	world_x: float, world_y: float,
 	grid_x: int, grid_y: int,
 	ground_slope: int,
 	ground_tile_id: int,
