@@ -1,48 +1,18 @@
 [gd_scene load_steps=4 format=3 uid="uid://dro2ypphiyigq"]
 
 [ext_resource type="Script" uid="uid://d1jvr3vhxdplm" path="res://_test/test.gd" id="1_5kc3e"]
-[ext_resource type="Texture2D" uid="uid://gou8bvl717ge" path="res://_test/UI_Banner.png" id="2_ss573"]
-[ext_resource type="Script" uid="uid://b8u2b2105arey" path="res://_test/grid_handler_test.gd" id="3_m74j2"]
+[ext_resource type="Script" uid="uid://dpoviwyogrtl4" path="res://graphics/battlefield/pathfinding_handler.gd" id="3_cxykl"]
+[ext_resource type="PackedScene" uid="uid://c8evu7drilu7" path="res://graphics/battlefield/scenes/Battlefield.tscn" id="3_m74j2"]
 
 [node name="Test" type="Node2D" node_paths=PackedStringArray("draw_test")]
 script = ExtResource("1_5kc3e")
-draw_test = NodePath("DrawTest")
+draw_test = NodePath("GridLayer")
+grid_size = Vector2i(16, 30)
 
-[node name="UI" type="Control" parent="."]
-z_index = 6
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
+[node name="PathfindingHandler" type="Node2D" parent="."]
+script = ExtResource("3_cxykl")
+metadata/_custom_type_script = "uid://dpoviwyogrtl4"
 
-[node name="TextureRect" type="TextureRect" parent="UI"]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = -12.0
-offset_top = -261.0
-offset_right = 1482.2748
-grow_vertical = 0
-mouse_filter = 2
-texture = ExtResource("2_ss573")
+[node name="GridLayer" type="Node2D" parent="."]
 
-[node name="RichTextLabel" type="RichTextLabel" parent="."]
-offset_right = 381.0
-offset_bottom = 148.0
-fit_content = true
-
-[node name="Sprite2D" type="Sprite2D" parent="."]
-
-[node name="Node2D" type="Node2D" parent="."]
-script = ExtResource("3_m74j2")
-cell_count = 115
-
-[node name="DrawTest" type="Node2D" parent="."]
-
-[node name="Area2D" type="Area2D" parent="."]
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D"]
+[node name="Battlefield" parent="." instance=ExtResource("3_m74j2")]

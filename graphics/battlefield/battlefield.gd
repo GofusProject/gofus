@@ -12,6 +12,7 @@ var character_sprite_handler: CharacterSpriteHandler
 var over_head_handler: OverHeadHandler
 var grid_handler: GridHandler
 var cell_interaction_handler: CellInteractionHandler
+var pathfinding_handler: PathfindingHandler
 
 # Cell
 const CELL_WIDTH: int = 106
@@ -70,6 +71,7 @@ func _ready() -> void:
 	over_head_handler = OverHeadHandler.new()
 	grid_handler = GridHandler.new()
 	cell_interaction_handler = CellInteractionHandler.new()
+	pathfinding_handler = PathfindingHandler.new()
 
 	background = get_node_or_null("Background")
 	ground_layer = get_node_or_null("GroundLayer")
@@ -132,6 +134,7 @@ func render_map(p_background_id, p_cell_resources: Array[CellResource]) -> void:
 		map_handler.render_cell(
 			cell_resource.id,
 			cell_resource.x, cell_resource.y,
+			cell_resource.grid_x, cell_resource.grid_y,
 			cell_resource.ground_slope,
 			cell_resource.ground_tile_id,
 			cell_resource.ground_tile_rot,
@@ -189,6 +192,15 @@ func display_cell_ids() -> void:
 	map_handler.display_cell_ids()
 
 #endregion
+
+
+#region PathfindingHandler
+
+func _setup_astar_2d_grid() -> void:
+	pass
+
+#endregion
+
 
 
 #region OverHeadHandler

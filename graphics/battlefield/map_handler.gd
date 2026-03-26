@@ -68,6 +68,8 @@ func _get_cell_id_label() -> Label:
 		label.add_theme_color_override("font_color", Color.WHITE)
 		label.add_theme_color_override("font_outline_color", Color.BLACK)
 		label.add_theme_constant_override("outline_size", 2)
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		Battlefield.cell_ids_layer.add_child(label)
 		_label_pool.append(label)
 		_label_pool_index += 1
@@ -101,9 +103,11 @@ func render_background(p_background_id: int) -> void:
 	Battlefield.background.texture = AssetLoader.get_background_texture(p_background_id)
 
 
+## Called by the Battlefield to render the all map
 func render_cell(
 	id: int,
 	world_x: int, world_y: int,
+	grid_x: int, grid_y: int,
 	ground_slope: int,
 	ground_tile_id: int,
 	ground_tile_rot: int,
@@ -183,10 +187,12 @@ func render_cell(
 		
 	# Cell ID label
 	var cell_id_label: Label = _get_cell_id_label()
-	cell_id_label.text = str(id)
-	cell_id_label.position = Vector2(world_x, world_y)
-	cell_id_label.position.x -= 10  # Approximate centering offset
-	cell_id_label.position.y -= 6
+	cell_id_label.text = str(id) + "\n" + str(Vector2i(grid_x, grid_y))
+
+	# Force Godot to compute the minimum size right now
+	cell_id_label.reset_size()  # or call size = cell_id_label.get_minimum_size()
+	var label_size: Vector2 = cell_id_label.get_minimum_size()
+	cell_id_label.position = Vector2(world_x, world_y) - label_size / 2
 
 
 func clear_map() -> void:
