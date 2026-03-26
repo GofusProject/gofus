@@ -2,16 +2,45 @@
 extends Node2D
 
 
+
+signal cell_clicked(cell_id: int)
+signal cell_hovered(cell_id: int)
+signal cell_unhovered(cell_id: int)
+
 var map_handler: MapHandler
 var character_sprite_handler: CharacterSpriteHandler
 var over_head_handler: OverHeadHandler
 var grid_handler: GridHandler
+var cell_interaction_handler: CellInteractionHandler
+var pathfinding_handler: PathfindingHandler
 
+# Cell
 const CELL_WIDTH: int = 106
 const CELL_HALF_WIDTH: float = 53
 const CELL_HEIGHT: int = 54  # Half-height for isometric
 const CELL_HALF_HEIGHT: float = 27  # Half-height for isometric
 const LEVEL_HEIGHT: int = 40  # Vertical offset per elevation level
+
+# Slope
+var slope_points_scaling: int = 2 # ! They are multiplied by 2 to match asset scaling 
+const SLOPE_POINTS: Array = [ 
+	[],
+	[[-26.5,0],[0,-13.5],[26.5,0],[0,13.5]],
+	[[-26.5,-20],[0,-13.5],[26.5,0],[0,13.5]],
+	[[-26.5,0],[0,-33.5],[26.5,0],[0,13.5]],
+	[[-26.5,-20],[0,-33.5],[26.5,0],[0,13.5]],
+	[[-26.5,0],[0,-13.5],[26.5,-20],[0,13.5]],
+	[[-26.5,-20],[0,-13.5],[26.5,-20],[0,13.5]],
+	[[-26.5,0],[0,-33.5],[26.5,-20],[0,13.5]],
+	[[-26.5,-20],[0,-33.5],[26.5,-20],[0,13.5]],
+	[[-26.5,0],[0,-13.5],[26.5,0],[0,-6.5]],
+	[[-26.5,-20],[0,-13.5],[26.5,0],[0,-6.5]],
+	[[-26.5,0],[0,-33.5],[26.5,0],[0,-6.5]],
+	[[-26.5,-20],[0,-33.5],[26.5,0],[0,-6.5]],
+	[[-26.5,0],[0,-13.5],[26.5,-20],[0,-6.5]],
+	[[-26.5,-20],[0,-13.5],[26.5,-20],[0,-6.5]],
+	[[-26.5,0],[0,-33.5],[26.5,-20],[0,-6.5]]
+]
 
 # Layers
 var background: Sprite2D
@@ -23,25 +52,26 @@ var cell_ids_layer: Node2D
 var character_sprites: Node2D
 var over_head_layer: Node2D
 var grid_layer: Node2D
+var cell_interaction_layer: Node2D
 
 const ANIMATED_CHARACTER_SPRITE_2D_SCENE: PackedScene = preload("res://graphics/battlefield/scenes/AnimatedCharacterSprite2D.tscn")
 const TEXT_OVER_HEAD_SCENE: PackedScene = preload("res://graphics/battlefield/scenes/TextOverHead.tscn")
-
 
 signal animated_character_sprite_2d_hovered(animated_character_sprite_2d: AnimatedCharacterSprite2D)
 signal animated_character_sprite_2d_unhovered(animated_character_sprite_2d: AnimatedCharacterSprite2D)
 signal animated_character_sprite_2d_clicked(animated_character_sprite_2d: AnimatedCharacterSprite2D)
 
 
+
 ## Initializes dependencies and event listening
 func _ready() -> void:
-
 
 	map_handler = MapHandler.new()
 	character_sprite_handler = CharacterSpriteHandler.new()
 	over_head_handler = OverHeadHandler.new()
 	grid_handler = GridHandler.new()
-
+	cell_interaction_handler = CellInteractionHandler.new()
+	pathfinding_handler = PathfindingHandler.new()
 
 	background = get_node_or_null("Background")
 	ground_layer = get_node_or_null("GroundLayer")
@@ -52,10 +82,9 @@ func _ready() -> void:
 	character_sprites = get_node_or_null("CharacterSprites")
 	over_head_layer = get_node_or_null("OverHeadLayer")
 	grid_layer = get_node_or_null("GridLayer")
+	cell_interaction_layer = get_node_or_null("CellInteractionLayer")
 
 	background.centered = false
-
-
 
 
 #region CharacterSpriteHandler
@@ -94,36 +123,49 @@ func _on_animated_character_sprite_2d_clicked(animated_character_sprite_2d: Anim
 
 #region MapHandler
 
-func render_map(p_background_id, p_cell_visual_resources: Array[CellVisualResource]) -> void:
+func render_map(p_background_id, p_cell_resources: Array[CellResource]) -> void:
 	print("[Battlefield] Rendering map...")
 	var render_start_time : int = Time.get_ticks_usec()
 
 	_clear()
 	if background != null and p_background_id != 0:
 		map_handler.render_background(p_background_id)
-	for cell_visual_resource in p_cell_visual_resources:
+	for cell_resource in p_cell_resources:
 		map_handler.render_cell(
-			cell_visual_resource.id,
-			cell_visual_resource.x, cell_visual_resource.y,
-			cell_visual_resource.ground_slope,
-			cell_visual_resource.ground_tile_id,
-			cell_visual_resource.ground_tile_rot,
-			cell_visual_resource.is_ground_tile_flip,
-			cell_visual_resource.ground_texture,
-			cell_visual_resource.ground_hframes,
-			cell_visual_resource.ground_offset,
-			cell_visual_resource.object1_id,
-			cell_visual_resource.object1_rot,
-			cell_visual_resource.is_object1_flip,
-			cell_visual_resource.object1_texture,
-			cell_visual_resource.object1_offset,
-			cell_visual_resource.object2_id,
-			cell_visual_resource.is_object2_interactive,
-			cell_visual_resource.is_object2_flip,
-			cell_visual_resource.object2_texture,
-			cell_visual_resource.object2_offset
+			cell_resource.id,
+			cell_resource.x, cell_resource.y,
+			cell_resource.grid_x, cell_resource.grid_y,
+			cell_resource.ground_slope,
+			cell_resource.ground_tile_id,
+			cell_resource.ground_tile_rot,
+			cell_resource.is_ground_tile_flip,
+			cell_resource.ground_texture,
+			cell_resource.ground_hframes,
+			cell_resource.ground_offset,
+			cell_resource.object1_id,
+			cell_resource.object1_rot,
+			cell_resource.is_object1_flip,
+			cell_resource.object1_texture,
+			cell_resource.object1_offset,
+			cell_resource.object2_id,
+			cell_resource.is_object2_interactive,
+			cell_resource.is_object2_flip,
+			cell_resource.object2_texture,
+			cell_resource.object2_offset
 		)
-	# _draw_grid()
+
+		grid_handler.render_cell(
+			cell_resource.x, cell_resource.y,
+			cell_resource.ground_slope,
+			cell_resource.movement
+		)
+
+		cell_interaction_handler.create_cell_area(
+			cell_resource.x, cell_resource.y,
+			cell_resource.ground_slope,
+			cell_resource.movement,
+			cell_resource.id
+		)
 
 	var render_end_time : int = Time.get_ticks_usec()
 	var render_time_sec : float = (render_end_time - render_start_time) / 1_000_000.0
@@ -152,12 +194,13 @@ func display_cell_ids() -> void:
 #endregion
 
 
-#region GridHandler
+#region PathfindingHandler
 
-func _draw_grid() -> void:
-	grid_handler.draw_grid()
+func _setup_astar_2d_grid() -> void:
+	pass
 
 #endregion
+
 
 
 #region OverHeadHandler
@@ -178,3 +221,5 @@ func _clear() -> void:
 	hide_character_over_head()
 	clear_map()
 	clear_character_sprites()
+	grid_handler.clear()
+	cell_interaction_handler.clear()

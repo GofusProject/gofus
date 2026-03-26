@@ -87,6 +87,10 @@ func _init(map_dict: Dictionary) -> void:
 				max_col += 1
 		else:
 			col += 1
+
+		# Grid position
+		cell_resource.grid_x = col
+		cell_resource.grid_y = row
   
 		# World positioning
 		var cell_world_x: float = col * Battlefield.CELL_WIDTH + x_offset
@@ -98,6 +102,7 @@ func _init(map_dict: Dictionary) -> void:
 		cell_resource.y = cell_position.y
 
 		if not cell_resource.is_active:
+			print("[MapResource] Cell %s is not active" % cell_resource.id)
 			continue
 		
 		active_cells += 1

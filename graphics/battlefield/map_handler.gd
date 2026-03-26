@@ -68,6 +68,8 @@ func _get_cell_id_label() -> Label:
 		label.add_theme_color_override("font_color", Color.WHITE)
 		label.add_theme_color_override("font_outline_color", Color.BLACK)
 		label.add_theme_constant_override("outline_size", 2)
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		Battlefield.cell_ids_layer.add_child(label)
 		_label_pool.append(label)
 		_label_pool_index += 1
@@ -101,9 +103,11 @@ func render_background(p_background_id: int) -> void:
 	Battlefield.background.texture = AssetLoader.get_background_texture(p_background_id)
 
 
+## Called by the Battlefield to render the all map
 func render_cell(
 	id: int,
 	world_x: int, world_y: int,
+	grid_x: int, grid_y: int,
 	ground_slope: int,
 	ground_tile_id: int,
 	ground_tile_rot: int,
@@ -127,6 +131,7 @@ func render_cell(
 	if ground_tile_id != 0:
 		# ground_tiles += 1
 		var ground_sprite: Sprite2D = _get_ground_sprite2D()
+		ground_sprite.name = "GroundSprite" + str(id)
 		
 		ground_sprite.hframes = ground_hframes
 		ground_sprite.texture = ground_texture
@@ -148,7 +153,8 @@ func render_cell(
 	if object1_id != 0:
 		# object1_tiles += 1
 		var object1_sprite: Sprite2D = _get_object1_sprite2D()
-		
+		object1_sprite.name = "Object1Sprite" + str(id)
+
 		# Reset sprite properties
 		object1_sprite.hframes = 1  # Reset frame count
 		object1_sprite.texture = object1_texture
@@ -168,6 +174,7 @@ func render_cell(
 	if object2_id != 0:
 		# object2_tiles += 1
 		var object2_sprite: Sprite2D = _get_object2_sprite2D()
+		object2_sprite.name = "Object2Sprite" + str(id)
 		
 		# Reset sprite properties
 		object2_sprite.hframes = 1  # Reset frame count
@@ -180,22 +187,13 @@ func render_cell(
 		
 	# Cell ID label
 	var cell_id_label: Label = _get_cell_id_label()
-	cell_id_label.text = str(id)
-	cell_id_label.position = Vector2(world_x, world_y)
-	cell_id_label.position.x -= 10  # Approximate centering offset
-	cell_id_label.position.y -= 6
+	cell_id_label.text = str(id) + "\n" + str(Vector2i(grid_x, grid_y))
 
+	# Force Godot to compute the minimum size right now
+	cell_id_label.reset_size()  # or call size = cell_id_label.get_minimum_size()
+	var label_size: Vector2 = cell_id_label.get_minimum_size()
+	cell_id_label.position = Vector2(world_x, world_y) - label_size / 2
 
-
-
-# ## Build full visual representation of the map
-# func render_map(p_cell_visual_resources: Array[CellVisualResource]) -> void:
-# 	# TO REMOVE #
-# 	cell_pointer = Sprite2D.new()
-# 	cell_pointer.texture = load("res://assets/graphics/gfx/cell_pointer.png")
-# 	cell_pointer.z_index = 1
-# 	Battlefield.ground_layer.add_child(cell_pointer)
-	
 
 func clear_map() -> void:
 	# Clear background
@@ -207,19 +205,19 @@ func clear_map() -> void:
 
 
 ## cell world pos -> grid pos / DOESNT WORK
-func get_grid_position_from_world_position(world_pos: Vector2) -> Vector2i:
-	# With ground_level = 7, the Y offset cancels out:
-	# cell_world_y = row * CELL_HALF_HEIGHT - LEVEL_HEIGHT * (7 - 7)
-	#              = row * CELL_HALF_HEIGHT
-	var row: int = roundi(world_pos.y / Battlefield.CELL_HALF_HEIGHT)
+# func get_grid_position_from_world_position(world_pos: Vector2) -> Vector2i:
+# 	# With ground_level = 7, the Y offset cancels out:
+# 	# cell_world_y = row * CELL_HALF_HEIGHT - LEVEL_HEIGHT * (7 - 7)
+# 	#              = row * CELL_HALF_HEIGHT
+# 	var row: int = roundi(world_pos.y / Battlefield.CELL_HALF_HEIGHT)
 
-	# Determine x_offset for this row using the same isometric alternating logic.
-	# Even rows have x_offset = 0, odd rows have x_offset = CELL_HALF_WIDTH.
-	var x_offset: float = Battlefield.CELL_HALF_WIDTH if row % 2 == 1 else 0.0
+# 	# Determine x_offset for this row using the same isometric alternating logic.
+# 	# Even rows have x_offset = 0, odd rows have x_offset = CELL_HALF_WIDTH.
+# 	var x_offset: float = Battlefield.CELL_HALF_WIDTH if row % 2 == 1 else 0.0
 
-	var col: int = roundi((world_pos.x - x_offset) / Battlefield.CELL_WIDTH)
+# 	var col: int = roundi((world_pos.x - x_offset) / Battlefield.CELL_WIDTH)
 
-	return Vector2i(col, row)
+# 	return Vector2i(col, row)
 
 
 ## grid pos -> cell world pos

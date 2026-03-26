@@ -16,7 +16,7 @@ var buttons: Array[RichTextButton] = [] # to remove
 
 
 func initialize() -> void:
-	npc_dialogue_cross_button.pressed.connect(func(): cross_button_pressed.emit(ActionResource.new(ActionResource.DialogActionId.LEAVE)))
+	npc_dialogue_cross_button.pressed.connect(func(): cross_button_pressed.emit(ActionResource.new(ActionResource.ActionId.LEAVE)))
 	
 
 func update(p_npc_name: String, p_npc_dialog: String, p_player_responses_text: Array[String], p_responses_action_resources: Array[ActionResource]):
@@ -33,7 +33,7 @@ func update(p_npc_name: String, p_npc_dialog: String, p_player_responses_text: A
 		rich_text_button.pressed.connect(
 			func(): reponse_button_pressed.emit(
 				ActionResource.new(
-					ActionResource.DialogActionId.RESPOND_TO_NPC,
+					ActionResource.ActionId.RESPOND_TO_NPC,
 					p_responses_action_resources[i].action_id,
 					p_responses_action_resources[i].param_1)
 			)

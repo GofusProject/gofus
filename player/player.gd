@@ -16,33 +16,18 @@ enum NpcInteractions {
 var coloring_helper: ColoringHelper
 var selected_npc_id: int = -1
 
-@onready var dialog_actions: Actions = Actions.new()
+@onready var actions: Actions = Actions.new()
 
 
 
 func _ready() -> void:
 	Ui.interaction.connect(func(p_action_resource): execute_action(p_action_resource))
 	Ui.gofus_popup_menu_button_pressed.connect(_on_gofus_popup_menu_button_pressed) # to remove
-	# Ui.npc_dialog_reponse_button_pressed.connect(_on_npc_dialog_reponse_button_pressed) # to remove
-	# Ui.npc_dialog_cross_button_pressed.connect(_on_npc_dialog_cross_button_pressed) # to remove
+	Battlefield.cell_clicked.connect(_on_battlefield_cell_clicked)
 	CharactersManager.character_hovered.connect(_on_character_hovered)		# TODO: Battlfield should relay mouse input here
 	CharactersManager.character_unhovered.connect(_on_character_unhovered)
 	CharactersManager.character_clicked.connect(_on_character_clicked)
 	coloring_helper = ColoringHelper.new()
-
-
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion:
-		var grid_pos: Vector2i = Battlefield.map_handler.get_grid_position_from_world_position(Battlefield.get_local_mouse_position())
-		Ui.grid_label_x.text = "grid_x: %s" % grid_pos.x
-		Ui.grid_label_y.text = "grid_x: %s" % grid_pos.y
-		# Battlefield.queue_redraw()
-		# MapManager.highlight_cell()
-
-	if event is InputEventMouseButton and event.pressed:
-		if event.button_index == MOUSE_BUTTON_LEFT:
-			print("MapManager.get_cell_id_from_mouse_position(): ", str(MapManager.get_cell_id_from_mouse_position()))
-			CharactersManager.close_character_popup_menu()
 
 
 func execute_action(action_resource: ActionResource) -> void:
@@ -50,18 +35,18 @@ func execute_action(action_resource: ActionResource) -> void:
 	# 	return
 
 	match action_resource.action_id:
-		ActionResource.DialogActionId.START:
-			dialog_actions.start_dialog_with_npc(selected_npc_id)
-		ActionResource.DialogActionId.RESPOND_TO_NPC:
-			dialog_actions.respond_to_npc(action_resource.param_1, action_resource.param_2) # param_1 = npc_dialog_player_response_id
-		ActionResource.DialogActionId.CONTINUE_DIALOG:
-			dialog_actions.continue_dialog(action_resource.param_1) # param_1 = npc_dialog_question_id
-		ActionResource.DialogActionId.LEAVE:
-			dialog_actions.leave_dialog()
+		ActionResource.ActionId.START:
+			actions.start_dialog_with_npc(selected_npc_id)
+		ActionResource.ActionId.RESPOND_TO_NPC:
+			actions.respond_to_npc(action_resource.param_1, action_resource.param_2) # param_1 = npc_dialog_player_response_id
+		ActionResource.ActionId.CONTINUE_DIALOG:
+			actions.continue_dialog(action_resource.param_1) # param_1 = npc_dialog_question_id
+		ActionResource.ActionId.LEAVE:
+			actions.leave_dialog()
 			selected_npc_id = -1
 		_:
 			printerr("[Player] Action %s not handled !" % action_resource.action_id )
-			dialog_actions.leave_dialog()
+			actions.leave_dialog()
 
 
 
@@ -81,6 +66,16 @@ func _on_character_clicked(character_id: int) -> void:
 	CharactersManager.open_character_popup_menu(character_id)
 	selected_npc_id = character_id
 
+
+func _on_battlefield_cell_clicked(p_cell_id: int) -> void:
+	execute_action( ActionResource.new(
+			ActionResource.ActionId.MOVE_CHARACTER_ON_MAP, p_cell_id
+		)
+	)
+
+
+
+
 # endregion
 
 
@@ -93,7 +88,7 @@ func _on_gofus_popup_menu_button_pressed(npc_interaction_id: int) -> void:
 		NpcInteractions.TRADE:
 			print("TRADE")
 		NpcInteractions.TALK:
-			dialog_actions.start_dialog_with_npc(selected_npc_id)
+			actions.start_dialog_with_npc(selected_npc_id)
 		NpcInteractions.DROP_PICK_UP_PET:
 			print("DROP_PICK_UP_PET")
 		NpcInteractions.SELL:
@@ -109,12 +104,12 @@ func _on_gofus_popup_menu_button_pressed(npc_interaction_id: int) -> void:
 
 # func _on_npc_dialog_reponse_button_pressed(p_player_response_id: int):
 # 	print("[Player] p_player_response_id ", p_player_response_id)
-# 	dialog_actions.response(p_player_response_id)
+# 	actions.response(p_player_response_id)
 # 	selected_npc_id = -1
 
 
 # func _on_npc_dialog_cross_button_pressed() -> void:
-# 	dialog_actions.leave()
+# 	actions.leave()
 # 	selected_npc_id = -1
 
 #endregion
