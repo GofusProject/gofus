@@ -5,7 +5,7 @@
 extends Node
 
 
-var current_map_resource: MapResource = null
+var map_resource: MapResource = null
 var _character_resources: Array[CharacterResource] = []
 var dialog_resource: DialogResource = null
 var playable_character_resource = PlayablePlayerResource # equivalent of LocalPlayer.as
@@ -19,17 +19,17 @@ func _ready() -> void:
 	print("[Datacenter] Ready")
 
 
-## Replace current_map_resource with the new MapResource
-## Flow: MapResource → stored as current_map_resource
+## Replace map_resource with the new MapResource
+## Flow: MapResource → stored as map_resource
 func set_current_map_resource(map: MapResource) -> void:
-	current_map_resource = map
+	map_resource = map
 	print("[Datacenter] Current map set to: %d" % map.map_id)
 	map_changed.emit(map)
 
 ## Return current MapResource
 ## Flow: Returns current MapResource
 func get_current_map() -> MapResource:
-	return current_map_resource
+	return map_resource
 
 
 ## Return character id

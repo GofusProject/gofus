@@ -230,7 +230,7 @@ func get_cell_world_position_from_grid_position(grid_pos: Vector2i) -> Vector2:
 
 ## cell id -> cell world pos
 func get_cell_world_position_from_cell_id(p_cell_id: int) -> Vector2:
-	var cell_resource: CellResource = Datacenter.current_map_resource.cell_resources[p_cell_id]
+	var cell_resource: CellResource = Datacenter.map_resource.cell_resources[p_cell_id]
 	var world_pos = Vector2(cell_resource.x, cell_resource.y)
 	if world_pos == Vector2.ZERO:
 		push_error("[MapHandler] World position cound not be retrieved for cell id ", str(p_cell_id))

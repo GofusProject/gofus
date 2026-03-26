@@ -44,6 +44,8 @@ func execute_action(action_resource: ActionResource) -> void:
 		ActionResource.ActionId.LEAVE:
 			actions.leave_dialog()
 			selected_npc_id = -1
+		ActionResource.ActionId.MOVE_CHARACTER_ON_MAP:
+			actions.move_playable_character_on_map(action_resource.param_1)
 		_:
 			printerr("[Player] Action %s not handled !" % action_resource.action_id )
 			actions.leave_dialog()

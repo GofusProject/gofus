@@ -78,15 +78,27 @@ func create_map(map_id: int) -> bool:
 
 
 func clear_map() -> void:
-	Datacenter.current_map_resource = null
+	Datacenter.map_resource = null
 	Battlefield.clear_map()
 
 
-func get_cell_id_from_mouse_position() -> int:
-	var map_resource = Datacenter.current_map_resource
-	var cell_resources: Array[CellResource] = map_resource.cell_resources
+func find_path(p_from_cell_id: int, p_to_cell_id: int) -> Array[Vector2]:
+	var map_resource: MapResource = Datacenter.map_resource
+	var from_cell_grid_pos: Vector2i = Vector2i.ZERO
+	var to_cell_grid_pos: Vector2i = Vector2i.ZERO
 
-	return Battlefield.get_cell_id_from_world_position(cell_resources)
+	for cell_resource: CellResource in map_resource.cell_resources:
+		if p_from_cell_id == cell_resource.id:
+			from_cell_grid_pos = Vector2i(cell_resource.grid_x, cell_resource.grid_y)
+		if p_to_cell_id == cell_resource.id:
+			to_cell_grid_pos = Vector2i(cell_resource.grid_x, cell_resource.grid_y)
+
+	if from_cell_grid_pos == Vector2i.ZERO or to_cell_grid_pos == Vector2i.ZERO:
+		printerr("[MapManager] Could not find path (from cell ids: %s, to: %s)" % [p_from_cell_id, p_to_cell_id])
+
+	print("[MapManager] From cell %d (grid pos %s) to cell %d (grid pos %s)" % [p_from_cell_id, from_cell_grid_pos, p_to_cell_id, to_cell_grid_pos])
+	# Battlefield.find_grid_path()
+	return []
 
 
 func highlight_cell() -> void:
@@ -96,9 +108,11 @@ func highlight_cell() -> void:
 func _on_cell_clicked(cell_id: int) -> void:
 	print("[MapManager] Cell clicked: %d" % cell_id)
 
+
 func _on_cell_hovered(cell_id: int) -> void:
 	# print("[MapManager] Cell hovered: %d" % cell_id)
 	pass
+
 
 func _on_cell_unhovered(cell_id: int) -> void:
 	# print("[MapManager] Cell unhovered: %d" % cell_id)
