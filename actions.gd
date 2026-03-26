@@ -24,7 +24,7 @@ func start_dialog_with_npc(p_npc_id: int):
 func respond_to_npc(p_action_id: int, p_param: int):
 	var action_resource = ActionResource.new(p_action_id, p_param)
 	Player.execute_action(action_resource)
-	if not p_action_id == ActionResource.DialogActionId.CONTINUE_DIALOG:
+	if not p_action_id == ActionResource.ActionId.CONTINUE_DIALOG:
 		DialogManager.leave_dialog()
 
 
@@ -35,3 +35,9 @@ func continue_dialog(p_dialog_question_id) -> void:
 
 func leave_dialog():
 	DialogManager.leave_dialog()
+
+
+func move_playable_character_on_map(to_cell_id: int):
+	var character_resource: CharacterResource = CharactersManager.get_playable_character_resource()
+	var path: Array[Vector2] = MapManager.find_path(character_resource.cell_id, to_cell_id)
+	CharactersManager.move_character(character_resource.id, path)
