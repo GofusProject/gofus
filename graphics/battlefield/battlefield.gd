@@ -196,8 +196,12 @@ func display_cell_ids() -> void:
 
 #region PathfindingHandler
 
-func _setup_astar_2d_grid() -> void:
-	pass
+func _setup_astar_2d_grid(p_grid_width: int, p_grid_height: int) -> void:
+	pathfinding_handler.setup_astar_2d_grid(p_grid_width, p_grid_height)
+
+
+func find_grid_path(p_from_cell_grid_pos: Vector2i, p_to_cell_grid_pos: Vector2i) -> Array[Vector2i]:
+	return pathfinding_handler.find_grid_path(p_from_cell_grid_pos, p_to_cell_grid_pos)
 
 #endregion
 

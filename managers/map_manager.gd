@@ -95,9 +95,12 @@ func find_path(p_from_cell_id: int, p_to_cell_id: int) -> Array[Vector2]:
 
 	if from_cell_grid_pos == Vector2i.ZERO or to_cell_grid_pos == Vector2i.ZERO:
 		printerr("[MapManager] Could not find path (from cell ids: %s, to: %s)" % [p_from_cell_id, p_to_cell_id])
+		return []
 
 	print("[MapManager] From cell %d (grid pos %s) to cell %d (grid pos %s)" % [p_from_cell_id, from_cell_grid_pos, p_to_cell_id, to_cell_grid_pos])
-	# Battlefield.find_grid_path()
+	Battlefield.find_grid_path(from_cell_grid_pos, to_cell_grid_pos)
+
+	# TO DO, retrieve array cell by grid pos and get world position
 	return []
 
 
