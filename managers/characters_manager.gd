@@ -74,6 +74,9 @@ func clear_characters() -> void:
 	Ui.close_character_popup_menu()
 
 
+func get_playable_character_resource() -> PlayablePlayerResource:
+	return Datacenter.playable_character_resource
+
 
 #region UI
 
