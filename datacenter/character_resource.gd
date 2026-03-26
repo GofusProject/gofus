@@ -7,7 +7,7 @@
 class_name CharacterResource
 extends Resource
 
-var id: int # need to be generated (can't use npc id as it could conflict with monster id, player id...)
+var id: int # need to be generated (ex: can't use npc id as it could conflict with monster id, player id...)
 var name: String
 var cell_id: int
 var map_id: int
