@@ -123,7 +123,7 @@ func _on_animated_character_sprite_2d_clicked(animated_character_sprite_2d: Anim
 
 #region MapHandler
 
-func render_map(p_background_id, p_cell_resources: Array[CellResource]) -> void:
+func render_map(p_background_id, p_cell_resources: Array[CellResource], p_map_diamond_grid_start: Vector2i, p_map_diamond_size: Vector2i) -> void:
 	print("[Battlefield] Rendering map...")
 	var render_start_time : int = Time.get_ticks_usec()
 
@@ -134,7 +134,7 @@ func render_map(p_background_id, p_cell_resources: Array[CellResource]) -> void:
 		map_handler.render_cell(
 			cell_resource.id,
 			cell_resource.x, cell_resource.y,
-			cell_resource.grid_x, cell_resource.grid_y,
+			cell_resource.diamond_grid_x, cell_resource.diamond_grid_y,
 			cell_resource.ground_slope,
 			cell_resource.ground_tile_id,
 			cell_resource.ground_tile_rot,
@@ -167,6 +167,8 @@ func render_map(p_background_id, p_cell_resources: Array[CellResource]) -> void:
 			cell_resource.id
 		)
 
+	_setup_astar_2d_grid(p_map_diamond_grid_start, p_map_diamond_size)
+
 	var render_end_time : int = Time.get_ticks_usec()
 	var render_time_sec : float = (render_end_time - render_start_time) / 1_000_000.0
 	print("[Battlefield] Map rendered (took %.2f sec)" % render_time_sec)
@@ -196,8 +198,8 @@ func display_cell_ids() -> void:
 
 #region PathfindingHandler
 
-func _setup_astar_2d_grid(p_grid_width: int, p_grid_height: int) -> void:
-	pathfinding_handler.setup_astar_2d_grid(p_grid_width, p_grid_height)
+func _setup_astar_2d_grid(p_map_diamond_start: Vector2i, p_map_diamond_size: Vector2i) -> void:
+	pathfinding_handler.setup_astar_2d_grid(p_map_diamond_start, p_map_diamond_size)
 
 
 func find_grid_path(p_from_cell_grid_pos: Vector2i, p_to_cell_grid_pos: Vector2i) -> Array[Vector2i]:

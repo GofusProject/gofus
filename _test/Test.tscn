@@ -15,3 +15,5 @@ metadata/_custom_type_script = "uid://dpoviwyogrtl4"
 [node name="GridLayer" type="Node2D" parent="."]
 
 [node name="Battlefield" parent="." instance=ExtResource("3_m74j2")]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]

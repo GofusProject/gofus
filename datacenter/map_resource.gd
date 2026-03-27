@@ -3,8 +3,8 @@ class_name MapResource
 
 var map_id: int
 var date: String
-var width: int
-var height: int
+var staggered_width: int
+var staggered_height: int
 var places: String
 var key: String
 var map_data: String
@@ -27,11 +27,16 @@ var cell_resources: Array[CellResource]
 var cell_count: int
 var active_cells: int = 0
 
+var diamond_grid_start: Vector2i = Vector2i.ZERO
+var diamond_grid_size: Vector2i = Vector2i.ZERO
+var diamond_end_grid_y: int = 0
+
+
 func _init(map_dict: Dictionary) -> void:
 	map_id        = int(map_dict["id"])
 	date          = str(map_dict["date"])
-	width         = int(map_dict["width"])
-	height        = int(map_dict["height"])
+	staggered_width         = int(map_dict["width"])
+	staggered_height        = int(map_dict["height"])
 	places        = str(map_dict["places"])
 	key           = str(map_dict["key"])
 	map_data      = str(map_dict["map_data"])
@@ -61,20 +66,21 @@ func _init(map_dict: Dictionary) -> void:
 		push_error("[MapResource] map_data length must be divisible by 10, got: %d" % map_data.length())
 		return
 	
-	cell_count = map_data.length() / 10
+	@warning_ignore("integer_division")
+	cell_count = map_data.length() / 10 
 	cell_resources.resize(cell_count)
 	
 
 	var col: int = -1
 	var row: int = 0
 	var x_offset: float = 0
-	var max_col: int = width - 1
+	var max_col: int = staggered_width - 1
 
 	for i in range(cell_count):
 		var cell_data: String = map_data.substr(i * 10, 10)
 		var cell_resource: CellResource = CellResource.new(i, cell_data)
 
-		# Grid positioning (isometric logic)
+		# World grid positioning (isometric logic)
 		if col == max_col:
 			col = 0
 			row += 1
@@ -88,10 +94,16 @@ func _init(map_dict: Dictionary) -> void:
 		else:
 			col += 1
 
-		# Grid position
-		cell_resource.grid_x = col
-		cell_resource.grid_y = row
-  
+
+		# Map grid positioning
+		cell_resource.staggered_grid_y = row - col
+		@warning_ignore("integer_division")
+		cell_resource.staggered_grid_x = (cell_resource.id - (staggered_width - 1) * cell_resource.staggered_grid_y) / staggered_width
+
+		cell_resource.diamond_grid_y = (staggered_width * row) - cell_resource.id
+		cell_resource.diamond_grid_x = cell_resource.id - (staggered_width - 1) * row
+
+
 		# World positioning
 		var cell_world_x: float = col * Battlefield.CELL_WIDTH + x_offset
 		var cell_world_y: float = row * Battlefield.CELL_HALF_HEIGHT \
@@ -110,5 +122,17 @@ func _init(map_dict: Dictionary) -> void:
 		cell_resources[i] = cell_resource
 
 
-	
+		# Calculate map diamond size, start point and end point
+		if cell_resource.diamond_grid_y < diamond_grid_start.y: # diamond_grid_start.y
+			diamond_grid_start.y = cell_resource.diamond_grid_y
+		if cell_resource.diamond_grid_y > diamond_end_grid_y: # diamond_end_grid_y
+			diamond_end_grid_y = cell_resource.diamond_grid_y	
 
+		# Calculate map diamond size
+		if cell_resource.diamond_grid_x > diamond_grid_size.x: # diamond_grid_size.x
+			diamond_grid_size.x = cell_resource.diamond_grid_x
+
+	
+	diamond_grid_size.y = diamond_end_grid_y - diamond_grid_start.y
+	
+	print("Diamond map size: %s" % str(diamond_grid_size))

@@ -220,6 +220,25 @@ func clear_map() -> void:
 # 	return Vector2i(col, row)
 
 
+## cell id -> grid pos
+func get_grid_pos_from_cell_id(p_map_width: int, cell_id: int) -> Vector2i:
+	@warning_ignore("integer_division")
+	var row: int = cell_id / (p_map_width * 2 - 1) 
+	var remainder: int = cell_id - row * (p_map_width * 2 - 1)
+	var col: int = remainder % p_map_width
+
+	var y: int = row - col
+	@warning_ignore("integer_division")
+	var x: int = (cell_id - (p_map_width - 1) * y) / p_map_width 
+
+	return Vector2i(x, y)
+
+
+## grid pos -> cell id
+func get_cell_id_from_grid_pos(p_map_width: int, grid_x: int, grid_y: int) -> int:
+	return grid_x * p_map_width + grid_y * (p_map_width - 1)
+
+
 ## grid pos -> cell world pos
 func get_cell_world_position_from_grid_position(grid_pos: Vector2i) -> Vector2:
 	var x_offset: float = Battlefield.CELL_HALF_WIDTH if grid_pos.y % 2 == 1 else 0.0

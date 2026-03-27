@@ -34,7 +34,7 @@ func create_map(map_id: int) -> bool:
 		push_error("[MapManager] MapResource initialization failed for map %d" % map_id)
 		return false
 	
-	print("[MapManager] Current map resource : width=%d, height=%d, bgID=%d, cell count=%d" % [map_resource.width, map_resource.height, map_resource.background_id, map_resource.cell_count])
+	print("[MapManager] Current map resource : width=%d, height=%d, bgID=%d, cell count=%d" % [map_resource.staggered_width, map_resource.staggered_height, map_resource.background_id, map_resource.cell_count])
 	
 	Datacenter.set_current_map_resource(map_resource)
 
@@ -73,7 +73,7 @@ func create_map(map_id: int) -> bool:
 			cell_resource.initialize_object2_texture_and_offset(object2_sprite_texture, object2_offset)
 			object2_tiles += 1
 
-	Battlefield.render_map(map_resource.background_id, map_resource.cell_resources)
+	Battlefield.render_map(map_resource.background_id, map_resource.cell_resources, map_resource.diamond_grid_start, map_resource.diamond_grid_size)
 	return true
 
 
@@ -89,16 +89,17 @@ func find_path(p_from_cell_id: int, p_to_cell_id: int) -> Array[Vector2]:
 
 	for cell_resource: CellResource in map_resource.cell_resources:
 		if p_from_cell_id == cell_resource.id:
-			from_cell_grid_pos = Vector2i(cell_resource.grid_x, cell_resource.grid_y)
+			from_cell_grid_pos = Vector2i(cell_resource.diamond_grid_x, cell_resource.diamond_grid_y)
 		if p_to_cell_id == cell_resource.id:
-			to_cell_grid_pos = Vector2i(cell_resource.grid_x, cell_resource.grid_y)
+			to_cell_grid_pos = Vector2i(cell_resource.diamond_grid_x, cell_resource.diamond_grid_y)
 
 	if from_cell_grid_pos == Vector2i.ZERO or to_cell_grid_pos == Vector2i.ZERO:
 		printerr("[MapManager] Could not find path (from cell ids: %s, to: %s)" % [p_from_cell_id, p_to_cell_id])
 		return []
 
 	print("[MapManager] From cell %d (grid pos %s) to cell %d (grid pos %s)" % [p_from_cell_id, from_cell_grid_pos, p_to_cell_id, to_cell_grid_pos])
-	Battlefield.find_grid_path(from_cell_grid_pos, to_cell_grid_pos)
+	var path: Array[Vector2i] = Battlefield.find_grid_path(from_cell_grid_pos, to_cell_grid_pos)
+	print("[MapManager] Path found: %s" % str(path))
 
 	# TO DO, retrieve array cell by grid pos and get world position
 	return []
