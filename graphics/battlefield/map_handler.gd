@@ -261,8 +261,8 @@ func get_cell_world_position_from_cell_id(p_cell_id: int) -> Vector2:
 func get_cell_id_from_world_position(p_world_position: Vector2, p_cell_resources: Array[CellResource]) -> int:
 
 	for cell_resource in p_cell_resources:
-		var cell_rect = Rect2(Vector2(cell_resource.x, cell_resource.y), Vector2(Battlefield.CELL_WIDTH, Battlefield.CELL_HALF_HEIGHT))
-		if cell_rect.has_point(p_world_position):
+		if p_world_position == Vector2(cell_resource.x, cell_resource.y):
+			print("[MapHandler] Cell ID %s found for world pos %s" % [cell_resource.id, str(p_world_position)])
 			return cell_resource.id
 
 	push_error("[MapHandler] Cell ID could not be retrieved for world position ", str(p_world_position))

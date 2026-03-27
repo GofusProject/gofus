@@ -3,6 +3,7 @@ class_name MapResource
 
 var map_id: int
 var date: String
+## For rendering
 var staggered_width: int
 var staggered_height: int
 var places: String
@@ -27,6 +28,7 @@ var cell_resources: Array[CellResource]
 var cell_count: int
 var active_cells: int = 0
 
+## For astar pathfinding
 var diamond_grid_start: Vector2i = Vector2i.ZERO
 var diamond_grid_size: Vector2i = Vector2i.ZERO
 var diamond_end_grid_y: int = 0

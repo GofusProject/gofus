@@ -97,16 +97,43 @@ func find_path(p_from_cell_id: int, p_to_cell_id: int) -> Array[Vector2]:
 		printerr("[MapManager] Could not find path (from cell ids: %s, to: %s)" % [p_from_cell_id, p_to_cell_id])
 		return []
 
+	# Grid path
 	print("[MapManager] From cell %d (grid pos %s) to cell %d (grid pos %s)" % [p_from_cell_id, from_cell_grid_pos, p_to_cell_id, to_cell_grid_pos])
-	var path: Array[Vector2i] = Battlefield.find_grid_path(from_cell_grid_pos, to_cell_grid_pos)
-	print("[MapManager] Path found: %s" % str(path))
+	var grid_path: Array[Vector2i] = Battlefield.find_grid_path(from_cell_grid_pos, to_cell_grid_pos)
+
+	# # TO REMOVE
+	# for i in grid_path.size() - 1:
+	# 	if i + 1 > grid_path.size() - 1:
+	# 		break
+	# 	print("[MapManager] Direction = ", Battlefield.pathfinding_handler.get_direction_from_grid_pos(grid_path[i], grid_path[i+1]))
+
+	# print("[MapManager] Path found: %s" % str(grid_path))
+
+	# Grid path to World path
+	var build_start_time : int = Time.get_ticks_usec()
+	var world_path: Array[Vector2] = []
+	for grid_pos in grid_path:
+		for cell_resource: CellResource in map_resource.cell_resources:
+			if cell_resource.diamond_grid_x == grid_pos.x and cell_resource.diamond_grid_y == grid_pos.y:
+				world_path.append(Vector2(cell_resource.x, cell_resource.y))
+				break
+	var build_total : int = Time.get_ticks_usec() - build_start_time
+	var build_total_in_sec = build_total / 1000000.0
+	var frame_percentage = (build_total_in_sec / (1.0 / 48.0)) * 100.0
+	print("Build total: %s seconds | Frame percentage (48hz): %s%%" % [build_total_in_sec, frame_percentage])
+	print("[MapManager] World path: %s" % str(world_path))
 
 	# TO DO, retrieve array cell by grid pos and get world position
-	return []
+	return world_path
 
 
 func highlight_cell() -> void:
 	Battlefield.highlight_cell()
+
+
+func get_cell_id_from_world_position(world_pos: Vector2) -> int:
+	var map_resource = Datacenter.map_resource
+	return Battlefield.map_handler.get_cell_id_from_world_position(world_pos, map_resource.cell_resources)
 
 
 func _on_cell_clicked(cell_id: int) -> void:

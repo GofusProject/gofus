@@ -10,8 +10,10 @@ var is_active: bool # `false` disable the entire cell. Don't know why it is used
 var id: int
 var x: float
 var y: float
+## For astar pathfinding
 var diamond_grid_x: int
 var diamond_grid_y: int
+## For rendering
 var staggered_grid_x: int
 var staggered_grid_y: int
 var cell_level: int # From 0 to 7 I think. Uused at MapResource init to determine world pos

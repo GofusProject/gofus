@@ -1,7 +1,12 @@
 class_name CharacterSpriteHandler
 extends Node2D
 
-enum Direction {
+
+
+signal character_world_path_point_reached(world_pos: Vector2, linked_character_id: int)
+
+
+enum Orientation {
 	EAST = 0,
 	SOUTH_EAST = 1,
 	SOUTH = 2,
@@ -13,6 +18,7 @@ enum Direction {
 }
 
 
+
 func add_animated_character_sprite_2d(p_linked_character_id: int, p_sprite_frames_id: int, p_direction: int, p_cell_id: int) -> void:
 
 	var animated_character_sprite_2d = Battlefield.ANIMATED_CHARACTER_SPRITE_2D_SCENE.instantiate()
@@ -22,6 +28,9 @@ func add_animated_character_sprite_2d(p_linked_character_id: int, p_sprite_frame
 	animated_character_sprite_2d.hovered.connect(Battlefield._on_animated_character_sprite_2d_hovered)
 	animated_character_sprite_2d.unhovered.connect(Battlefield._on_animated_character_sprite_2d_unhovered)
 	animated_character_sprite_2d.clicked.connect(Battlefield._on_animated_character_sprite_2d_clicked)
+	animated_character_sprite_2d.world_path_point_reached.connect(func(world_pos: Vector2, linked_character_id: int) -> void:
+		character_world_path_point_reached.emit(world_pos, linked_character_id)
+	)
 
 	Battlefield.character_sprites.add_child(animated_character_sprite_2d)
 
@@ -42,3 +51,8 @@ func get_animated_character_sprite_2d_by_character_id(p_character_id: int) -> An
 func get_animated_character_sprite_2d_world_position(p_character_id: int) -> Vector2:
 	var animated_character_sprite_2d: AnimatedCharacterSprite2D = get_animated_character_sprite_2d_by_character_id(p_character_id)
 	return animated_character_sprite_2d.position
+
+
+func move_character(p_character_id: int, p_path: Array[Vector2]) -> void:
+	var animated_character_sprite_2d: AnimatedCharacterSprite2D = get_animated_character_sprite_2d_by_character_id(p_character_id)
+	animated_character_sprite_2d.follow_path(p_path)

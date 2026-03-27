@@ -4,7 +4,10 @@ extends AnimatedSprite2D
 
 var linked_character_id: int
 var sprite_frames_id: int
-var direction: int
+var orientation_id: int
+var orientation_letter: String
+var animation_name: String
+
 
 # Cache to avoid get_image() every frame
 var _cached_image: Image
@@ -12,15 +15,46 @@ var _cached_animation: StringName
 var _cached_frame: int
 
 var is_hovered: bool
-
 var is_selected: bool
 var area_2d: Area2D
 var collision_shape: CollisionShape2D
+
+# Speed definitions indexed by orientation_id
+const WALK_SPEEDS = [0.07,0.06,0.06,0.06,0.07,0.06,0.06,0.06]
+const MOUNT_SPEEDS = [0.23,0.2,0.2,0.2,0.23,0.2,0.2,0.2]
+const RUN_SPEEDS = [0.17,0.15,0.15,0.15,0.17,0.15,0.15,0.15]
+var next_point: Vector2 = Vector2(-1, -1)
+var path: Array[Vector2] = []
 
 
 signal hovered(animated_character_sprite_2d: AnimatedCharacterSprite2D)
 signal unhovered(animated_character_sprite_2d: AnimatedCharacterSprite2D)
 signal clicked(animated_character_sprite_2d: AnimatedCharacterSprite2D)
+signal world_path_point_reached(world_pos: Vector2, linked_character_id: int)
+
+
+func _process(delta: float) -> void:
+	if not path.is_empty():
+		# si arrivé au prochain point on enlève le point du path
+		if position.distance_to(next_point) == 0:
+			world_path_point_reached.emit(next_point, linked_character_id)
+			path.remove_at(0)
+
+			# If path empty, reset and return
+			if path.is_empty():
+				next_point = Vector2(-1, -1)
+				play(_set_animation_to_play("static", orientation_id))
+				return
+
+			# Set next point
+			next_point = path[0]
+
+			# Set orientation
+			set_orientation_from_direction(position.direction_to(next_point))
+			set_animation_from_orientation()
+
+		position = position.move_toward(next_point, RUN_SPEEDS[0] * 48 ) # TO CHANGE
+
 
 
 func initialize(p_linked_character_id: int, p_sprite_frames_id: int, p_direction: int) -> void:
@@ -35,7 +69,7 @@ func initialize(p_linked_character_id: int, p_sprite_frames_id: int, p_direction
 
 	linked_character_id	= p_linked_character_id
 	sprite_frames_id	= p_sprite_frames_id
-	direction			= p_direction
+	orientation_id			= p_direction
 
 	centered = false
 	y_sort_enabled = true
@@ -46,7 +80,7 @@ func initialize(p_linked_character_id: int, p_sprite_frames_id: int, p_direction
 		push_error("[", self, "] No sprite frames to display")
 		return
 
-	var anim_to_play: String = _set_animation_to_play("static", direction) # "static" is the default animation for npcs on map
+	var anim_to_play: String = _set_animation_to_play("static", orientation_id) # "static" is the default animation for npcs on map
 
 	play(anim_to_play)
 
@@ -54,35 +88,53 @@ func initialize(p_linked_character_id: int, p_sprite_frames_id: int, p_direction
 func set_highlight(toggle: bool) -> void:
 	if toggle == true: material.set_shader_parameter("highlight_opacity", 0.5)
 	if toggle == false: material.set_shader_parameter("highlight_opacity", 0.0)
+
+
+func follow_path(p_path: Array[Vector2]) -> void:
+	path = p_path
+	next_point = p_path[0]
+	animation_name = "run"
+
+
+func set_orientation_from_direction(direction: Vector2) -> void:
+	var angle = direction.angle()
+	var octant = int(round(8 * angle / (2 * PI) + 8)) % 8
+	orientation_id = octant
 	
 
-func _set_animation_to_play(animation_state_name: String, direction_letter: int) -> String:
+func set_animation_from_orientation() -> void:
+	var anim_to_play: String = _set_animation_to_play("run", orientation_id)
+	play(anim_to_play)
+
+
+func _set_animation_to_play(animation_state_name: String, orientation: int) -> String:
 
 	var anim_to_play: String = animation_state_name
 
-	match direction_letter:
-		CharacterSpriteHandler.Direction.EAST:
+	flip_h = false
+	match orientation:
+		CharacterSpriteHandler.Orientation.EAST:
 			anim_to_play += "S"
-		CharacterSpriteHandler.Direction.SOUTH_EAST:
+		CharacterSpriteHandler.Orientation.SOUTH_EAST:
 			anim_to_play += "R"
-		CharacterSpriteHandler.Direction.SOUTH:
+		CharacterSpriteHandler.Orientation.SOUTH:
 			anim_to_play += "F"
-		CharacterSpriteHandler.Direction.SOUTH_WEST:
+		CharacterSpriteHandler.Orientation.SOUTH_WEST:
 			anim_to_play += "R"
 			flip_h = true
-		CharacterSpriteHandler.Direction.WEST:
+		CharacterSpriteHandler.Orientation.WEST:
 			anim_to_play += "S"
 			flip_h = true
-		CharacterSpriteHandler.Direction.NORTH_WEST:
+		CharacterSpriteHandler.Orientation.NORTH_WEST:
 			anim_to_play += "L"
-		CharacterSpriteHandler.Direction.NORTH:
+		CharacterSpriteHandler.Orientation.NORTH:
 			anim_to_play += "B"
-		CharacterSpriteHandler.Direction.NORTH_EAST:
+		CharacterSpriteHandler.Orientation.NORTH_EAST:
 			anim_to_play += "L"
 			flip_h = true
 
 	return anim_to_play
-	
+
 
 func _is_pixel_opaque(global_mouse: Vector2) -> bool:
 
