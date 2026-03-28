@@ -92,7 +92,17 @@ func set_highlight(toggle: bool) -> void:
 
 func follow_path(p_path: Array[Vector2]) -> void:
 	path = p_path
+
+	# allow the sprite to move from its position and the first next point (and not the first cell of the path)
+	# If not remove, the sprite behave weirdly when the path is changed whil a path alreay exists
+	path.remove_at(0)
+
+	if path.is_empty():
+		return
 	next_point = p_path[0]
+	# Set orientation
+	set_orientation_from_direction(position.direction_to(next_point))
+	set_animation_from_orientation()
 	animation_name = "run"
 
 

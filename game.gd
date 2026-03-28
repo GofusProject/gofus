@@ -9,7 +9,6 @@ var player_id: int = 1
 
 func _ready() -> void:
 	change_map(map_id)
-	create_player(player_id)
 	pass
 
 
@@ -39,6 +38,7 @@ func change_map(p_map_id: int):
 		push_error("[Game] Map changed failed")
 		return
 	CharactersManager.create_npcs()
+	create_player(player_id)
 
 
 func create_player(p_player_id) -> void:
