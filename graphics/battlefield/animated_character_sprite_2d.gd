@@ -53,7 +53,7 @@ func _process(delta: float) -> void:
 			set_orientation_from_direction(position.direction_to(next_point))
 			set_animation_from_orientation()
 
-		position = position.move_toward(next_point, RUN_SPEEDS[0] * 48 ) # TO CHANGE
+		position = position.move_toward(next_point, RUN_SPEEDS[1] * 48 ) # TO CHANGE
 
 
 

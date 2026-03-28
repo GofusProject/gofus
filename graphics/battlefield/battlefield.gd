@@ -173,6 +173,12 @@ func render_map(p_background_id, p_cell_resources: Array[CellResource], p_map_di
 
 	_setup_astar_2d_grid(p_map_diamond_grid_start, p_map_diamond_size)
 
+	# Set astar grid walkability based on cell movement cost
+	for cell_resource in p_cell_resources:
+		if cell_resource.movement == 0:
+			pathfinding_handler.astar_grid.set_point_solid(Vector2i(cell_resource.diamond_grid_x, cell_resource.diamond_grid_y))
+
+
 	var render_end_time : int = Time.get_ticks_usec()
 	var render_time_sec : float = (render_end_time - render_start_time) / 1_000_000.0
 	print("[Battlefield] Map rendered (took %.2f sec)" % render_time_sec)
