@@ -34,6 +34,7 @@ y_sort_enabled = true
 z_index = 4
 
 [node name="CellIDSLayer" type="Node2D" parent="."]
+visible = false
 z_index = 4
 
 [node name="OverHeadLayer" type="Node2D" parent="."]
