@@ -138,7 +138,7 @@ func render_map(p_background_id, p_cell_resources: Array[CellResource], p_map_di
 		map_handler.render_cell(
 			cell_resource.id,
 			cell_resource.x, cell_resource.y,
-			cell_resource.diamond_grid_x, cell_resource.diamond_grid_y,
+			cell_resource.staggered_grid_x, cell_resource.staggered_grid_y,
 			cell_resource.ground_slope,
 			cell_resource.ground_tile_id,
 			cell_resource.ground_tile_rot,

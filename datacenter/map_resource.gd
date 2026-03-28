@@ -3,9 +3,10 @@ class_name MapResource
 
 var map_id: int
 var date: String
-## For rendering
-var staggered_width: int
-var staggered_height: int
+## Rendering use staggered isometric grid
+## Vector2i(width, height). I recalculate height with y going right
+## Dofus use staggered with x going downward and y going down right 
+var staggered_size: Vector2i 
 var places: String
 var key: String
 var map_data: String
@@ -37,8 +38,8 @@ var diamond_end_grid_y: int = 0
 func _init(map_dict: Dictionary) -> void:
 	map_id        = int(map_dict["id"])
 	date          = str(map_dict["date"])
-	staggered_width         = int(map_dict["width"])
-	staggered_height        = int(map_dict["height"])
+	staggered_size.y         = int(map_dict["width"])
+	# staggered_height        = int(map_dict["height"]) # Height is recalculated, see staggered_size for more info
 	places        = str(map_dict["places"])
 	key           = str(map_dict["key"])
 	map_data      = str(map_dict["map_data"])
@@ -76,7 +77,7 @@ func _init(map_dict: Dictionary) -> void:
 	var col: int = -1
 	var row: int = 0
 	var x_offset: float = 0
-	var max_col: int = staggered_width - 1
+	var max_col: int = staggered_size.y - 1
 
 	for i in range(cell_count):
 		var cell_data: String = map_data.substr(i * 10, 10)
@@ -98,12 +99,13 @@ func _init(map_dict: Dictionary) -> void:
 
 
 		# Map grid positioning
-		cell_resource.staggered_grid_y = row - col
-		@warning_ignore("integer_division")
-		cell_resource.staggered_grid_x = (cell_resource.id - (staggered_width - 1) * cell_resource.staggered_grid_y) / staggered_width
+		# Dofus has a different way to calculate this (Pathfinding.as, getCaseCoordonnee(), just before return)
+		cell_resource.staggered_grid_y = row
+		cell_resource.staggered_grid_x = col
 
-		cell_resource.diamond_grid_y = (staggered_width * row) - cell_resource.id
-		cell_resource.diamond_grid_x = cell_resource.id - (staggered_width - 1) * row
+		# Found this calculation myself
+		cell_resource.diamond_grid_y = (staggered_size.y * row) - cell_resource.id
+		cell_resource.diamond_grid_x = cell_resource.id - (staggered_size.y - 1) * row
 
 
 		# World positioning
