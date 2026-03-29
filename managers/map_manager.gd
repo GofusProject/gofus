@@ -73,7 +73,7 @@ func create_map(map_id: int) -> bool:
 			cell_resource.initialize_object2_texture_and_offset(object2_sprite_texture, object2_offset)
 			object2_tiles += 1
 
-	Battlefield.build_map(map_resource.background_id, map_resource.cell_resources, map_resource.diamond_grid_start, map_resource. diamond_grid_size)
+	Battlefield.build_map(map_resource.background_id, map_resource.size.x, map_resource.cell_resources, map_resource.diamond_grid_start, map_resource. diamond_grid_size)
 	return true
 
 

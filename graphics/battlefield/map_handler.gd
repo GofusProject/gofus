@@ -195,7 +195,7 @@ func render_cell(
 	cell_id_label.position = Vector2(world_x, world_y) - label_size / 2
 
 
-func render_map(p_background_id, p_cell_resources: Array[CellResource]) -> void:
+func render_map(p_background_id, p_map_width: int, p_cell_resources: Array[CellResource]) -> void:
 	print("[Battlefield] Rendering map...")
 	var render_start_time : int = Time.get_ticks_usec()
 
@@ -203,7 +203,41 @@ func render_map(p_background_id, p_cell_resources: Array[CellResource]) -> void:
 
 	if Battlefield.background != null and p_background_id != 0:
 		render_background(p_background_id)
+
+	var col: int = -1
+	var row: int = 0
+	var x_offset: float = 0
+	var max_col: int = p_map_width - 1
+
 	for cell_resource in p_cell_resources:
+
+		if col == max_col:
+			col = 0
+			row += 1
+  
+			if x_offset == 0:
+				x_offset = Battlefield.CELL_HALF_WIDTH
+				max_col -= 1
+			else:
+				x_offset = 0
+				max_col += 1
+		else:
+			col += 1	
+
+		# Map grid positioning
+		# Dofus has a different way to calculate this (Pathfinding.as, getCaseCoordonnee(), just before return)
+		cell_resource.staggered_grid_y = row
+		cell_resource.staggered_grid_x = col
+
+		# World positioning - TO MAP HANDLER
+		var cell_world_x: float = col * Battlefield.CELL_WIDTH + x_offset
+		var cell_world_y: float = row * Battlefield.CELL_HALF_HEIGHT \
+			- Battlefield.LEVEL_HEIGHT * (cell_resource.cell_level - 7)
+  
+		var cell_position: Vector2 = Vector2(cell_world_x, cell_world_y)
+		cell_resource.x = cell_position.x
+		cell_resource.y = cell_position.y
+
 		render_cell(
 			cell_resource.id,
 			cell_resource.x, cell_resource.y,

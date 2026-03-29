@@ -18,10 +18,50 @@ var astar_grid: AStarGrid2D
 
 
 
-func setup_astar_2d_grid(p_cell_resources: Array[CellResource], p_grid_start: Vector2i, p_grid_size: Vector2i) -> void:
+func setup_astar_2d_grid(p_map_staggered_width: int, p_cell_resources: Array[CellResource]) -> void:
+
+	var staggered_grid_x: int = -1
+	var staggered_grid_y: int = 0
+	var max_staggered_grid_x: int = p_map_staggered_width - 1
+	var diamond_grid_start: Vector2i
+	var diamond_grid_size: Vector2i
+	var diamond_end_grid_y: int # TO REMOVE
+
+
+	for cell_resource in p_cell_resources:
+
+		if staggered_grid_x == max_staggered_grid_x:
+			staggered_grid_x = 0
+			staggered_grid_y += 1
+  
+			if max_staggered_grid_x == p_map_staggered_width - 1:
+				max_staggered_grid_x -= 1
+			else:
+				max_staggered_grid_x += 1
+		else:
+			staggered_grid_x += 1
+
+
+		# Found those calculation myself
+		cell_resource.diamond_grid_y = (p_map_staggered_width * staggered_grid_y) - cell_resource.id
+		cell_resource.diamond_grid_x = cell_resource.id - (p_map_staggered_width - 1) * staggered_grid_y
+
+		# TO REPLACE BY WIDTH - 1 AND WIDTH + 1
+		# Calculate map diamond size, start point and end point
+		if cell_resource.diamond_grid_y < diamond_grid_start.y: # diamond_grid_start.y
+			diamond_grid_start.y = cell_resource.diamond_grid_y
+		if cell_resource.diamond_grid_y > diamond_end_grid_y: # diamond_end_grid_y
+			diamond_end_grid_y = cell_resource.diamond_grid_y	
+
+		# Calculate map diamond size
+		if cell_resource.diamond_grid_x > diamond_grid_size.x: # diamond_grid_size.x
+			diamond_grid_size.x = cell_resource.diamond_grid_x
+
+	diamond_grid_size.y = diamond_end_grid_y - diamond_grid_start.y
+
 
 	astar_grid = AStarGrid2D.new()
-	astar_grid.region = Rect2i(p_grid_start.x, p_grid_start.y, p_grid_size.x, p_grid_size.y)
+	astar_grid.region = Rect2i(diamond_grid_start.x, diamond_grid_start.y, diamond_grid_size.x, diamond_grid_size.y)
 	astar_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ALWAYS
 	astar_grid.default_compute_heuristic = AStarGrid2D.HEURISTIC_OCTILE
 	astar_grid.default_estimate_heuristic = AStarGrid2D.HEURISTIC_OCTILE
