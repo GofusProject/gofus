@@ -39,5 +39,8 @@ func leave_dialog():
 
 func move_playable_character_on_map(to_cell_id: int):
 	var character_resource: CharacterResource = CharactersManager.get_playable_character_resource()
-	var path: Array[Vector2] = MapManager.find_path(character_resource.cell_id, to_cell_id)
-	CharactersManager.move_character(character_resource, path)
+	var results: Array[Array] = MapManager.get_world_path_and_directions(character_resource.cell_id, to_cell_id)
+	var path = results[0]
+	var directions = results[1]
+
+	CharactersManager.move_character(character_resource, path, directions)

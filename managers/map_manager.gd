@@ -82,32 +82,35 @@ func clear_map() -> void:
 	Battlefield.clear()
 
 
-func find_path(p_from_cell_id: int, p_to_cell_id: int) -> Array[Vector2]:
+## path = results[0], directions = results[1]
+func get_world_path_and_directions(p_from_cell_id: int, p_to_cell_id: int) -> Array[Array]:
 	var map_resource: MapResource = Datacenter.map_resource
-	var from_cell_grid_pos: Vector2i = Vector2i.ZERO
-	var to_cell_grid_pos: Vector2i = Vector2i.ZERO
-
 
 	# Grid path
-	print("[MapManager] From cell %d (grid pos %s) to cell %d (grid pos %s)" % [p_from_cell_id, from_cell_grid_pos, p_to_cell_id, to_cell_grid_pos])
 	var cell_id_path: PackedInt64Array = Battlefield.spatial_handler.find_path(map_resource.size.x, p_from_cell_id, p_to_cell_id)
 
 	# Grid path to World path
 	var build_start_time : int = Time.get_ticks_usec()
+	
 	var world_path: Array[Vector2] = []
-	for cell_id in cell_id_path:
-		for cell_resource: CellResource in map_resource.cell_resources:
-			if cell_resource.id == cell_id:
-				world_path.append(Vector2(cell_resource.x, cell_resource.y))
-				break
+	var directions: Array[SpatialHandler.Direction] = []
+	for i in cell_id_path.size():
+		var cell_id = cell_id_path[i]
+		world_path.append(Vector2(map_resource.cell_resources[cell_id].x, map_resource.cell_resources[cell_id].y))
+		if i < cell_id_path.size() - 1:
+			directions.append(Battlefield.spatial_handler.get_direction_from_cell_id_to_cell_id(map_resource.size.x, cell_id, cell_id_path[i + 1]))
+	
+
+
 	var build_total : int = Time.get_ticks_usec() - build_start_time
 	var build_total_in_sec = build_total / 1000000.0
 	var frame_percentage = (build_total_in_sec / (1.0 / 48.0)) * 100.0
 	print("Build total: %s seconds | Frame percentage (48hz): %s%%" % [build_total_in_sec, frame_percentage])
 	print("[MapManager] World path: %s" % str(world_path))
+	print("[MapManager] Directions: %s" % str(directions))
 
-	# TO DO, retrieve array cell by grid pos and get world position
-	return world_path
+	# Results
+	return [world_path, directions]
 
 
 func highlight_cell() -> void:

@@ -1,6 +1,9 @@
-## Use DIAMOND grid
+## SpatialHandler uses DIAMOND grid (contrary to MapHandler which use staggered grid)
 ## Handles directions, pathfinding
 ## It does not handle any visual process, so it can be transfered easily to server side
+## Can be called by any battlefield handler
+## Cannot convert diamond grid position to world position because it does not handle slope or cell levels 
+## To communicate with other handlers, it can provide cell ids
 
 class_name SpatialHandler
 extends Node
@@ -107,6 +110,35 @@ func get_direction_from_grid_pos(p_from_grid_pos: Vector2i, p_to_grid_pos: Vecto
 		_:
 			push_error("[PathfindingHandler] Invalid direction vector: %s" % str(direction_vector))
 			return -1
+
+
+## Only work for adjacents cells
+func get_direction_from_cell_id_to_cell_id(p_map_width: int, p_from_cell_id: int, p_to_cell_id: int) -> int:
+
+	var cell_id_offset = p_to_cell_id - p_from_cell_id
+
+	# Godot 4's match statement doesn't allow expressions (like p_map_width * 2 - 1) in patterns — only constants and literals.
+	#So I have to use if statements instead of match
+
+	if cell_id_offset == 1:
+		return Direction.EAST
+	elif cell_id_offset == p_map_width:
+		return Direction.SOUTH_EAST
+	elif cell_id_offset == p_map_width * 2 - 1:
+		return Direction.SOUTH
+	elif cell_id_offset == p_map_width - 1:
+		return Direction.SOUTH_WEST
+	elif cell_id_offset == -1:
+		return Direction.WEST
+	elif cell_id_offset == -p_map_width:
+		return Direction.NORTH_WEST
+	elif cell_id_offset == -p_map_width * 2 + 1:
+		return Direction.NORTH
+	elif cell_id_offset == -(p_map_width - 1):
+		return Direction.NORTH_EAST
+	else:
+		push_error("[PathfindingHandler] Invalid cell id offset: %d" % cell_id_offset)
+		return -1
 
 
 ## cell id -> grid pos

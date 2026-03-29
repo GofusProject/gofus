@@ -25,6 +25,7 @@ const MOUNT_SPEEDS = [0.23,0.2,0.2,0.2,0.23,0.2,0.2,0.2]
 const RUN_SPEEDS = [0.17,0.15,0.15,0.15,0.17,0.15,0.15,0.15]
 var next_point: Vector2 = Vector2(-1, -1)
 var path: Array[Vector2] = []
+var path_directions: Array[CharacterSpriteHandler.Orientation]
 
 
 signal hovered(animated_character_sprite_2d: AnimatedCharacterSprite2D)
@@ -35,6 +36,7 @@ signal world_path_point_reached(world_pos: Vector2, linked_character_id: int)
 
 func _process(delta: float) -> void:
 	if not path.is_empty():
+
 		# si arrivé au prochain point on enlève le point du path
 		if position.distance_to(next_point) == 0:
 			world_path_point_reached.emit(next_point, linked_character_id)
@@ -49,12 +51,12 @@ func _process(delta: float) -> void:
 			# Set next point
 			next_point = path[0]
 
-			# Set orientation
-			set_orientation_from_direction(position.direction_to(next_point))
-			set_animation_from_orientation()
+			path_directions.remove_at(0)
+			orientation_id = path_directions[0]
+			play(_set_animation_to_play("run", orientation_id))
+		
 
 		position = position.move_toward(next_point, RUN_SPEEDS[1] * 48 ) # TO CHANGE
-
 
 
 func initialize(p_linked_character_id: int, p_sprite_frames_id: int, p_direction: int) -> void:
@@ -90,8 +92,9 @@ func set_highlight(toggle: bool) -> void:
 	if toggle == false: material.set_shader_parameter("highlight_opacity", 0.0)
 
 
-func follow_path(p_path: Array[Vector2]) -> void:
+func follow_path(p_path: Array[Vector2], p_orientations: Array[CharacterSpriteHandler.Orientation]) -> void:
 	path = p_path
+	path_directions = p_orientations
 
 	# allow the sprite to move from its position and the first next point (and not the first cell of the path)
 	# If not remove, the sprite behave weirdly when the path is changed whil a path alreay exists
@@ -99,22 +102,13 @@ func follow_path(p_path: Array[Vector2]) -> void:
 
 	if path.is_empty():
 		return
+	
+	orientation_id = path_directions[0]
 	next_point = p_path[0]
 	# Set orientation
-	set_orientation_from_direction(position.direction_to(next_point))
-	set_animation_from_orientation()
-	animation_name = "run"
-
-
-func set_orientation_from_direction(direction: Vector2) -> void:
-	var angle = direction.angle()
-	var octant = int(round(8 * angle / (2 * PI) + 8)) % 8
-	orientation_id = octant
 	
+	play(_set_animation_to_play("run", orientation_id))
 
-func set_animation_from_orientation() -> void:
-	var anim_to_play: String = _set_animation_to_play("run", orientation_id)
-	play(anim_to_play)
 
 
 func _set_animation_to_play(animation_state_name: String, orientation: int) -> String:

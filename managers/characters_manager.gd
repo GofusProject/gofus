@@ -80,8 +80,8 @@ func get_playable_character_resource() -> PlayablePlayerResource:
 	return Datacenter.playable_character_resource
 
 
-func move_character(p_character_resource: CharacterResource, p_path: Array[Vector2]) -> void:
-	Battlefield.move_character(p_character_resource.id, p_path)
+func move_character(p_character_resource: CharacterResource, p_path: Array[Vector2], p_orientations: Array[CharacterSpriteHandler.Orientation]) -> void:
+	Battlefield.move_character(p_character_resource.id, p_path, p_orientations)
 
 
 #region UI

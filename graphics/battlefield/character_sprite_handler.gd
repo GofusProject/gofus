@@ -1,3 +1,5 @@
+## As all Battlefield handler exept SpatialHandler, CharacterSpriteHandler can only process world position (no grid position)
+
 class_name CharacterSpriteHandler
 extends Node2D
 
@@ -53,6 +55,6 @@ func get_animated_character_sprite_2d_world_position(p_character_id: int) -> Vec
 	return animated_character_sprite_2d.position
 
 
-func move_character(p_character_id: int, p_path: Array[Vector2]) -> void:
+func move_character(p_character_id: int, p_path: Array[Vector2], p_orientations: Array[CharacterSpriteHandler.Orientation]) -> void:
 	var animated_character_sprite_2d: AnimatedCharacterSprite2D = get_animated_character_sprite_2d_by_character_id(p_character_id)
-	animated_character_sprite_2d.follow_path(p_path)
+	animated_character_sprite_2d.follow_path(p_path, p_orientations)

@@ -123,8 +123,8 @@ func clear_character_sprites() -> void:
 	character_sprite_handler.clear_character_sprites()
 
 
-func move_character(p_character_id: int, p_path: Array[Vector2]) -> void:
-	character_sprite_handler.move_character(p_character_id, p_path)
+func move_character(p_character_id: int, p_path: Array[Vector2],  p_orientations: Array[CharacterSpriteHandler.Orientation]) -> void:
+	character_sprite_handler.move_character(p_character_id, p_path, p_orientations)
 
 
 func _on_animated_character_sprite_2d_hovered(animated_character_sprite_2d: AnimatedCharacterSprite2D) -> void:
