@@ -20,13 +20,12 @@ var astar_grid: AStarGrid2D
 
 func setup_astar_2d_grid(p_map_staggered_width: int, p_cell_resources: Array[CellResource]) -> void:
 
+	# cell_resource.diamond_grid_pos is calculated from the staggered grid positioning
 	var staggered_grid_x: int = -1
 	var staggered_grid_y: int = 0
 	var max_staggered_grid_x: int = p_map_staggered_width - 1
-	var diamond_grid_start: Vector2i
-	var diamond_grid_size: Vector2i
-	var diamond_end_grid_y: int # TO REMOVE
-
+	var diamond_grid_start = Vector2i(0, 1 - p_map_staggered_width)
+	var diamond_grid_size = Vector2i(0, p_map_staggered_width * 2)
 
 	for cell_resource in p_cell_resources:
 
@@ -41,29 +40,19 @@ func setup_astar_2d_grid(p_map_staggered_width: int, p_cell_resources: Array[Cel
 		else:
 			staggered_grid_x += 1
 
-
 		# Found those calculation myself
 		cell_resource.diamond_grid_y = (p_map_staggered_width * staggered_grid_y) - cell_resource.id
 		cell_resource.diamond_grid_x = cell_resource.id - (p_map_staggered_width - 1) * staggered_grid_y
 
-		# TO REPLACE BY WIDTH - 1 AND WIDTH + 1
-		# Calculate map diamond size, start point and end point
-		if cell_resource.diamond_grid_y < diamond_grid_start.y: # diamond_grid_start.y
-			diamond_grid_start.y = cell_resource.diamond_grid_y
-		if cell_resource.diamond_grid_y > diamond_end_grid_y: # diamond_end_grid_y
-			diamond_end_grid_y = cell_resource.diamond_grid_y	
-
-		# Calculate map diamond size
+		# Didn't find a way to calculate map diamond size.x, so for now I take the highest cell ressource diamond grid x
 		if cell_resource.diamond_grid_x > diamond_grid_size.x: # diamond_grid_size.x
 			diamond_grid_size.x = cell_resource.diamond_grid_x
-
-	diamond_grid_size.y = diamond_end_grid_y - diamond_grid_start.y
 
 
 	astar_grid = AStarGrid2D.new()
 	astar_grid.region = Rect2i(diamond_grid_start.x, diamond_grid_start.y, diamond_grid_size.x, diamond_grid_size.y)
 	astar_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ALWAYS
-	astar_grid.default_compute_heuristic = AStarGrid2D.HEURISTIC_OCTILE
+	astar_grid.default_compute_heuristic = AStarGrid2D.HEURISTIC_OCTILE # Set to this heuristic so that the path do not zig zag
 	astar_grid.default_estimate_heuristic = AStarGrid2D.HEURISTIC_OCTILE
 	astar_grid.update()
 
@@ -81,6 +70,7 @@ func find_path(p_map_width: int, p_from_cell_id: int, p_to_cell_id: int) -> Arra
 	var to_grid_pos: Vector2i = get_grid_pos_from_cell_id(p_map_width, p_to_cell_id)
 
 	var grid_path: Array[Vector2i] = astar_grid.get_id_path(from_grid_pos, to_grid_pos)
+	print("[SpatialHander] Path found: ", grid_path)
 
 	var path_cell_ids: Array[int] = []
 	for grid_pos: Vector2i in grid_path:
