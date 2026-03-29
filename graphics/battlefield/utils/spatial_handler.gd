@@ -3,27 +3,75 @@ extends Node
 
 
 
-var astar_2d: AStarGrid2D
+enum Direction {
+	EAST = 0,
+	SOUTH_EAST = 1,
+	SOUTH = 2,
+	SOUTH_WEST = 3,
+	WEST = 4,
+	NORTH_WEST = 5,
+	NORTH = 6,
+	NORTH_EAST = 7
+}
+
+var astar_grid: AStarGrid2D
 
 
 
-func initialize(p_cell_resources: Array[CellResource]) -> void:
+func setup_astar_2d_grid(p_cell_resources: Array[CellResource], p_grid_start: Vector2i, p_grid_size: Vector2i) -> void:
 
-	astar_2d = AStarGrid2D.new()
-	astar_2d.heuristic = AStarGrid2D.Heuristic.HEURISTIC_OCTILE
+	astar_grid = AStarGrid2D.new()
+	astar_grid.region = Rect2i(p_grid_start.x, p_grid_start.y, p_grid_size.x, p_grid_size.y)
+	astar_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ALWAYS
+	astar_grid.default_compute_heuristic = AStarGrid2D.HEURISTIC_OCTILE
+	astar_grid.default_estimate_heuristic = AStarGrid2D.HEURISTIC_OCTILE
+	astar_grid.update()
 
-	_setup_astar_2d_grid(p_map_diamond_grid_start, p_map_diamond_size)
 
 	# Set astar grid walkability based on cell movement cost
+	astar_grid.fill_solid_region(astar_grid.region) 
 	for cell_resource in p_cell_resources:
 		if cell_resource.movement != 0:
-			pathfinding_handler.astar_grid.set_point_solid(Vector2i(cell_resource.diamond_grid_x, cell_resource.diamond_grid_y), false)
+			astar_grid.set_point_solid(Vector2i(cell_resource.diamond_grid_x, cell_resource.diamond_grid_y), false)
 
 
 
+func find_path(p_map_width: int, p_from_cell_id: int, p_to_cell_id: int) -> Array[int]:
+	var from_grid_pos: Vector2i = get_grid_pos_from_cell_id(p_map_width, p_from_cell_id)
+	var to_grid_pos: Vector2i = get_grid_pos_from_cell_id(p_map_width, p_to_cell_id)
 
-func find_grid_path(p_from_cell_id: int, p_to_cell_id: int) -> PackedInt64Array:
-	return astar_2d.get_id_path(p_from_cell_id, p_to_cell_id)
+	var grid_path: Array[Vector2i] = astar_grid.get_id_path(from_grid_pos, to_grid_pos)
+
+	var path_cell_ids: Array[int] = []
+	for grid_pos: Vector2i in grid_path:
+		path_cell_ids.append(get_cell_id_from_grid_pos(p_map_width, grid_pos.x, grid_pos.y))
+	return path_cell_ids
+
+
+func get_direction_from_grid_pos(p_from_grid_pos: Vector2i, p_to_grid_pos: Vector2i) -> int:
+
+	var direction_vector = p_to_grid_pos - p_from_grid_pos
+	match direction_vector:
+		Vector2i(1, 0):
+			return Direction.EAST
+		Vector2i(1, 1):
+			return Direction.SOUTH_EAST
+		Vector2i(0, 1):
+			return Direction.SOUTH
+		Vector2i(-1, 1):
+			return Direction.SOUTH_WEST
+		Vector2i(-1, 0):
+			return Direction.WEST
+		Vector2i(-1, -1):
+			return Direction.NORTH_WEST
+		Vector2i(0, -1):
+			return Direction.NORTH
+		Vector2i(1, -1):
+			return Direction.NORTH_EAST
+		_:
+			push_error("[PathfindingHandler] Invalid direction vector: %s" % str(direction_vector))
+			return -1
+
 
 
 ## cell id -> grid pos
@@ -51,6 +99,6 @@ func get_cell_neighbours() -> Array:
 	
 
 func clear() -> void:
-	astar_2d = null
+	astar_grid = null
 	for child in Battlefield.debug_astar_layer.get_children():
 		child.queue_free()

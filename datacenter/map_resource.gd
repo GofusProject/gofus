@@ -3,7 +3,7 @@ class_name MapResource
 
 var map_id: int
 var date: String
-## Staggered isometric grid
+## Staggered isometric grid FOR RENDERING ONLY
 ## Vector2i(width, height). I recalculate height with y going right
 ## Dofus use staggered with x going downward and y going down right 
 var size: Vector2i 
@@ -28,6 +28,12 @@ var max_merchant: int
 var cell_resources: Array[CellResource]
 var cell_count: int
 var active_cells: int = 0
+
+
+## For astar pathfinding
+var diamond_grid_start: Vector2i = Vector2i.ZERO
+var diamond_grid_size: Vector2i = Vector2i.ZERO
+var diamond_end_grid_y: int = 0
 
 
 func _init(map_dict: Dictionary) -> void:
@@ -78,7 +84,7 @@ func _init(map_dict: Dictionary) -> void:
 		var cell_data: String = map_data.substr(i * 10, 10)
 		var cell_resource: CellResource = CellResource.new(i, cell_data)
 
-		# World grid positioning (isometric logic) # TO MAP HANDLER
+		# TO MAP HANDLER (AND SPATIAL HANDLER FOR GRID POSITIONNING)
 		if col == max_col:
 			col = 0
 			row += 1
@@ -93,13 +99,18 @@ func _init(map_dict: Dictionary) -> void:
 			col += 1
 
 
-		# Map grid positioning
+		# Map grid positioning - TO MAP HANDLER
 		# Dofus has a different way to calculate this (Pathfinding.as, getCaseCoordonnee(), just before return)
 		cell_resource.staggered_grid_y = row
 		cell_resource.staggered_grid_x = col
 
+		# TO SPATIAL HANDLER
+		# Found those calculation myself
+		cell_resource.diamond_grid_y = (size.x * row) - cell_resource.id
+		cell_resource.diamond_grid_x = cell_resource.id - (size.x - 1) * row
 
-		# World positioning
+
+		# World positioning - TO MAP HANDLER
 		var cell_world_x: float = col * Battlefield.CELL_WIDTH + x_offset
 		var cell_world_y: float = row * Battlefield.CELL_HALF_HEIGHT \
 			- Battlefield.LEVEL_HEIGHT * (cell_resource.cell_level - 7)
@@ -116,6 +127,19 @@ func _init(map_dict: Dictionary) -> void:
 
 		cell_resources[i] = cell_resource
 
+		# TO SPATIAL HANDLER
+		# Calculate map diamond size, start point and end point
+		if cell_resource.diamond_grid_y < diamond_grid_start.y: # diamond_grid_start.y
+			diamond_grid_start.y = cell_resource.diamond_grid_y
+		if cell_resource.diamond_grid_y > diamond_end_grid_y: # diamond_end_grid_y
+			diamond_end_grid_y = cell_resource.diamond_grid_y	
+
+		# Calculate map diamond size
+		if cell_resource.diamond_grid_x > diamond_grid_size.x: # diamond_grid_size.x
+			diamond_grid_size.x = cell_resource.diamond_grid_x
+
+	# TO SPATIAL
+	diamond_grid_size.y = diamond_end_grid_y - diamond_grid_start.y
 	
 	# Neighbours init - TO SPATIAL
 	for cell_resource in cell_resources:

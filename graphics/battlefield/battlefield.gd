@@ -11,7 +11,6 @@ var map_handler: MapHandler
 var character_sprite_handler: CharacterSpriteHandler
 var over_head_handler: OverHeadHandler
 var cell_interaction_handler: CellInteractionHandler
-var pathfinding_handler: PathfindingHandler
 var spatial_handler: SpatialHandler
 
 # Cell
@@ -73,7 +72,6 @@ func _ready() -> void:
 	character_sprite_handler = CharacterSpriteHandler.new()
 	over_head_handler = OverHeadHandler.new()
 	cell_interaction_handler = CellInteractionHandler.new()
-	pathfinding_handler = PathfindingHandler.new()
 	spatial_handler = SpatialHandler.new()
 
 	background = get_node_or_null("Background")
@@ -92,10 +90,10 @@ func _ready() -> void:
 
 
 
-func build_map(p_background_id, p_cell_resources: Array[CellResource]) -> void:
+func build_map(p_background_id, p_cell_resources: Array[CellResource], p_grid_start: Vector2i, p_grid_size: Vector2i) -> void:
 
 	map_handler.render_map(p_background_id, p_cell_resources)
-	spatial_handler.initialize(p_cell_resources)
+	spatial_handler.setup_astar_2d_grid(p_cell_resources, p_grid_start, p_grid_size)
 
 	for cell_resource in p_cell_resources:
 		cell_interaction_handler.create_cell_area(
