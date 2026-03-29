@@ -195,7 +195,7 @@ func render_cell(
 	cell_id_label.position = Vector2(world_x, world_y) - label_size / 2
 
 
-func render_map(p_background_id, p_cell_resources: Array[CellResource], p_map_diamond_grid_start: Vector2i, p_map_diamond_size: Vector2i) -> void:
+func render_map(p_background_id, p_cell_resources: Array[CellResource]) -> void:
 	print("[Battlefield] Rendering map...")
 	var render_start_time : int = Time.get_ticks_usec()
 
@@ -232,16 +232,6 @@ func render_map(p_background_id, p_cell_resources: Array[CellResource], p_map_di
 			cell_resource.ground_slope,
 			cell_resource.movement
 		)
-
-		
-
-	# UNCOMMENT TO RECOVER ASTAR
-	# _setup_astar_2d_grid(p_map_diamond_grid_start, p_map_diamond_size)
-
-	# # Set astar grid walkability based on cell movement cost
-	# for cell_resource in p_cell_resources:
-	# 	if cell_resource.movement != 0:
-	# 		pathfinding_handler.astar_grid.set_point_solid(Vector2i(cell_resource.diamond_grid_x, cell_resource.diamond_grid_y), false)
 
 
 	var render_end_time : int = Time.get_ticks_usec()

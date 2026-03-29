@@ -92,9 +92,9 @@ func _ready() -> void:
 
 
 
-func build_map(p_background_id, p_cell_resources: Array[CellResource], p_map_diamond_grid_start: Vector2i, p_map_diamond_size: Vector2i) -> void:
+func build_map(p_background_id, p_cell_resources: Array[CellResource]) -> void:
 
-	map_handler.render_map(p_background_id, p_cell_resources, p_map_diamond_grid_start, p_map_diamond_size)
+	map_handler.render_map(p_background_id, p_cell_resources)
 	spatial_handler.initialize(p_cell_resources)
 
 	for cell_resource in p_cell_resources:

@@ -73,7 +73,7 @@ func create_map(map_id: int) -> bool:
 			cell_resource.initialize_object2_texture_and_offset(object2_sprite_texture, object2_offset)
 			object2_tiles += 1
 
-	Battlefield.build_map(map_resource.background_id, map_resource.cell_resources, map_resource.diamond_grid_start, map_resource.diamond_grid_size)
+	Battlefield.build_map(map_resource.background_id, map_resource.cell_resources)
 	return true
 
 
@@ -87,27 +87,10 @@ func find_path(p_from_cell_id: int, p_to_cell_id: int) -> Array[Vector2]:
 	var from_cell_grid_pos: Vector2i = Vector2i.ZERO
 	var to_cell_grid_pos: Vector2i = Vector2i.ZERO
 
-	for cell_resource: CellResource in map_resource.cell_resources:
-		if p_from_cell_id == cell_resource.id:
-			from_cell_grid_pos = Vector2i(cell_resource.diamond_grid_x, cell_resource.diamond_grid_y)
-		if p_to_cell_id == cell_resource.id:
-			to_cell_grid_pos = Vector2i(cell_resource.diamond_grid_x, cell_resource.diamond_grid_y)
-
-	if from_cell_grid_pos == Vector2i.ZERO or to_cell_grid_pos == Vector2i.ZERO:
-		printerr("[MapManager] Could not find path (from cell ids: %s, to: %s)" % [p_from_cell_id, p_to_cell_id])
-		return []
 
 	# Grid path
 	print("[MapManager] From cell %d (grid pos %s) to cell %d (grid pos %s)" % [p_from_cell_id, from_cell_grid_pos, p_to_cell_id, to_cell_grid_pos])
 	var cell_id_path: PackedInt64Array = Battlefield.spatial_handler.find_grid_path(p_from_cell_id, p_to_cell_id)
-
-	# # TO REMOVE
-	# for i in grid_path.size() - 1:
-	# 	if i + 1 > grid_path.size() - 1:
-	# 		break
-	# 	print("[MapManager] Direction = ", Battlefield.pathfinding_handler.get_direction_from_grid_pos(grid_path[i], grid_path[i+1]))
-
-	# print("[MapManager] Path found: %s" % str(grid_path))
 
 	# Grid path to World path
 	var build_start_time : int = Time.get_ticks_usec()

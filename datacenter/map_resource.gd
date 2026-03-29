@@ -29,11 +29,6 @@ var cell_resources: Array[CellResource]
 var cell_count: int
 var active_cells: int = 0
 
-## For astar pathfinding
-var diamond_grid_start: Vector2i = Vector2i.ZERO
-var diamond_grid_size: Vector2i = Vector2i.ZERO
-var diamond_end_grid_y: int = 0
-
 
 func _init(map_dict: Dictionary) -> void:
 	map_id        = int(map_dict["id"])
@@ -103,10 +98,6 @@ func _init(map_dict: Dictionary) -> void:
 		cell_resource.staggered_grid_y = row
 		cell_resource.staggered_grid_x = col
 
-		# Found this calculation myself
-		cell_resource.diamond_grid_y = (staggered_size.x * row) - cell_resource.id
-		cell_resource.diamond_grid_x = cell_resource.id - (staggered_size.x - 1) * row
-
 
 		# World positioning
 		var cell_world_x: float = col * Battlefield.CELL_WIDTH + x_offset
@@ -125,19 +116,6 @@ func _init(map_dict: Dictionary) -> void:
 
 		cell_resources[i] = cell_resource
 
-
-		# Calculate map diamond size, start point and end point
-		if cell_resource.diamond_grid_y < diamond_grid_start.y: # diamond_grid_start.y
-			diamond_grid_start.y = cell_resource.diamond_grid_y
-		if cell_resource.diamond_grid_y > diamond_end_grid_y: # diamond_end_grid_y
-			diamond_end_grid_y = cell_resource.diamond_grid_y	
-
-		# Calculate map diamond size
-		if cell_resource.diamond_grid_x > diamond_grid_size.x: # diamond_grid_size.x
-			diamond_grid_size.x = cell_resource.diamond_grid_x
-
-	
-	diamond_grid_size.y = diamond_end_grid_y - diamond_grid_start.y
 	
 	# Neighbours init
 	for cell_resource in cell_resources:
