@@ -106,8 +106,8 @@ func render_background(p_background_id: int) -> void:
 ## Called by the Battlefield to render the all map
 func render_cell(
 	id: int,
-	world_x: float, world_y: float,
-	grid_x: int, grid_y: int,
+	world_position: Vector2,
+	staggered_grid_position: Vector2i,
 	ground_slope: int,
 	ground_tile_id: int,
 	ground_tile_rot: int,
@@ -137,7 +137,7 @@ func render_cell(
 		ground_sprite.texture = ground_texture
 
 		ground_sprite.offset = ground_offset
-		ground_sprite.position = Vector2(world_x, world_y)
+		ground_sprite.position = world_position
 
 		if ground_slope != 1:
 			ground_sprite.frame = ground_slope - 1
@@ -160,7 +160,7 @@ func render_cell(
 		object1_sprite.texture = object1_texture
 
 		object1_sprite.offset = object1_offset
-		object1_sprite.position = Vector2(world_x, world_y)
+		object1_sprite.position = world_position
 
 		if ground_slope == 1 and object1_rot != 0:
 			object1_sprite.rotation_degrees = float(object1_rot * 90)
@@ -180,19 +180,19 @@ func render_cell(
 		object2_sprite.hframes = 1  # Reset frame count
 		object2_sprite.texture = object2_texture
 		object2_sprite.offset = object2_offset
-		object2_sprite.position = Vector2(world_x, world_y) 
+		object2_sprite.position = world_position 
 
 		if is_object2_flip:
 			object2_sprite.scale.x = -1.0
 		
 	# Cell ID label
 	var cell_id_label: Label = _get_cell_id_label()
-	cell_id_label.text = str(id) + "\n" + str(Vector2i(grid_x, grid_y))
+	cell_id_label.text = str(id) + "\n" + str(staggered_grid_position)
 
 	# Force Godot to compute the minimum size right now
 	cell_id_label.reset_size()  # or call size = cell_id_label.get_minimum_size()
 	var label_size: Vector2 = cell_id_label.get_minimum_size()
-	cell_id_label.position = Vector2(world_x, world_y) - label_size / 2
+	cell_id_label.position = world_position - label_size / 2
 
 
 func render_map(p_background_id, p_map_width: int, p_cell_resources: Array[CellResource]) -> void:
@@ -204,44 +204,38 @@ func render_map(p_background_id, p_map_width: int, p_cell_resources: Array[CellR
 	if Battlefield.background != null and p_background_id != 0:
 		render_background(p_background_id)
 
-	var col: int = -1
-	var row: int = 0
-	var x_offset: float = 0
-	var max_col: int = p_map_width - 1
+	var staggered_grid_x: int = -1
+	var staggered_grid_y: int = 0
+	var world_x_offset: float = 0
+	var max_staggered_grid_x: int = p_map_width - 1
 
 	for cell_resource in p_cell_resources:
 
-		if col == max_col:
-			col = 0
-			row += 1
+		if staggered_grid_x == max_staggered_grid_x:
+			staggered_grid_x = 0
+			staggered_grid_y += 1
   
-			if x_offset == 0:
-				x_offset = Battlefield.CELL_HALF_WIDTH
-				max_col -= 1
+			if world_x_offset == 0:
+				world_x_offset = Battlefield.CELL_HALF_WIDTH
+				max_staggered_grid_x -= 1
 			else:
-				x_offset = 0
-				max_col += 1
+				world_x_offset = 0
+				max_staggered_grid_x += 1
 		else:
-			col += 1	
+			staggered_grid_x += 1	
 
 		# Map grid positioning
 		# Dofus has a different way to calculate this (Pathfinding.as, getCaseCoordonnee(), just before return)
-		cell_resource.staggered_grid_y = row
-		cell_resource.staggered_grid_x = col
-
-		# World positioning - TO MAP HANDLER
-		var cell_world_x: float = col * Battlefield.CELL_WIDTH + x_offset
-		var cell_world_y: float = row * Battlefield.CELL_HALF_HEIGHT \
-			- Battlefield.LEVEL_HEIGHT * (cell_resource.cell_level - 7)
-  
-		var cell_position: Vector2 = Vector2(cell_world_x, cell_world_y)
-		cell_resource.x = cell_position.x
-		cell_resource.y = cell_position.y
+		cell_resource.staggered_grid_position = Vector2i(staggered_grid_x, staggered_grid_y)
+		cell_resource.world_position = Vector2(
+			staggered_grid_x * Battlefield.CELL_WIDTH + world_x_offset,
+			staggered_grid_y * Battlefield.CELL_HALF_HEIGHT - Battlefield.LEVEL_HEIGHT * (cell_resource.cell_level - 7)
+			)
 
 		render_cell(
 			cell_resource.id,
-			cell_resource.x, cell_resource.y,
-			cell_resource.staggered_grid_x, cell_resource.staggered_grid_y,
+			cell_resource.world_position,
+			cell_resource.staggered_grid_position,
 			cell_resource.ground_slope,
 			cell_resource.ground_tile_id,
 			cell_resource.ground_tile_rot,
@@ -262,7 +256,7 @@ func render_map(p_background_id, p_map_width: int, p_cell_resources: Array[CellR
 		)
 
 		render_grid_cell(
-			cell_resource.x, cell_resource.y,
+			cell_resource.world_position,
 			cell_resource.ground_slope,
 			cell_resource.movement
 		)
@@ -273,11 +267,11 @@ func render_map(p_background_id, p_map_width: int, p_cell_resources: Array[CellR
 	print("[Battlefield] Map rendered (took %.2f sec)" % render_time_sec)
 
 
-func render_grid_cell(world_x: float, world_y: float, ground_slope: int, movement: int) -> void:
+func render_grid_cell(p_world_position: Vector2, ground_slope: int, movement: int) -> void:
 	if movement == 0:
 		return
 
-	var pos = Vector2(world_x, world_y)
+	var pos = p_world_position
 	var cell_visual = Line2D.new()
 	cell_visual.closed = true
 	cell_visual.width = 1.5
@@ -315,19 +309,14 @@ func get_cell_world_position_from_grid_position(grid_pos: Vector2i) -> Vector2:
 
 ## cell id -> cell world pos
 func get_cell_world_position_from_cell_id(p_cell_id: int) -> Vector2:
-	var cell_resource: CellResource = Datacenter.map_resource.cell_resources[p_cell_id]
-	var world_pos = Vector2(cell_resource.x, cell_resource.y)
-	if world_pos == Vector2.ZERO:
-		push_error("[MapHandler] World position cound not be retrieved for cell id ", str(p_cell_id))
-
-	return Vector2(cell_resource.x, cell_resource.y)
+	return Datacenter.map_resource.cell_resources[p_cell_id].world_position
 
 
 ## cell world pos -> cell id
 func get_cell_id_from_world_position(p_world_position: Vector2, p_cell_resources: Array[CellResource]) -> int:
 
 	for cell_resource in p_cell_resources:
-		if p_world_position == Vector2(cell_resource.x, cell_resource.y):
+		if p_world_position == cell_resource.world_position:
 			print("[MapHandler] Cell ID %s found for world pos %s" % [cell_resource.id, str(p_world_position)])
 			return cell_resource.id
 

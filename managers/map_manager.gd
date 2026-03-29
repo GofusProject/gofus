@@ -96,7 +96,7 @@ func get_world_path_and_directions(p_from_cell_id: int, p_to_cell_id: int) -> Ar
 	var directions: Array[SpatialHandler.Direction] = []
 	for i in cell_id_path.size():
 		var cell_id = cell_id_path[i]
-		world_path.append(Vector2(map_resource.cell_resources[cell_id].x, map_resource.cell_resources[cell_id].y))
+		world_path.append(map_resource.cell_resources[cell_id].world_position)
 		if i < cell_id_path.size() - 1:
 			directions.append(Battlefield.spatial_handler.get_direction_from_cell_id_to_cell_id(map_resource.size.x, cell_id, cell_id_path[i + 1]))
 	

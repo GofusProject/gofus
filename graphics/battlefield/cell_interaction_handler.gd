@@ -9,7 +9,7 @@ var _area_pool_index: int = 0
 
 
 
-func create_cell_area(world_x: float, world_y: float, ground_slope: int, movement: int, cell_id: int) -> void:
+func create_cell_area(p_world_position: Vector2, ground_slope: int, movement: int, cell_id: int) -> void:
 	if movement == 0:
 		return
 
@@ -34,7 +34,7 @@ func create_cell_area(world_x: float, world_y: float, ground_slope: int, movemen
 	_area_pool_index += 1
 
 	# Init
-	cell_area.position = Vector2(world_x, world_y)
+	cell_area.position = p_world_position
 	cell_area.name = "Area2D" + str(cell_id)
 
 	# Bind signals carrying the live cell_id

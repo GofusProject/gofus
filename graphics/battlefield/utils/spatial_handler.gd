@@ -49,13 +49,13 @@ func setup_astar_2d_grid(p_map_staggered_width: int, p_cell_resources: Array[Cel
 			staggered_grid_x += 1
 
 		# Diamond grid pos. Found those calculation myself
-		cell_resource.diamond_grid_y = (p_map_staggered_width * staggered_grid_y) - cell_resource.id
-		cell_resource.diamond_grid_x = cell_resource.id - (p_map_staggered_width - 1) * staggered_grid_y
+		cell_resource.diamond_grid_position.y = (p_map_staggered_width * staggered_grid_y) - cell_resource.id
+		cell_resource.diamond_grid_position.x = cell_resource.id - (p_map_staggered_width - 1) * staggered_grid_y
 
 		# diamond_grid_size.x setting
 		# Didn't find a way to calculate map diamond size.x, so for now I take the highest cell ressource diamond grid x
-		if cell_resource.diamond_grid_x > diamond_grid_size.x: # diamond_grid_size.x
-			diamond_grid_size.x = cell_resource.diamond_grid_x
+		if cell_resource.diamond_grid_position.x > diamond_grid_size.x: # diamond_grid_size.x
+			diamond_grid_size.x = cell_resource.diamond_grid_position.x
 
 
 	# A* Star setup 
@@ -71,7 +71,7 @@ func setup_astar_2d_grid(p_map_staggered_width: int, p_cell_resources: Array[Cel
 	astar_grid.fill_solid_region(astar_grid.region) 
 	for cell_resource in p_cell_resources:
 		if cell_resource.movement != 0:
-			astar_grid.set_point_solid(Vector2i(cell_resource.diamond_grid_x, cell_resource.diamond_grid_y), false)
+			astar_grid.set_point_solid(cell_resource.diamond_grid_position, false)
 
 
 func find_path(p_map_width: int, p_from_cell_id: int, p_to_cell_id: int) -> Array[int]:

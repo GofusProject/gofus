@@ -97,7 +97,7 @@ func build_map(p_background_id, p_map_staggered_width: int, p_cell_resources: Ar
 
 	for cell_resource in p_cell_resources:
 		cell_interaction_handler.create_cell_area(
-			cell_resource.x, cell_resource.y,
+			cell_resource.world_position,
 			cell_resource.ground_slope,
 			cell_resource.movement,
 			cell_resource.id
