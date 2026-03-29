@@ -10,9 +10,9 @@ signal cell_unhovered(cell_id: int)
 var map_handler: MapHandler
 var character_sprite_handler: CharacterSpriteHandler
 var over_head_handler: OverHeadHandler
-var grid_handler: GridHandler
 var cell_interaction_handler: CellInteractionHandler
 var pathfinding_handler: PathfindingHandler
+var spatial_handler: SpatialHandler
 
 # Cell
 const CELL_WIDTH: int = 106
@@ -55,7 +55,7 @@ var grid_layer: Node2D
 var cell_interaction_layer: Node2D
 var debug_astar_layer: Node2D
 
-var astar_2d: AStar2D
+
 
 const ANIMATED_CHARACTER_SPRITE_2D_SCENE: PackedScene = preload("res://graphics/battlefield/scenes/AnimatedCharacterSprite2D.tscn")
 const TEXT_OVER_HEAD_SCENE: PackedScene = preload("res://graphics/battlefield/scenes/TextOverHead.tscn")
@@ -72,9 +72,9 @@ func _ready() -> void:
 	map_handler = MapHandler.new()
 	character_sprite_handler = CharacterSpriteHandler.new()
 	over_head_handler = OverHeadHandler.new()
-	grid_handler = GridHandler.new()
 	cell_interaction_handler = CellInteractionHandler.new()
 	pathfinding_handler = PathfindingHandler.new()
+	spatial_handler = SpatialHandler.new()
 
 	background = get_node_or_null("Background")
 	ground_layer = get_node_or_null("GroundLayer")
@@ -89,6 +89,21 @@ func _ready() -> void:
 	debug_astar_layer = get_node_or_null("DebugAStarLayer")
 
 	background.centered = false
+
+
+
+func build_map(p_background_id, p_cell_resources: Array[CellResource], p_map_diamond_grid_start: Vector2i, p_map_diamond_size: Vector2i) -> void:
+
+	map_handler.render_map(p_background_id, p_cell_resources, p_map_diamond_grid_start, p_map_diamond_size)
+	spatial_handler.initialize(p_cell_resources)
+
+	for cell_resource in p_cell_resources:
+		cell_interaction_handler.create_cell_area(
+			cell_resource.x, cell_resource.y,
+			cell_resource.ground_slope,
+			cell_resource.movement,
+			cell_resource.id
+		)
 
 
 #region CharacterSpriteHandler
@@ -129,139 +144,6 @@ func _on_animated_character_sprite_2d_clicked(animated_character_sprite_2d: Anim
 #endregion
 
 
-#region MapHandler
-
-func render_map(p_background_id, p_cell_resources: Array[CellResource], p_map_diamond_grid_start: Vector2i, p_map_diamond_size: Vector2i) -> void:
-	print("[Battlefield] Rendering map...")
-	var render_start_time : int = Time.get_ticks_usec()
-
-	_clear()
-	astar_2d = AStar2DExtended.new()
-	astar_2d.heuristic = AStar2DExtended.Heuristic.HEURISTIC_OCTILE
-
-	if background != null and p_background_id != 0:
-		map_handler.render_background(p_background_id)
-	for cell_resource in p_cell_resources:
-		map_handler.render_cell(
-			cell_resource.id,
-			cell_resource.x, cell_resource.y,
-			cell_resource.staggered_grid_x, cell_resource.staggered_grid_y,
-			cell_resource.ground_slope,
-			cell_resource.ground_tile_id,
-			cell_resource.ground_tile_rot,
-			cell_resource.is_ground_tile_flip,
-			cell_resource.ground_texture,
-			cell_resource.ground_hframes,
-			cell_resource.ground_offset,
-			cell_resource.object1_id,
-			cell_resource.object1_rot,
-			cell_resource.is_object1_flip,
-			cell_resource.object1_texture,
-			cell_resource.object1_offset,
-			cell_resource.object2_id,
-			cell_resource.is_object2_interactive,
-			cell_resource.is_object2_flip,
-			cell_resource.object2_texture,
-			cell_resource.object2_offset
-		)
-
-		grid_handler.render_cell(
-			cell_resource.x, cell_resource.y,
-			cell_resource.ground_slope,
-			cell_resource.movement
-		)
-
-		cell_interaction_handler.create_cell_area(
-			cell_resource.x, cell_resource.y,
-			cell_resource.ground_slope,
-			cell_resource.movement,
-			cell_resource.id
-		)
-
-		if cell_resource.movement != 0:
-			astar_2d.add_point(
-				cell_resource.id,
-				Vector2(cell_resource.x, cell_resource.y)
-			)
-			var red_square = Polygon2D.new()
-			red_square.color = Color.RED
-			var square_size = 16
-			var square_vertices = PackedVector2Array([
-				Vector2(0,0),
-				Vector2(square_size,0),
-				Vector2(square_size,square_size),
-				Vector2(0,square_size)
-			])
-			red_square.polygon = square_vertices
-			debug_astar_layer.add_child(red_square)
-			red_square.position = Vector2(cell_resource.x, cell_resource.y) - Vector2(square_size, square_size) / 2
-
-			for neighbour_id in cell_resource.neighbour_cell_ids:
-				astar_2d.connect_points(cell_resource.id, neighbour_id)
-				var red_line = Line2D.new()
-				red_line.default_color = Color.RED
-				red_line.width = 2.0
-				var line_vertices = PackedVector2Array([
-					Vector2(cell_resource.x, cell_resource.y),
-					Vector2(Datacenter.map_resource.cell_resources[neighbour_id].x, Datacenter.map_resource.cell_resources[neighbour_id].y)
-					])
-				red_line.points = line_vertices
-				debug_astar_layer.add_child(red_line)
-		
-
-	# UNCOMMENT TO RECOVER ASTAR
-	# _setup_astar_2d_grid(p_map_diamond_grid_start, p_map_diamond_size)
-
-	# # Set astar grid walkability based on cell movement cost
-	# for cell_resource in p_cell_resources:
-	# 	if cell_resource.movement != 0:
-	# 		pathfinding_handler.astar_grid.set_point_solid(Vector2i(cell_resource.diamond_grid_x, cell_resource.diamond_grid_y), false)
-
-
-	var render_end_time : int = Time.get_ticks_usec()
-	var render_time_sec : float = (render_end_time - render_start_time) / 1_000_000.0
-	print("[Battlefield] Map rendered (took %.2f sec)" % render_time_sec)
-
-
-func clear_map() -> void:
-	map_handler.clear_map()
-
-
-func get_world_position_from_cell_id(cell_id: int) -> Vector2i:
-	return map_handler.get_cell_world_position_from_cell_id(cell_id)
-
-
-func get_cell_id_from_world_position(p_cell_resources: Array[CellResource]) -> int:
-	return map_handler.get_cell_id_from_world_position(get_local_mouse_position(), p_cell_resources)
-
-
-func highlight_cell() -> void:
-	map_handler.update_cell_pointer_position(get_local_mouse_position())
-
-
-func display_cell_ids() -> void:
-	map_handler.display_cell_ids()
-
-#endregion
-
-
-#region PathfindingHandler
-
-func _setup_astar_2d_grid(p_map_diamond_start: Vector2i, p_map_diamond_size: Vector2i) -> void:
-	pathfinding_handler.setup_astar_2d_grid(p_map_diamond_start, p_map_diamond_size)
-
-
-# func find_grid_path(p_from_cell_grid_pos: Vector2i, p_to_cell_grid_pos: Vector2i) -> Array[Vector2i]:
-# 	return pathfinding_handler.find_grid_path(p_from_cell_grid_pos, p_to_cell_grid_pos)
-
-
-func find_grid_path(p_from_cell_id: int, p_to_cell_id: int) -> PackedInt64Array:
-	return astar_2d.get_id_path(p_from_cell_id, p_to_cell_id)
-
-#endregion
-
-
-
 #region OverHeadHandler
 
 func show_character_over_head(p_character_id: int, p_name: String) -> void:
@@ -276,12 +158,9 @@ func hide_character_over_head() -> void:
 #endregion
 
 
-func _clear() -> void:
+func clear() -> void:
 	hide_character_over_head()
-	clear_map()
+	map_handler.clear()
 	clear_character_sprites()
-	grid_handler.clear()
 	cell_interaction_handler.clear()
-	astar_2d = null
-	for child in debug_astar_layer.get_children():
-		child.queue_free()
+	spatial_handler.clear()

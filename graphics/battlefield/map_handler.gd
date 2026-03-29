@@ -1,12 +1,11 @@
-# MapHandler.gd
-# Equivalent of MapHandler.as
-# Node representing a complete map with all visual layers
-  
+## Equivalent of MapHandler.as
+## Node representing a complete map with all visual layers
+## Note: Spatial handling is in SpatialHandler
+
 extends Node2D
 class_name MapHandler
   
 
-var cell_pointer: Sprite2D
 
 # Object pools - arrays of reusable nodes
 var _ground_sprite_pool: Array[Sprite2D] = []
@@ -18,7 +17,8 @@ var _ground_pool_index: int = 0
 var _object1_pool_index: int = 0
 var _object2_pool_index: int = 0
 var _label_pool_index: int = 0
-  
+
+
 
 func _get_pooled_sprite2D(pool: Array, index: int, layer: Node) -> Sprite2D:
 	if index < pool.size():
@@ -195,7 +195,79 @@ func render_cell(
 	cell_id_label.position = Vector2(world_x, world_y) - label_size / 2
 
 
-func clear_map() -> void:
+func render_map(p_background_id, p_cell_resources: Array[CellResource], p_map_diamond_grid_start: Vector2i, p_map_diamond_size: Vector2i) -> void:
+	print("[Battlefield] Rendering map...")
+	var render_start_time : int = Time.get_ticks_usec()
+
+	clear()
+
+	if Battlefield.background != null and p_background_id != 0:
+		render_background(p_background_id)
+	for cell_resource in p_cell_resources:
+		render_cell(
+			cell_resource.id,
+			cell_resource.x, cell_resource.y,
+			cell_resource.staggered_grid_x, cell_resource.staggered_grid_y,
+			cell_resource.ground_slope,
+			cell_resource.ground_tile_id,
+			cell_resource.ground_tile_rot,
+			cell_resource.is_ground_tile_flip,
+			cell_resource.ground_texture,
+			cell_resource.ground_hframes,
+			cell_resource.ground_offset,
+			cell_resource.object1_id,
+			cell_resource.object1_rot,
+			cell_resource.is_object1_flip,
+			cell_resource.object1_texture,
+			cell_resource.object1_offset,
+			cell_resource.object2_id,
+			cell_resource.is_object2_interactive,
+			cell_resource.is_object2_flip,
+			cell_resource.object2_texture,
+			cell_resource.object2_offset
+		)
+
+		render_grid_cell(
+			cell_resource.x, cell_resource.y,
+			cell_resource.ground_slope,
+			cell_resource.movement
+		)
+
+		
+
+	# UNCOMMENT TO RECOVER ASTAR
+	# _setup_astar_2d_grid(p_map_diamond_grid_start, p_map_diamond_size)
+
+	# # Set astar grid walkability based on cell movement cost
+	# for cell_resource in p_cell_resources:
+	# 	if cell_resource.movement != 0:
+	# 		pathfinding_handler.astar_grid.set_point_solid(Vector2i(cell_resource.diamond_grid_x, cell_resource.diamond_grid_y), false)
+
+
+	var render_end_time : int = Time.get_ticks_usec()
+	var render_time_sec : float = (render_end_time - render_start_time) / 1_000_000.0
+	print("[Battlefield] Map rendered (took %.2f sec)" % render_time_sec)
+
+
+func render_grid_cell(world_x: float, world_y: float, ground_slope: int, movement: int) -> void:
+	if movement == 0:
+		return
+
+	var pos = Vector2(world_x, world_y)
+	var cell_visual = Line2D.new()
+	cell_visual.closed = true
+	cell_visual.width = 1.5
+	cell_visual.antialiased = true
+	cell_visual.position = pos
+	var raw = Battlefield.SLOPE_POINTS[ground_slope]
+	var points = PackedVector2Array()
+	for p in raw:
+		points.append(Vector2(p[0] * Battlefield.slope_points_scaling, p[1] * Battlefield.slope_points_scaling))
+	cell_visual.points = points
+	Battlefield.grid_layer.add_child(cell_visual)
+
+
+func clear() -> void:
 	# Clear background
 	if Battlefield.background != null:
 		Battlefield.background.texture = null
@@ -203,40 +275,10 @@ func clear_map() -> void:
 	# Hide all pooled sprites and labels
 	_reset_pools()
 
+	# A implementer en pool
+	for child in Battlefield.grid_layer.get_children():
+		child.queue_free()
 
-## cell world pos -> grid pos / DOESNT WORK
-# func get_grid_position_from_world_position(world_pos: Vector2) -> Vector2i:
-# 	# With ground_level = 7, the Y offset cancels out:
-# 	# cell_world_y = row * CELL_HALF_HEIGHT - LEVEL_HEIGHT * (7 - 7)
-# 	#              = row * CELL_HALF_HEIGHT
-# 	var row: int = roundi(world_pos.y / Battlefield.CELL_HALF_HEIGHT)
-
-# 	# Determine x_offset for this row using the same isometric alternating logic.
-# 	# Even rows have x_offset = 0, odd rows have x_offset = CELL_HALF_WIDTH.
-# 	var x_offset: float = Battlefield.CELL_HALF_WIDTH if row % 2 == 1 else 0.0
-
-# 	var col: int = roundi((world_pos.x - x_offset) / Battlefield.CELL_WIDTH)
-
-# 	return Vector2i(col, row)
-
-
-## cell id -> grid pos
-func get_grid_pos_from_cell_id(p_map_width: int, cell_id: int) -> Vector2i:
-	@warning_ignore("integer_division")
-	var row: int = cell_id / (p_map_width * 2 - 1) 
-	var remainder: int = cell_id - row * (p_map_width * 2 - 1)
-	var col: int = remainder % p_map_width
-
-	var y: int = row - col
-	@warning_ignore("integer_division")
-	var x: int = (cell_id - (p_map_width - 1) * y) / p_map_width 
-
-	return Vector2i(x, y)
-
-
-## grid pos -> cell id
-func get_cell_id_from_grid_pos(p_map_width: int, grid_x: int, grid_y: int) -> int:
-	return grid_x * p_map_width + grid_y * (p_map_width - 1)
 
 
 ## grid pos -> cell world pos
@@ -267,8 +309,3 @@ func get_cell_id_from_world_position(p_world_position: Vector2, p_cell_resources
 
 	push_error("[MapHandler] Cell ID could not be retrieved for world position ", str(p_world_position))
 	return -1
-
-
-func get_cell_neighbours() -> Array:
-	return [] # TO IMPLEMENT
-	

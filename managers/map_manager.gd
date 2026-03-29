@@ -73,13 +73,13 @@ func create_map(map_id: int) -> bool:
 			cell_resource.initialize_object2_texture_and_offset(object2_sprite_texture, object2_offset)
 			object2_tiles += 1
 
-	Battlefield.render_map(map_resource.background_id, map_resource.cell_resources, map_resource.diamond_grid_start, map_resource.diamond_grid_size)
+	Battlefield.build_map(map_resource.background_id, map_resource.cell_resources, map_resource.diamond_grid_start, map_resource.diamond_grid_size)
 	return true
 
 
 func clear_map() -> void:
 	Datacenter.map_resource = null
-	Battlefield.clear_map()
+	Battlefield.clear()
 
 
 func find_path(p_from_cell_id: int, p_to_cell_id: int) -> Array[Vector2]:
@@ -99,7 +99,7 @@ func find_path(p_from_cell_id: int, p_to_cell_id: int) -> Array[Vector2]:
 
 	# Grid path
 	print("[MapManager] From cell %d (grid pos %s) to cell %d (grid pos %s)" % [p_from_cell_id, from_cell_grid_pos, p_to_cell_id, to_cell_grid_pos])
-	var cell_id_path: PackedInt64Array = Battlefield.find_grid_path(p_from_cell_id, p_to_cell_id)
+	var cell_id_path: PackedInt64Array = Battlefield.spatial_handler.find_grid_path(p_from_cell_id, p_to_cell_id)
 
 	# # TO REMOVE
 	# for i in grid_path.size() - 1:
