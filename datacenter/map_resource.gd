@@ -86,26 +86,3 @@ func _init(map_dict: Dictionary) -> void:
 		active_cells += 1
 
 		cell_resources[i] = cell_resource
-
-	
-	# Neighbours init - TO SPATIAL
-	for cell_resource in cell_resources:
-		cell_resource.neighbour_cell_ids = []
-
-		cell_resource.neighbour_cell_ids.append(cell_resource.id + 1) # DIRECTION_EAST
-		cell_resource.neighbour_cell_ids.append(cell_resource.id + size.x) # DIRECTION_SOUTH_EAST
-		cell_resource.neighbour_cell_ids.append(cell_resource.id + size.x * 2 - 1) # DIRECTION_SOUTH
-		cell_resource.neighbour_cell_ids.append(cell_resource.id + size.x - 1) # DIRECTION_SOUTH_WEST
-		cell_resource.neighbour_cell_ids.append(cell_resource.id - 1) # DIRECTION_WEST
-		cell_resource.neighbour_cell_ids.append(cell_resource.id - size.x) # DIRECTION_NORTH_WEST
-		cell_resource.neighbour_cell_ids.append(cell_resource.id - size.x * 2 + 1) # DIRECTION_NORTH
-		cell_resource.neighbour_cell_ids.append(cell_resource.id - size.x + 1) # DIRECTION_NORTH_EAST
-
-		for neighbour_cell_id in cell_resource.neighbour_cell_ids.duplicate():
-			if neighbour_cell_id < 0 or neighbour_cell_id >= cell_count:
-				cell_resource.neighbour_cell_ids.erase(neighbour_cell_id)
-			else:
-				var neighbour_cell_resource: CellResource = cell_resources[neighbour_cell_id]
-				if neighbour_cell_resource.movement == 0:
-					cell_resource.neighbour_cell_ids.erase(neighbour_cell_id)
-				

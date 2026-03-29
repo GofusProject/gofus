@@ -18,7 +18,6 @@ var staggered_grid_x: int
 var staggered_grid_y: int
 var cell_level: int # From 0 to 7 I think. Uused at MapResource init to determine world pos
 var permanent_level: int
-var neighbour_cell_ids: Array[int]
 
 # Interaction
 var is_walkable: bool
@@ -85,6 +84,7 @@ func _init(p_id: int, p_raw_data: String) -> void:
 	is_object_external_interactive = cell_dict["is_object_external_interactive"]
 	permanent_level                   = cell_dict["permanent_level"]
 	is_targetable                     = cell_dict["is_targetable"]
+
 
 func initialize_ground_texture_and_offset(p_ground_texture: Texture2D, p_ground_offset: Vector2, p_ground_hframes: int) -> void:
 	ground_texture = p_ground_texture

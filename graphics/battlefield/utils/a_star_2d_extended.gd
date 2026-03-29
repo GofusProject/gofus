@@ -1,3 +1,5 @@
+## NOT USED
+
 class_name AStar2DExtended
 extends AStar2D
 

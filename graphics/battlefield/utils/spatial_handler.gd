@@ -1,3 +1,7 @@
+## Use DIAMOND grid
+## Handles directions, pathfinding
+## It does not handle any visual process, so it can be transfered easily to server side
+
 class_name SpatialHandler
 extends Node
 
@@ -29,6 +33,7 @@ func setup_astar_2d_grid(p_map_staggered_width: int, p_cell_resources: Array[Cel
 
 	for cell_resource in p_cell_resources:
 
+		# Match staggered grid loop (See MapHandler)
 		if staggered_grid_x == max_staggered_grid_x:
 			staggered_grid_x = 0
 			staggered_grid_y += 1
@@ -40,15 +45,17 @@ func setup_astar_2d_grid(p_map_staggered_width: int, p_cell_resources: Array[Cel
 		else:
 			staggered_grid_x += 1
 
-		# Found those calculation myself
+		# Diamond grid pos. Found those calculation myself
 		cell_resource.diamond_grid_y = (p_map_staggered_width * staggered_grid_y) - cell_resource.id
 		cell_resource.diamond_grid_x = cell_resource.id - (p_map_staggered_width - 1) * staggered_grid_y
 
+		# diamond_grid_size.x setting
 		# Didn't find a way to calculate map diamond size.x, so for now I take the highest cell ressource diamond grid x
 		if cell_resource.diamond_grid_x > diamond_grid_size.x: # diamond_grid_size.x
 			diamond_grid_size.x = cell_resource.diamond_grid_x
 
 
+	# A* Star setup 
 	astar_grid = AStarGrid2D.new()
 	astar_grid.region = Rect2i(diamond_grid_start.x, diamond_grid_start.y, diamond_grid_size.x, diamond_grid_size.y)
 	astar_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ALWAYS
@@ -57,12 +64,11 @@ func setup_astar_2d_grid(p_map_staggered_width: int, p_cell_resources: Array[Cel
 	astar_grid.update()
 
 
-	# Set astar grid walkability based on cell movement cost
+	# Set astar grid walkability based on cell movement property
 	astar_grid.fill_solid_region(astar_grid.region) 
 	for cell_resource in p_cell_resources:
 		if cell_resource.movement != 0:
 			astar_grid.set_point_solid(Vector2i(cell_resource.diamond_grid_x, cell_resource.diamond_grid_y), false)
-
 
 
 func find_path(p_map_width: int, p_from_cell_id: int, p_to_cell_id: int) -> Array[int]:
@@ -103,7 +109,6 @@ func get_direction_from_grid_pos(p_from_grid_pos: Vector2i, p_to_grid_pos: Vecto
 			return -1
 
 
-
 ## cell id -> grid pos
 func get_grid_pos_from_cell_id(p_map_width: int, cell_id: int) -> Vector2i:
 	@warning_ignore("integer_division")
@@ -123,10 +128,38 @@ func get_cell_id_from_grid_pos(p_map_width: int, grid_x: int, grid_y: int) -> in
 	return grid_x * p_map_width + grid_y * (p_map_width - 1)
 
 
+func get_cell_neighbours(cell_id: int, p_map_width: int) -> Array:
+	var neighbours: Array[int] = []
+	for direction in Direction.values():
+		var neighbour_cell_id = get_cell_id_at_direction(cell_id, direction, p_map_width)
+		if neighbour_cell_id >= 0:
+			neighbours.append(neighbour_cell_id)
+	return neighbours
 
-func get_cell_neighbours() -> Array:
-	return [] # TO IMPLEMENT
-	
+
+func get_cell_id_at_direction(from_cell_id: int, direction: Direction, p_map_width: int) -> int:
+
+	match direction:
+		Direction.EAST:
+			return from_cell_id + 1
+		Direction.SOUTH_EAST:
+			return from_cell_id + p_map_width
+		Direction.SOUTH:
+			return from_cell_id + p_map_width * 2 - 1
+		Direction.SOUTH_WEST:
+			return from_cell_id + p_map_width - 1
+		Direction.WEST:
+			return from_cell_id - 1
+		Direction.NORTH_WEST:
+			return from_cell_id - p_map_width
+		Direction.NORTH:
+			return from_cell_id - p_map_width * 2 + 1
+		Direction.NORTH_EAST:
+			return from_cell_id - p_map_width + 1
+		_:
+			push_error("[SpatialHander] Invalid direction: %s" % str(direction))
+			return -1
+
 
 func clear() -> void:
 	astar_grid = null
