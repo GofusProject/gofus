@@ -5,17 +5,11 @@ extends Node
 
 
 
-signal character_hovered(character_id: int)
-signal character_unhovered(character_id: int)
-signal character_clicked(character_id: int)
 signal character_world_path_point_reached(world_pos: Vector2, linked_character_id: int)
 
 
 
 func _ready() -> void:
-	Battlefield.animated_character_sprite_2d_hovered.connect(_on_battlefield_animated_character_sprite_2d_hovered)
-	Battlefield.animated_character_sprite_2d_unhovered.connect(_on_battlefield_animated_character_sprite_2d_unhovered)
-	Battlefield.animated_character_sprite_2d_clicked.connect(_on_battlefield_animated_character_sprite_2d_clicked)
 	Battlefield.character_sprite_handler.character_world_path_point_reached.connect(_on_battlefield_character_world_path_point_reached)
 
 
@@ -29,7 +23,7 @@ func create_playable_character(p_player_id) -> void:
 	Datacenter.playable_character_resource = playable_character_resource
 	var character_id = Datacenter.add_character_resource(playable_character_resource)
 
-	Battlefield.render_character_sprite(
+	Battlefield.character_sprite_handler.add_animated_character_sprite_2d(
 		character_id,
 		playable_character_resource.sprite_frames_id,
 		playable_character_resource.direction,
@@ -63,7 +57,7 @@ func create_npcs() -> void:
 		var non_playable_character_resource = NonPlayableCharacterResource.new(npc_data, npc_template_data, npc_template_name)
 		var character_id: int = Datacenter.add_character_resource(non_playable_character_resource)
 
-		Battlefield.render_character_sprite(
+		Battlefield.character_sprite_handler.add_animated_character_sprite_2d(
 			character_id,
 			non_playable_character_resource.sprite_frames_id,
 			non_playable_character_resource.direction,
@@ -72,7 +66,7 @@ func create_npcs() -> void:
 
 func clear_characters() -> void:
 	Datacenter._character_resources.clear()
-	Battlefield.clear_character_sprites()
+	Battlefield.character_sprite_handler.clear()
 	Ui.close_character_popup_menu()
 
 
@@ -81,7 +75,7 @@ func get_playable_character_resource() -> PlayablePlayerResource:
 
 
 func move_character(p_character_resource: CharacterResource, p_path: Array[Vector2], p_orientations: Array[CharacterSpriteHandler.Orientation]) -> void:
-	Battlefield.move_character(p_character_resource.id, p_path, p_orientations)
+	Battlefield.character_sprite_handler.move_character(p_character_resource.id, p_path, p_orientations)
 
 
 #region UI
@@ -129,22 +123,9 @@ func close_character_popup_menu() -> void:
 
 #region Battlefied
 
-func _on_battlefield_animated_character_sprite_2d_hovered(animated_character_sprite_2d: AnimatedCharacterSprite2D) -> void:
-	character_hovered.emit(animated_character_sprite_2d.linked_character_id)
-
-
-func _on_battlefield_animated_character_sprite_2d_unhovered(animated_character_sprite_2d: AnimatedCharacterSprite2D) -> void:
-	character_unhovered.emit(animated_character_sprite_2d.linked_character_id)
-
-
-func _on_battlefield_animated_character_sprite_2d_clicked(animated_character_sprite_2d: AnimatedCharacterSprite2D) -> void:
-	character_clicked.emit(animated_character_sprite_2d.linked_character_id)
-
-
 func _on_battlefield_character_world_path_point_reached(world_pos: Vector2, linked_character_id: int) -> void:
 	var character_resource: CharacterResource = Datacenter._character_resources[linked_character_id]
 	character_resource.cell_id = MapManager.get_cell_id_from_world_position(world_pos) # MapManager is called because cell_id is related to it
 	character_world_path_point_reached.emit(world_pos, linked_character_id)
-
 
 #endregion

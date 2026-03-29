@@ -4,7 +4,9 @@ class_name CharacterSpriteHandler
 extends Node2D
 
 
-
+signal character_hovered(animated_character_sprite_2d_id: int)
+signal character_unhovered(animated_character_sprite_2d_id: int)
+signal character_clicked(animated_character_sprite_2d_id: int)
 signal character_world_path_point_reached(world_pos: Vector2, linked_character_id: int)
 
 
@@ -27,9 +29,15 @@ func add_animated_character_sprite_2d(p_linked_character_id: int, p_sprite_frame
 	animated_character_sprite_2d.initialize(p_linked_character_id, p_sprite_frames_id, p_direction)
 	animated_character_sprite_2d.position = Battlefield.map_handler.get_cell_world_position_from_cell_id(p_cell_id)
 
-	animated_character_sprite_2d.hovered.connect(Battlefield._on_animated_character_sprite_2d_hovered)
-	animated_character_sprite_2d.unhovered.connect(Battlefield._on_animated_character_sprite_2d_unhovered)
-	animated_character_sprite_2d.clicked.connect(Battlefield._on_animated_character_sprite_2d_clicked)
+	animated_character_sprite_2d.hovered.connect(func(animated_character_sprite_2d_id: int) -> void:
+		character_hovered.emit(animated_character_sprite_2d_id)
+	)
+	animated_character_sprite_2d.unhovered.connect(func(animated_character_sprite_2d_id: int) -> void:
+		character_unhovered.emit(animated_character_sprite_2d_id)
+	)
+	animated_character_sprite_2d.clicked.connect(func(animated_character_sprite_2d_id: int) -> void:
+		character_clicked.emit(animated_character_sprite_2d_id)
+	)
 	animated_character_sprite_2d.world_path_point_reached.connect(func(world_pos: Vector2, linked_character_id: int) -> void:
 		character_world_path_point_reached.emit(world_pos, linked_character_id)
 	)
@@ -37,7 +45,7 @@ func add_animated_character_sprite_2d(p_linked_character_id: int, p_sprite_frame
 	Battlefield.character_sprites.add_child(animated_character_sprite_2d)
 
 
-func clear_character_sprites() -> void:
+func clear() -> void:
 	for child in Battlefield.character_sprites.get_children():
 		child.queue_free()
 
@@ -55,6 +63,7 @@ func get_animated_character_sprite_2d_world_position(p_character_id: int) -> Vec
 	return animated_character_sprite_2d.position
 
 
-func move_character(p_character_id: int, p_path: Array[Vector2], p_orientations: Array[CharacterSpriteHandler.Orientation]) -> void:
+func move_character(p_character_id: int, p_path: Array[Vector2],  p_orientations: Array[CharacterSpriteHandler.Orientation]) -> void:
 	var animated_character_sprite_2d: AnimatedCharacterSprite2D = get_animated_character_sprite_2d_by_character_id(p_character_id)
 	animated_character_sprite_2d.follow_path(p_path, p_orientations)
+

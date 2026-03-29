@@ -28,9 +28,9 @@ var path: Array[Vector2] = []
 var path_directions: Array[CharacterSpriteHandler.Orientation]
 
 
-signal hovered(animated_character_sprite_2d: AnimatedCharacterSprite2D)
-signal unhovered(animated_character_sprite_2d: AnimatedCharacterSprite2D)
-signal clicked(animated_character_sprite_2d: AnimatedCharacterSprite2D)
+signal hovered(animated_character_sprite_2d_id: int)
+signal unhovered(animated_character_sprite_2d_id: int)
+signal clicked(animated_character_sprite_2d_id: int)
 signal world_path_point_reached(world_pos: Vector2, linked_character_id: int)
 
 
@@ -195,7 +195,7 @@ func _on_area_2d_mouse_exited() -> void:
 	if is_hovered != false:
 		set_highlight(false)
 		is_hovered = false
-		unhovered.emit(self)
+		unhovered.emit(linked_character_id)
 
 
 func _on_area_2d_mouse_entered() -> void:
@@ -212,12 +212,12 @@ func _on_area_2d_input_event(viewport: Node, event: InputEvent, shape_idx: int) 
 		if is_hovered != true:
 			set_highlight(true)
 			is_hovered = true
-			hovered.emit(self)
+			hovered.emit(linked_character_id)
 		if event is InputEventMouseButton and event.pressed:
 			is_selected = true
-			clicked.emit(self)
+			clicked.emit(linked_character_id)
 	else:
 		if is_hovered != false:
 			set_highlight(false)
 			is_hovered = false
-			unhovered.emit(self)
+			unhovered.emit(linked_character_id)

@@ -24,9 +24,9 @@ func _ready() -> void:
 	Ui.interaction.connect(func(p_action_resource): execute_action(p_action_resource))
 	Ui.gofus_popup_menu_button_pressed.connect(_on_gofus_popup_menu_button_pressed) # to remove
 	Battlefield.cell_clicked.connect(_on_battlefield_cell_clicked)
-	CharactersManager.character_hovered.connect(_on_character_hovered)		# TODO: Battlfield should relay mouse input here
-	CharactersManager.character_unhovered.connect(_on_character_unhovered)
-	CharactersManager.character_clicked.connect(_on_character_clicked)
+	Battlefield.character_sprite_handler.character_hovered.connect(_on_character_hovered)		# TODO: Battlfield should relay mouse input here
+	Battlefield.character_sprite_handler.character_unhovered.connect(_on_character_unhovered)
+	Battlefield.character_sprite_handler.character_clicked.connect(_on_character_clicked)
 	coloring_helper = ColoringHelper.new()
 
 

@@ -59,9 +59,6 @@ var debug_astar_layer: Node2D
 const ANIMATED_CHARACTER_SPRITE_2D_SCENE: PackedScene = preload("res://graphics/battlefield/scenes/AnimatedCharacterSprite2D.tscn")
 const TEXT_OVER_HEAD_SCENE: PackedScene = preload("res://graphics/battlefield/scenes/TextOverHead.tscn")
 
-signal animated_character_sprite_2d_hovered(animated_character_sprite_2d: AnimatedCharacterSprite2D)
-signal animated_character_sprite_2d_unhovered(animated_character_sprite_2d: AnimatedCharacterSprite2D)
-signal animated_character_sprite_2d_clicked(animated_character_sprite_2d: AnimatedCharacterSprite2D)
 
 
 
@@ -104,43 +101,6 @@ func build_map(p_background_id, p_map_staggered_width: int, p_cell_resources: Ar
 		)
 
 
-#region CharacterSpriteHandler
-
-func render_character_sprite(p_linked_character_id: int, p_sprite_frames_id: int, p_direction: int, p_cell_id: int) -> void:
-	print("[Battlefield] Rendering character...")
-	var render_start_time : int = Time.get_ticks_usec()
-	character_sprite_handler.add_animated_character_sprite_2d(p_linked_character_id, p_sprite_frames_id, p_direction, p_cell_id)
-	var render_end_time : int = Time.get_ticks_usec()
-	var render_time_sec : float = (render_end_time - render_start_time) / 1_000_000.0
-	print("[Battlefield] Character rendered (took %.2f sec)" % render_time_sec)
-
-
-func get_character_sprite_world_position(p_character_id: int) -> Vector2:
-	return character_sprite_handler.get_animated_character_sprite_2d_world_position(p_character_id)
-
-
-func clear_character_sprites() -> void:
-	character_sprite_handler.clear_character_sprites()
-
-
-func move_character(p_character_id: int, p_path: Array[Vector2],  p_orientations: Array[CharacterSpriteHandler.Orientation]) -> void:
-	character_sprite_handler.move_character(p_character_id, p_path, p_orientations)
-
-
-func _on_animated_character_sprite_2d_hovered(animated_character_sprite_2d: AnimatedCharacterSprite2D) -> void:
-	animated_character_sprite_2d_hovered.emit(animated_character_sprite_2d)
-
-
-func _on_animated_character_sprite_2d_unhovered(animated_character_sprite_2d: AnimatedCharacterSprite2D) -> void:
-	animated_character_sprite_2d_unhovered.emit(animated_character_sprite_2d)
-
-
-func _on_animated_character_sprite_2d_clicked(animated_character_sprite_2d: AnimatedCharacterSprite2D) -> void:
-	animated_character_sprite_2d_clicked.emit(animated_character_sprite_2d)
-	print("[Battlefield] sprite_frames_id ", animated_character_sprite_2d.sprite_frames_id, " clicked")
-
-#endregion
-
 
 #region OverHeadHandler
 
@@ -159,6 +119,6 @@ func hide_character_over_head() -> void:
 func clear() -> void:
 	hide_character_over_head()
 	map_handler.clear()
-	clear_character_sprites()
+	character_sprite_handler.clear()
 	cell_interaction_handler.clear()
 	spatial_handler.clear()
