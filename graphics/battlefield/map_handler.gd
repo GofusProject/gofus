@@ -269,15 +269,6 @@ func get_cell_id_from_world_position(p_world_position: Vector2, p_cell_resources
 	return -1
 
 
-# func update_cell_pointer_position(p_world_position: Vector2) -> void:
-# 	var grid_pos: Vector2i = get_grid_position_from_world_position(p_world_position) # c'est celle là qui marche pas
-# 	var clamped_world_pos: Vector2 = get_cell_world_position_from_grid_position(grid_pos)
-# 	cell_pointer.position = clamped_world_pos
-
-
-
-## Toggle visibility of cell ID labels
-func display_cell_ids() -> void:
-	if Battlefield.cell_ids_layer:
-		Battlefield.cell_ids_layer.visible = not Battlefield.cell_ids_layer.visible
+func get_cell_neighbours() -> Array:
+	return [] # TO IMPLEMENT
 	

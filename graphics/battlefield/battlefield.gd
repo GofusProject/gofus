@@ -53,6 +53,9 @@ var character_sprites: Node2D
 var over_head_layer: Node2D
 var grid_layer: Node2D
 var cell_interaction_layer: Node2D
+var debug_astar_layer: Node2D
+
+var astar_2d: AStar2D
 
 const ANIMATED_CHARACTER_SPRITE_2D_SCENE: PackedScene = preload("res://graphics/battlefield/scenes/AnimatedCharacterSprite2D.tscn")
 const TEXT_OVER_HEAD_SCENE: PackedScene = preload("res://graphics/battlefield/scenes/TextOverHead.tscn")
@@ -83,6 +86,7 @@ func _ready() -> void:
 	over_head_layer = get_node_or_null("OverHeadLayer")
 	grid_layer = get_node_or_null("GridLayer")
 	cell_interaction_layer = get_node_or_null("CellInteractionLayer")
+	debug_astar_layer = get_node_or_null("DebugAStarLayer")
 
 	background.centered = false
 
@@ -132,6 +136,9 @@ func render_map(p_background_id, p_cell_resources: Array[CellResource], p_map_di
 	var render_start_time : int = Time.get_ticks_usec()
 
 	_clear()
+	astar_2d = AStar2DExtended.new()
+	astar_2d.heuristic = AStar2DExtended.Heuristic.HEURISTIC_OCTILE
+
 	if background != null and p_background_id != 0:
 		map_handler.render_background(p_background_id)
 	for cell_resource in p_cell_resources:
@@ -171,12 +178,44 @@ func render_map(p_background_id, p_cell_resources: Array[CellResource], p_map_di
 			cell_resource.id
 		)
 
-	_setup_astar_2d_grid(p_map_diamond_grid_start, p_map_diamond_size)
-
-	# Set astar grid walkability based on cell movement cost
-	for cell_resource in p_cell_resources:
 		if cell_resource.movement != 0:
-			pathfinding_handler.astar_grid.set_point_solid(Vector2i(cell_resource.diamond_grid_x, cell_resource.diamond_grid_y), false)
+			astar_2d.add_point(
+				cell_resource.id,
+				Vector2(cell_resource.x, cell_resource.y)
+			)
+			var red_square = Polygon2D.new()
+			red_square.color = Color.RED
+			var square_size = 16
+			var square_vertices = PackedVector2Array([
+				Vector2(0,0),
+				Vector2(square_size,0),
+				Vector2(square_size,square_size),
+				Vector2(0,square_size)
+			])
+			red_square.polygon = square_vertices
+			debug_astar_layer.add_child(red_square)
+			red_square.position = Vector2(cell_resource.x, cell_resource.y) - Vector2(square_size, square_size) / 2
+
+			for neighbour_id in cell_resource.neighbour_cell_ids:
+				astar_2d.connect_points(cell_resource.id, neighbour_id)
+				var red_line = Line2D.new()
+				red_line.default_color = Color.RED
+				red_line.width = 2.0
+				var line_vertices = PackedVector2Array([
+					Vector2(cell_resource.x, cell_resource.y),
+					Vector2(Datacenter.map_resource.cell_resources[neighbour_id].x, Datacenter.map_resource.cell_resources[neighbour_id].y)
+					])
+				red_line.points = line_vertices
+				debug_astar_layer.add_child(red_line)
+		
+
+	# UNCOMMENT TO RECOVER ASTAR
+	# _setup_astar_2d_grid(p_map_diamond_grid_start, p_map_diamond_size)
+
+	# # Set astar grid walkability based on cell movement cost
+	# for cell_resource in p_cell_resources:
+	# 	if cell_resource.movement != 0:
+	# 		pathfinding_handler.astar_grid.set_point_solid(Vector2i(cell_resource.diamond_grid_x, cell_resource.diamond_grid_y), false)
 
 
 	var render_end_time : int = Time.get_ticks_usec()
@@ -212,8 +251,12 @@ func _setup_astar_2d_grid(p_map_diamond_start: Vector2i, p_map_diamond_size: Vec
 	pathfinding_handler.setup_astar_2d_grid(p_map_diamond_start, p_map_diamond_size)
 
 
-func find_grid_path(p_from_cell_grid_pos: Vector2i, p_to_cell_grid_pos: Vector2i) -> Array[Vector2i]:
-	return pathfinding_handler.find_grid_path(p_from_cell_grid_pos, p_to_cell_grid_pos)
+# func find_grid_path(p_from_cell_grid_pos: Vector2i, p_to_cell_grid_pos: Vector2i) -> Array[Vector2i]:
+# 	return pathfinding_handler.find_grid_path(p_from_cell_grid_pos, p_to_cell_grid_pos)
+
+
+func find_grid_path(p_from_cell_id: int, p_to_cell_id: int) -> PackedInt64Array:
+	return astar_2d.get_id_path(p_from_cell_id, p_to_cell_id)
 
 #endregion
 
@@ -239,3 +282,6 @@ func _clear() -> void:
 	clear_character_sprites()
 	grid_handler.clear()
 	cell_interaction_handler.clear()
+	astar_2d = null
+	for child in debug_astar_layer.get_children():
+		child.queue_free()

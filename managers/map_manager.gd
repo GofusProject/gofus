@@ -34,7 +34,7 @@ func create_map(map_id: int) -> bool:
 		push_error("[MapManager] MapResource initialization failed for map %d" % map_id)
 		return false
 	
-	print("[MapManager] Current map resource : width=%d, height=%d, bgID=%d, cell count=%d" % [map_resource.staggered_width, map_resource.staggered_height, map_resource.background_id, map_resource.cell_count])
+	print("[MapManager] Current map resource : width=%d, height=%d, bgID=%d, cell count=%d" % [map_resource.staggered_size.x, map_resource.staggered_size.y, map_resource.background_id, map_resource.cell_count])
 	
 	Datacenter.set_current_map_resource(map_resource)
 
@@ -99,7 +99,7 @@ func find_path(p_from_cell_id: int, p_to_cell_id: int) -> Array[Vector2]:
 
 	# Grid path
 	print("[MapManager] From cell %d (grid pos %s) to cell %d (grid pos %s)" % [p_from_cell_id, from_cell_grid_pos, p_to_cell_id, to_cell_grid_pos])
-	var grid_path: Array[Vector2i] = Battlefield.find_grid_path(from_cell_grid_pos, to_cell_grid_pos)
+	var cell_id_path: PackedInt64Array = Battlefield.find_grid_path(p_from_cell_id, p_to_cell_id)
 
 	# # TO REMOVE
 	# for i in grid_path.size() - 1:
@@ -112,9 +112,9 @@ func find_path(p_from_cell_id: int, p_to_cell_id: int) -> Array[Vector2]:
 	# Grid path to World path
 	var build_start_time : int = Time.get_ticks_usec()
 	var world_path: Array[Vector2] = []
-	for grid_pos in grid_path:
+	for cell_id in cell_id_path:
 		for cell_resource: CellResource in map_resource.cell_resources:
-			if cell_resource.diamond_grid_x == grid_pos.x and cell_resource.diamond_grid_y == grid_pos.y:
+			if cell_resource.id == cell_id:
 				world_path.append(Vector2(cell_resource.x, cell_resource.y))
 				break
 	var build_total : int = Time.get_ticks_usec() - build_start_time

@@ -18,6 +18,7 @@ var staggered_grid_x: int
 var staggered_grid_y: int
 var cell_level: int # From 0 to 7 I think. Uused at MapResource init to determine world pos
 var permanent_level: int
+var neighbour_cell_ids: Array[int]
 
 # Interaction
 var is_walkable: bool

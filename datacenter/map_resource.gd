@@ -38,7 +38,7 @@ var diamond_end_grid_y: int = 0
 func _init(map_dict: Dictionary) -> void:
 	map_id        = int(map_dict["id"])
 	date          = str(map_dict["date"])
-	staggered_size.y         = int(map_dict["width"])
+	staggered_size.x         = int(map_dict["width"])
 	# staggered_height        = int(map_dict["height"]) # Height is recalculated, see staggered_size for more info
 	places        = str(map_dict["places"])
 	key           = str(map_dict["key"])
@@ -77,7 +77,7 @@ func _init(map_dict: Dictionary) -> void:
 	var col: int = -1
 	var row: int = 0
 	var x_offset: float = 0
-	var max_col: int = staggered_size.y - 1
+	var max_col: int = staggered_size.x - 1
 
 	for i in range(cell_count):
 		var cell_data: String = map_data.substr(i * 10, 10)
@@ -104,8 +104,8 @@ func _init(map_dict: Dictionary) -> void:
 		cell_resource.staggered_grid_x = col
 
 		# Found this calculation myself
-		cell_resource.diamond_grid_y = (staggered_size.y * row) - cell_resource.id
-		cell_resource.diamond_grid_x = cell_resource.id - (staggered_size.y - 1) * row
+		cell_resource.diamond_grid_y = (staggered_size.x * row) - cell_resource.id
+		cell_resource.diamond_grid_x = cell_resource.id - (staggered_size.x - 1) * row
 
 
 		# World positioning
@@ -139,4 +139,24 @@ func _init(map_dict: Dictionary) -> void:
 	
 	diamond_grid_size.y = diamond_end_grid_y - diamond_grid_start.y
 	
-	print("Diamond map size: %s" % str(diamond_grid_size))
+	# Neighbours init
+	for cell_resource in cell_resources:
+		cell_resource.neighbour_cell_ids = []
+
+		cell_resource.neighbour_cell_ids.append(cell_resource.id + 1) # DIRECTION_EAST
+		cell_resource.neighbour_cell_ids.append(cell_resource.id + staggered_size.x) # DIRECTION_SOUTH_EAST
+		cell_resource.neighbour_cell_ids.append(cell_resource.id + staggered_size.x * 2 - 1) # DIRECTION_SOUTH
+		cell_resource.neighbour_cell_ids.append(cell_resource.id + staggered_size.x - 1) # DIRECTION_SOUTH_WEST
+		cell_resource.neighbour_cell_ids.append(cell_resource.id - 1) # DIRECTION_WEST
+		cell_resource.neighbour_cell_ids.append(cell_resource.id - staggered_size.x) # DIRECTION_NORTH_WEST
+		cell_resource.neighbour_cell_ids.append(cell_resource.id - staggered_size.x * 2 + 1) # DIRECTION_NORTH
+		cell_resource.neighbour_cell_ids.append(cell_resource.id - staggered_size.x + 1) # DIRECTION_NORTH_EAST
+
+		for neighbour_cell_id in cell_resource.neighbour_cell_ids.duplicate():
+			if neighbour_cell_id < 0 or neighbour_cell_id >= cell_count:
+				cell_resource.neighbour_cell_ids.erase(neighbour_cell_id)
+			else:
+				var neighbour_cell_resource: CellResource = cell_resources[neighbour_cell_id]
+				if neighbour_cell_resource.movement == 0:
+					cell_resource.neighbour_cell_ids.erase(neighbour_cell_id)
+				
