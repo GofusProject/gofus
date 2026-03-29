@@ -34,7 +34,7 @@ func create_map(map_id: int) -> bool:
 		push_error("[MapManager] MapResource initialization failed for map %d" % map_id)
 		return false
 	
-	print("[MapManager] Current map resource : width=%d, height=%d, bgID=%d, cell count=%d" % [map_resource.staggered_size.x, map_resource.staggered_size.y, map_resource.background_id, map_resource.cell_count])
+	print("[MapManager] Current map resource : width=%d, height=%d, bgID=%d, cell count=%d" % [map_resource.size.x, map_resource.size.y, map_resource.background_id, map_resource.cell_count])
 	
 	Datacenter.set_current_map_resource(map_resource)
 

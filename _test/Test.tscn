@@ -4,9 +4,10 @@
 [ext_resource type="Script" uid="uid://dpoviwyogrtl4" path="res://graphics/battlefield/pathfinding_handler.gd" id="3_cxykl"]
 [ext_resource type="PackedScene" uid="uid://c8evu7drilu7" path="res://graphics/battlefield/scenes/Battlefield.tscn" id="3_m74j2"]
 
-[node name="Test" type="Node2D" node_paths=PackedStringArray("draw_test")]
+[node name="Test" type="Node2D"]
 script = ExtResource("1_5kc3e")
-draw_test = NodePath("GridLayer")
+grid_x = 1
+grid_y = 1
 
 [node name="PathfindingHandler" type="Node2D" parent="."]
 script = ExtResource("3_cxykl")

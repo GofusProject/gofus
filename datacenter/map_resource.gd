@@ -3,10 +3,10 @@ class_name MapResource
 
 var map_id: int
 var date: String
-## Rendering use staggered isometric grid
+## Staggered isometric grid
 ## Vector2i(width, height). I recalculate height with y going right
 ## Dofus use staggered with x going downward and y going down right 
-var staggered_size: Vector2i 
+var size: Vector2i 
 var places: String
 var key: String
 var map_data: String
@@ -33,8 +33,8 @@ var active_cells: int = 0
 func _init(map_dict: Dictionary) -> void:
 	map_id        = int(map_dict["id"])
 	date          = str(map_dict["date"])
-	staggered_size.x         = int(map_dict["width"])
-	# staggered_height        = int(map_dict["height"]) # Height is recalculated, see staggered_size for more info
+	size.x         = int(map_dict["width"])
+	# staggered_height        = int(map_dict["height"]) # Height is recalculated, see size for more info
 	places        = str(map_dict["places"])
 	key           = str(map_dict["key"])
 	map_data      = str(map_dict["map_data"])
@@ -72,13 +72,13 @@ func _init(map_dict: Dictionary) -> void:
 	var col: int = -1
 	var row: int = 0
 	var x_offset: float = 0
-	var max_col: int = staggered_size.x - 1
+	var max_col: int = size.x - 1
 
 	for i in range(cell_count):
 		var cell_data: String = map_data.substr(i * 10, 10)
 		var cell_resource: CellResource = CellResource.new(i, cell_data)
 
-		# World grid positioning (isometric logic)
+		# World grid positioning (isometric logic) # TO MAP HANDLER
 		if col == max_col:
 			col = 0
 			row += 1
@@ -117,18 +117,18 @@ func _init(map_dict: Dictionary) -> void:
 		cell_resources[i] = cell_resource
 
 	
-	# Neighbours init
+	# Neighbours init - TO SPATIAL
 	for cell_resource in cell_resources:
 		cell_resource.neighbour_cell_ids = []
 
 		cell_resource.neighbour_cell_ids.append(cell_resource.id + 1) # DIRECTION_EAST
-		cell_resource.neighbour_cell_ids.append(cell_resource.id + staggered_size.x) # DIRECTION_SOUTH_EAST
-		cell_resource.neighbour_cell_ids.append(cell_resource.id + staggered_size.x * 2 - 1) # DIRECTION_SOUTH
-		cell_resource.neighbour_cell_ids.append(cell_resource.id + staggered_size.x - 1) # DIRECTION_SOUTH_WEST
+		cell_resource.neighbour_cell_ids.append(cell_resource.id + size.x) # DIRECTION_SOUTH_EAST
+		cell_resource.neighbour_cell_ids.append(cell_resource.id + size.x * 2 - 1) # DIRECTION_SOUTH
+		cell_resource.neighbour_cell_ids.append(cell_resource.id + size.x - 1) # DIRECTION_SOUTH_WEST
 		cell_resource.neighbour_cell_ids.append(cell_resource.id - 1) # DIRECTION_WEST
-		cell_resource.neighbour_cell_ids.append(cell_resource.id - staggered_size.x) # DIRECTION_NORTH_WEST
-		cell_resource.neighbour_cell_ids.append(cell_resource.id - staggered_size.x * 2 + 1) # DIRECTION_NORTH
-		cell_resource.neighbour_cell_ids.append(cell_resource.id - staggered_size.x + 1) # DIRECTION_NORTH_EAST
+		cell_resource.neighbour_cell_ids.append(cell_resource.id - size.x) # DIRECTION_NORTH_WEST
+		cell_resource.neighbour_cell_ids.append(cell_resource.id - size.x * 2 + 1) # DIRECTION_NORTH
+		cell_resource.neighbour_cell_ids.append(cell_resource.id - size.x + 1) # DIRECTION_NORTH_EAST
 
 		for neighbour_cell_id in cell_resource.neighbour_cell_ids.duplicate():
 			if neighbour_cell_id < 0 or neighbour_cell_id >= cell_count:
