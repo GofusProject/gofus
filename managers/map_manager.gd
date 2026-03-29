@@ -20,7 +20,7 @@ func _ready() -> void:
 ## Orchestrate map creation process
 ## Return true if map successfully created, false if not
 func create_map(map_id: int) -> bool:
-	print("[MapManager] Creating map %d..." % map_id)
+	PerformanceTracker.start_timer("MapManager", "Map creation")
 	
 	# 1. Database
 	var map_dict: Dictionary = Database.get_map_data(map_id)
@@ -74,6 +74,7 @@ func create_map(map_id: int) -> bool:
 			object2_tiles += 1
 
 	Battlefield.build_map(map_resource.background_id, map_resource.size.x, map_resource.cell_resources, map_resource.diamond_grid_start, map_resource. diamond_grid_size)
+	PerformanceTracker.end_timer()
 	return true
 
 
@@ -89,9 +90,6 @@ func get_world_path_and_directions(p_from_cell_id: int, p_to_cell_id: int) -> Ar
 	# Grid path
 	var cell_id_path: PackedInt64Array = Battlefield.spatial_handler.find_path(map_resource.size.x, p_from_cell_id, p_to_cell_id)
 
-	# Grid path to World path
-	var build_start_time : int = Time.get_ticks_usec()
-	
 	var world_path: Array[Vector2] = []
 	var directions: Array[SpatialHandler.Direction] = []
 	for i in cell_id_path.size():
@@ -101,11 +99,6 @@ func get_world_path_and_directions(p_from_cell_id: int, p_to_cell_id: int) -> Ar
 			directions.append(Battlefield.spatial_handler.get_direction_from_cell_id_to_cell_id(map_resource.size.x, cell_id, cell_id_path[i + 1]))
 	
 
-
-	var build_total : int = Time.get_ticks_usec() - build_start_time
-	var build_total_in_sec = build_total / 1000000.0
-	var frame_percentage = (build_total_in_sec / (1.0 / 48.0)) * 100.0
-	print("Build total: %s seconds | Frame percentage (48hz): %s%%" % [build_total_in_sec, frame_percentage])
 	print("[MapManager] World path: %s" % str(world_path))
 	print("[MapManager] Directions: %s" % str(directions))
 

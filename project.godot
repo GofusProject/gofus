@@ -32,6 +32,7 @@ Console="*res://addons/console/console.gd"
 ConsoleCommandAdder="*res://_tools/console_command_adder.gd"
 Game="*res://Game.tscn"
 Player="*res://player/player.gd"
+PerformanceTracker="*res://utils/performance_tracker.gd"
 
 [debug]
 
