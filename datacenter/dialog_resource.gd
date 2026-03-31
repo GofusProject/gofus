@@ -20,7 +20,7 @@ var player_response_texts: Array[String]  = []
 func _init(p_dialog_question_data: Dictionary, p_dialog_question_text: String, p_dialog_title: String) -> void:
 	dialog_question_id = int(p_dialog_question_data["id"])
 	dialog_title = p_dialog_title
-	dialog_question_text = p_dialog_question_text
+	dialog_question_text = p_dialog_question_text + " (" + str(dialog_question_id) + ")"
 	params = p_dialog_question_data["params"]
 	cond = p_dialog_question_data["cond"]
 	if_false = int(p_dialog_question_data["if_false"])
@@ -37,4 +37,4 @@ func _init(p_dialog_question_data: Dictionary, p_dialog_question_text: String, p
 func initialize_response(p_player_response_data: Dictionary, p_player_response_text: String) -> void:
 	var action_resource = ActionResource.new((int(p_player_response_data["type"])), int(p_player_response_data["args"]))
 	player_response_action_resources.append(action_resource)
-	player_response_texts.append(p_player_response_text)
+	player_response_texts.append(p_player_response_text  + " (" + str(action_resource.action_id) + ")")

@@ -8,6 +8,7 @@ func start_dialog_with_npc(p_npc_id: int):
 	var npc_resource = Datacenter.get_character_resource(p_npc_id) as NonPlayableCharacterResource
 
 	var npc_name: String = npc_resource.name
+	var npc_name_with_npc_template_id: String = npc_name + " (" + str(npc_resource.npc_template_id) + ")"
 
 	# Set npc_init_dialog_id
 	var npc_init_dialog_map_to_id: Dictionary[int, int] = npc_resource.init_dialog_map_to_id
@@ -18,7 +19,7 @@ func start_dialog_with_npc(p_npc_id: int):
 	else:
 		npc_init_dialog_question_id = npc_init_dialog_map_to_id[map_resource.map_id]
 
-	DialogManager.start_dialog(npc_init_dialog_question_id, npc_name)
+	DialogManager.start_dialog(npc_init_dialog_question_id, npc_name_with_npc_template_id)
 
 
 func respond_to_npc(p_action_id: int, p_param: int):
