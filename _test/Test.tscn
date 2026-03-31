@@ -1,8 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://dro2ypphiyigq"]
+[gd_scene load_steps=2 format=3 uid="uid://dro2ypphiyigq"]
 
 [ext_resource type="Script" uid="uid://d1jvr3vhxdplm" path="res://_test/test.gd" id="1_5kc3e"]
-[ext_resource type="Script" path="res://graphics/battlefield/pathfinding_handler.gd" id="3_cxykl"]
-[ext_resource type="PackedScene" uid="uid://c8evu7drilu7" path="res://graphics/battlefield/scenes/Battlefield.tscn" id="3_m74j2"]
 
 [node name="Test" type="Node2D"]
 script = ExtResource("1_5kc3e")
@@ -11,20 +9,5 @@ grid_x = 1
 grid_y = 1
 
 [node name="PathfindingHandler" type="Node2D" parent="."]
-script = ExtResource("3_cxykl")
-metadata/_custom_type_script = "uid://dpoviwyogrtl4"
 
 [node name="GridLayer" type="Node2D" parent="."]
-
-[node name="Battlefield" parent="." instance=ExtResource("3_m74j2")]
-
-[node name="TileMapLayer" type="TileMapLayer" parent="."]
-
-[node name="Polygon2D" type="Polygon2D" parent="."]
-
-[node name="Polygon2D2" type="Polygon2D" parent="."]
-color = Color(1, 0, 0, 1)
-polygon = PackedVector2Array(0, 0, 16, 0, 16, 16, 0, 16)
-
-[node name="Line2D" type="Line2D" parent="."]
-points = PackedVector2Array(74, 39, 1540, 824)

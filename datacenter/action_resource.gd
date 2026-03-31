@@ -4,7 +4,8 @@ extends Resource
 
 ## Les action_id sont liés à Action.java
 enum ActionId {
-	START = 2000,
+	START_DIALOG = 2000,
+	TELEPORTATION = 0,
 	CONTINUE_DIALOG = 1,
 	RESPOND_TO_NPC = 1999,
 	LEAVE = 2001,

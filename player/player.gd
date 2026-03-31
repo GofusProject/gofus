@@ -35,7 +35,7 @@ func execute_action(action_resource: ActionResource) -> void:
 	# 	return
 
 	match action_resource.action_id:
-		ActionResource.ActionId.START:
+		ActionResource.ActionId.START_DIALOG:
 			actions.start_dialog_with_npc(selected_npc_id)
 		ActionResource.ActionId.RESPOND_TO_NPC:
 			actions.respond_to_npc(action_resource.param_1, action_resource.param_2) # param_1 = npc_dialog_player_response_id
