@@ -1,103 +1,110 @@
 # Database.gd
 # AutoLoad singleton
-# Handles data persistence and provides quick access to data
-
+# Handles data persistence via SQLite and provides quick access to data
 extends Node
 
+const DB_PATH: String = "res://database/gofus_database.db"
+const VERBOSITY_LEVEL: int = SQLite.VERBOSE
 
-const MAPS_CSV_PATH : String = "res://database/maps_database.csv"
-const NPC_TEMPLATE_CSV_PATH: String = "res://database/npc_template_database.csv"
-const NPCS_CSV_PATH: String = "res://database/npcs_database.csv"
-const DIALOG_QUESTIONS_CSV_PATH: String = "res://database/dialog_questions_database.csv"
-const DIALOG_RESPONSE_ACTIONS_CSV_PATH: String = "res://database/dialog_response_actions_database.csv"
-const PLAYER_CSV_PATH: String = "res://database/player_database.csv"
+var db: SQLite = null
 
-
-# I tried to use arrays instead, but very little gains in the end
-var _npc_template_cache: Dictionary[int, Dictionary] = {}
-var _npcs_cache: Dictionary[int, Dictionary] = {}
-var _maps_cache: Dictionary[int, Dictionary] = {} 
-var _dialog_questions_cache: Dictionary[int, Dictionary] = {} 
-var _dialog_response_actions_cache: Dictionary[int, Dictionary] = {} 
-var _player_cache: Dictionary[int, Dictionary] = {} 
-
-
+# ─────────────────────────────────────────────
+#  Lifecycle
+# ─────────────────────────────────────────────
 
 func _ready() -> void:
 	print("[Database] Initializing...")
-
-	var build_start_time : int = Time.get_ticks_usec()
-	var mem_before := Performance.get_monitor(Performance.MEMORY_STATIC)
-
-	_load_csv_into_cache(MAPS_CSV_PATH, _maps_cache)
-	_load_csv_into_cache(NPC_TEMPLATE_CSV_PATH, _npc_template_cache)
-	_load_csv_into_cache(NPCS_CSV_PATH, _npcs_cache)
-	_load_csv_into_cache(DIALOG_QUESTIONS_CSV_PATH, _dialog_questions_cache)
-	_load_csv_into_cache(DIALOG_RESPONSE_ACTIONS_CSV_PATH, _dialog_response_actions_cache)
-	_load_csv_into_cache(PLAYER_CSV_PATH, _player_cache)
-
-	var build_end_time : int = Time.get_ticks_usec()
-	var build_time_sec : float = (build_end_time - build_start_time) / 1_000_000.0
-	print("[Database] Ready (took %.2f sec)" % build_time_sec)
-
-	var mem_after := Performance.get_monitor(Performance.MEMORY_STATIC)
-	var mem_used := mem_after - mem_before
-	var mb = mem_used / (1024.0 * 1024.0)
-	print("[Database] Approximate cache memory size: %.3f MB" % mb)
-
-
-func _load_csv_into_cache(csv_path: String,	cache: Dictionary[int, Dictionary]) -> void:
-	print("[Database] Loading from CSV: %s" % csv_path)
-	var file: FileAccess = FileAccess.open(csv_path, FileAccess.READ)
-	if not file:
-		push_error("[Database] Failed to open CSV: " + csv_path)
+	db = SQLite.new()
+	db.path = DB_PATH
+	db.verbosity_level = VERBOSITY_LEVEL
+	if not db.open_db():
+		push_error("[Database] Failed to open database at: " + DB_PATH)
 		return
-
-	var column_names: PackedStringArray = file.get_csv_line()
-	var expected_columns: int = column_names.size()
-
-	var count: int = 0
-	while not file.eof_reached():
-		var row: PackedStringArray = file.get_csv_line()
-		if row.size() < expected_columns:
-			print("[Database] Row with id " + row[0] + " skipped.")
-			continue
-		var entry: Dictionary = {}
-		for i in column_names.size():
-			entry[column_names[i]] = row[i]
-		cache[int(row[0])] = entry
-		count += 1
-
-	file.close()
-	print("[Database] Loaded %d entries from CSV" % count)
+	print("[Database] Ready — connected to: %s" % DB_PATH)
 
 
-func _get_from_cache(cache: Dictionary, id: int, label: String) -> Dictionary:
-	if not cache.has(id):
-		push_error("[Database] %s %d not found in cache" % [label, id])
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PREDELETE and db:
+		db.close_db()
+		print("[Database] Connection closed.")
+
+# ─────────────────────────────────────────────
+#  Internal helpers
+# ─────────────────────────────────────────────
+
+## Generic single-row fetch. Returns {} if nothing found or DB is unavailable.
+func _fetch_one(table: String, id: int) -> Dictionary:
+	if not db:
+		push_error("[Database] DB not initialised.")
 		return {}
-	return cache[id]
+	db.query_with_bindings(
+		"SELECT * FROM %s WHERE id = ?;" % table,
+		[id]
+	)
+	if db.query_result.is_empty():
+		push_error("[Database] No row found in '%s' for id=%d" % [table, id])
+		return {}
+	return db.query_result[0]
 
 
-func get_map_data(p_map_id: int) -> Dictionary:
-	return _get_from_cache(_maps_cache, p_map_id, "Map")
+## Generic multi-row fetch. Returns [] if nothing found or DB is unavailable.
+func _fetch_all(table: String) -> Array:
+	if not db:
+		push_error("[Database] DB not initialised.")
+		return []
+	db.query("SELECT * FROM %s;" % table)
+	return db.query_result
 
 
-func get_npc_template_data(p_template_id: int) -> Dictionary:
-	return _get_from_cache(_npc_template_cache, p_template_id, "NpcTemplate")
+## Generic filtered fetch. Returns [] if nothing found or DB is unavailable.
+func _fetch_where(table: String, column: String, value: Variant) -> Array:
+	if not db:
+		push_error("[Database] DB not initialised.")
+		return []
+	db.query_with_bindings(
+		"SELECT * FROM %s WHERE %s = ?;" % [table, column],
+		[value]
+	)
+	return db.query_result
+
+# ─────────────────────────────────────────────
+#  Public getters
+# ─────────────────────────────────────────────
+
+func get_map_data(p_id: int) -> Dictionary:
+	return _fetch_one("maps", p_id)
 
 
-func get_npc_data(p_npc_id: int) -> Dictionary:
-	return _get_from_cache(_npcs_cache, p_npc_id, "Npc")
+func get_npc_template_data(p_id: int) -> Dictionary:
+	return _fetch_one("npc_templates", p_id)
 
 
-func get_dialog_question_data(p_npc_dialog_id: int) -> Dictionary:
-	return _get_from_cache(_dialog_questions_cache, p_npc_dialog_id, "NpcDialog")
+func get_npc_data(p_id: int) -> Dictionary:
+	return _fetch_one("npcs", p_id)
 
 
-func get_dialog_response_action_data(p_npc_dialog_player_response_id: int) -> Dictionary:
-	return _get_from_cache(_dialog_response_actions_cache, p_npc_dialog_player_response_id, "DialogResponseActions")
+func get_dialog_question_data(p_id: int) -> Dictionary:
+	return _fetch_one("dialog_questions", p_id)
 
 
-func get_player_data(p_player_id: int) -> Dictionary:
-	return _get_from_cache(_player_cache, p_player_id, "Player")
+func get_dialog_response_action_data(p_id: int) -> Dictionary:
+	return _fetch_one("dialog_response_actions", p_id)
+
+
+func get_player_data(p_id: int) -> Dictionary:
+	return _fetch_one("players", p_id)
+
+
+func get_scripted_cell_data(p_id: int) -> Dictionary:
+	return _fetch_one("scripted_cells", p_id)
+
+
+
+# ## Returns all dialog questions for a given dialog.
+# func get_dialog_questions_for_dialog(p_dialog_id: int) -> Array:
+# 	return _fetch_where("dialog_questions", "dialog_id", p_dialog_id)
+
+
+# ## Returns all response actions for a given question.
+# func get_response_actions_for_question(p_question_id: int) -> Array:
+# 	return _fetch_where("dialog_response_actions", "question_id", p_question_id)

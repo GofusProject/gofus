@@ -4,9 +4,6 @@
 
 [node name="Test" type="Node2D"]
 script = ExtResource("1_5kc3e")
-cell_id = 29
-grid_x = 1
-grid_y = 1
 
 [node name="PathfindingHandler" type="Node2D" parent="."]
 
