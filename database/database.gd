@@ -95,7 +95,7 @@ func get_player_data(p_id: int) -> Dictionary:
 	return _fetch_one("players", p_id)
 
 
-func get_scripted_cell_data(p_id: int) -> Dictionary:
+func get_scripted_cell_data(p_id: int) -> Array[Dictionary]:
 	return _fetch_one("scripted_cells", p_id)
 
 
