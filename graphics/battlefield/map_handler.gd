@@ -298,27 +298,9 @@ func clear() -> void:
 		child.queue_free()
 
 
-
 ## grid pos -> cell world pos
 func get_cell_world_position_from_grid_position(grid_pos: Vector2i) -> Vector2:
 	var x_offset: float = Battlefield.CELL_HALF_WIDTH if grid_pos.y % 2 == 1 else 0.0
 	var world_x: float = grid_pos.x * Battlefield.CELL_WIDTH + x_offset
 	var world_y: float = grid_pos.y * Battlefield.CELL_HALF_HEIGHT
 	return Vector2(world_x, world_y)
-
-
-## cell id -> cell world pos
-func get_cell_world_position_from_cell_id(p_cell_id: int) -> Vector2:
-	return Datacenter.map_resource.cell_resources[p_cell_id].world_position
-
-
-## cell world pos -> cell id
-func get_cell_id_from_world_position(p_world_position: Vector2, p_cell_resources: Array[CellResource]) -> int:
-
-	for cell_resource in p_cell_resources:
-		if p_world_position == cell_resource.world_position:
-			print("[MapHandler] Cell ID %s found for world pos %s" % [cell_resource.id, str(p_world_position)])
-			return cell_resource.id
-
-	push_error("[MapHandler] Cell ID could not be retrieved for world position ", str(p_world_position))
-	return -1

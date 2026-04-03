@@ -79,7 +79,6 @@ func find_path(p_map_width: int, p_from_cell_id: int, p_to_cell_id: int) -> Arra
 	var to_grid_pos: Vector2i = get_grid_pos_from_cell_id(p_map_width, p_to_cell_id)
 
 	var grid_path: Array[Vector2i] = astar_grid.get_id_path(from_grid_pos, to_grid_pos)
-	print("[SpatialHander] Path found: ", grid_path)
 
 	var path_cell_ids: Array[int] = []
 	for grid_pos: Vector2i in grid_path:

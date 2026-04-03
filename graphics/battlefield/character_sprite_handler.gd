@@ -27,7 +27,7 @@ func add_animated_character_sprite_2d(p_linked_character_id: int, p_sprite_frame
 
 	var animated_character_sprite_2d = Battlefield.ANIMATED_CHARACTER_SPRITE_2D_SCENE.instantiate()
 	animated_character_sprite_2d.initialize(p_linked_character_id, p_sprite_frames_id, p_direction)
-	animated_character_sprite_2d.position = Battlefield.map_handler.get_cell_world_position_from_cell_id(p_cell_id)
+	animated_character_sprite_2d.position = MapManager.get_cell_world_position_from_cell_id(p_cell_id) # Position should be 
 
 	animated_character_sprite_2d.hovered.connect(func(animated_character_sprite_2d_id: int) -> void:
 		character_hovered.emit(animated_character_sprite_2d_id)

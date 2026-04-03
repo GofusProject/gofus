@@ -1,4 +1,4 @@
-class_name PlayablePlayerResource
+class_name PlayableCharacterResource
 extends CharacterResource
 
 
