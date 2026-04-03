@@ -20,7 +20,8 @@ var condition # ActionCondition, to implement
 
 
 
-func _init(p_action_id , p_param_1: int = -1, p_param_2: int = -1) -> void:
+func _init(p_action_id , p_param_1: int = -1, p_param_2: int = -1, p_condition = "") -> void:
 	action_id = p_action_id
 	param_1 = p_param_1
 	param_2 = p_param_2
+	condition = p_condition
