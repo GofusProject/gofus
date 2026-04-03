@@ -133,11 +133,14 @@ func get_cell_id_from_world_position(p_world_position: Vector2) -> int:
 
 	for cell_resource in map_resource.cell_resources:
 		if p_world_position == cell_resource.world_position:
-			print("[MapManager] Cell ID %s found for world pos %s" % [cell_resource.id, str(p_world_position)])
 			return cell_resource.id
 
 	push_error("[MapManager] Cell ID could not be retrieved for world position ", str(p_world_position))
 	return -1
+
+
+func get_current_map_id() -> int:
+	return Datacenter.map_resource.map_id
 
 
 func _on_cell_clicked(cell_id: int) -> void:
@@ -159,3 +162,4 @@ func _on_character_manager_character_world_path_point_reached(p_world_position: 
 	var cell_resource: CellResource = Datacenter.map_resource.cell_resources[cell_id]
 	if cell_resource.action_resource != null:
 		scripted_cell_triggered.emit(cell_resource.action_resource)
+		print("[MapManager] Scripted cell triggered at cell ID %d with action id %s" % [cell_id, cell_resource.action_resource.action_id])
