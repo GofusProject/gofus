@@ -16,7 +16,7 @@ extends Node
 
 
 func print_color_data(character_id: int) -> void:
-	var char_res: CharacterResource = Datacenter.get_character_resource(character_id)
+	var char_res: CharacterResource = Game.datacenter.get_character_resource(character_id)
 	print("Npc template ID: ", char_res.npc_template_id)
 	print("Hex Color1 (Head): %X | Hex Color2 (Body): %X | Hex Color3 (Bottom): %X" % [char_res.color1, char_res.color2, char_res.color3])
 	print("Sprite frames id: ", char_res.sprite_frames_id)

@@ -11,15 +11,17 @@ signal character_world_path_point_reached(world_pos: Vector2, linked_character_i
 
 # Modules
 var database: Database
-# var datacenter: Datacenter
+var datacenter: Datacenter
 # var gofus_translator: GofusTranslator
 # var asset_loader: AssetLoader
 # var battlefield: Battlefield
 # var ui: UI
 
 
-func initialize(p_database: Database) -> void:
+func initialize(p_database: Database, p_datacenter: Datacenter) -> void:
 	database = p_database
+	datacenter = p_datacenter
+
 
 
 
@@ -36,8 +38,8 @@ func create_player_character(p_player_id) -> void:
 
 	var player_character_resource = PlayerCharacterResource.new(player_data)
 	# Added in datacenter in both player_character_resource and character_resources[]
-	Datacenter.player_character_resource = player_character_resource
-	var character_id = Datacenter.add_character_resource(player_character_resource)
+	datacenter.player_character_resource = player_character_resource
+	var character_id = datacenter.add_character_resource(player_character_resource)
 
 
 	Battlefield.character_sprite_handler.add_animated_character_sprite_2d(
@@ -51,7 +53,7 @@ func create_player_character(p_player_id) -> void:
 
 func create_npcs() -> void:
 
-	var map_resource = Datacenter.get_current_map()
+	var map_resource = datacenter.get_current_map()
 	var npc_ids: Array[int] = map_resource.npc_ids
 
 	for npc_id in npc_ids:
@@ -73,7 +75,7 @@ func create_npcs() -> void:
 			return
 
 		var non_playable_character_resource = NonPlayableCharacterResource.new(npc_data, npc_template_data, npc_template_name)
-		var character_id: int = Datacenter.add_character_resource(non_playable_character_resource)
+		var character_id: int = datacenter.add_character_resource(non_playable_character_resource)
 
 		Battlefield.character_sprite_handler.add_animated_character_sprite_2d(
 			character_id,
@@ -83,15 +85,19 @@ func create_npcs() -> void:
 
 
 func clear_characters() -> void:
-	Datacenter._character_resources.clear()
+	datacenter._character_resources.clear()
 	# Player character is readded because its persistance.  
-	Datacenter.add_character_resource(Datacenter.player_character_resource)
+	datacenter.add_character_resource(datacenter.player_character_resource)
 	Battlefield.character_sprite_handler.clear()
 	Ui.close_character_popup_menu()
 
 
+func get_character_resource(p_character_id) -> CharacterResource:
+	return datacenter.get_character_resource(p_character_id)
+
+
 func get_player_character_resource() -> PlayerCharacterResource:
-	return Datacenter.player_character_resource
+	return datacenter.player_character_resource
 
 
 func move_character(p_character_resource: CharacterResource, p_path: Array[Vector2], p_orientations: Array[CharacterSpriteHandler.Orientation]) -> void:
@@ -100,14 +106,14 @@ func move_character(p_character_resource: CharacterResource, p_path: Array[Vecto
 
 func teleport_character(p_character_id: int, p_world_position: Vector2, p_cell_id: int) -> void:
 	Battlefield.character_sprite_handler.teleport_character(p_character_id, p_world_position)
-	var character_resource = Datacenter.player_character_resource
+	var character_resource = datacenter.player_character_resource
 	character_resource.cell_id = p_cell_id
 
 
 #region UI
 
 func show_character_over_head(character_id: int) -> void:
-	var character_resource: CharacterResource = Datacenter.get_character_resource(character_id)
+	var character_resource: CharacterResource = datacenter.get_character_resource(character_id)
 	Battlefield.show_character_over_head(character_id, character_resource.name)
 
 
@@ -118,7 +124,7 @@ func hide_character_over_head() -> void:
 func open_character_popup_menu(p_character_id: int) -> void:
 	Ui.close_character_popup_menu()
 
-	var character_resource = Datacenter.get_character_resource(p_character_id)
+	var character_resource = datacenter.get_character_resource(p_character_id)
 
 	# Match can't handle "character_resource is NonPlayableCharacterResource"
 	if character_resource is NonPlayableCharacterResource:
@@ -150,7 +156,7 @@ func close_character_popup_menu() -> void:
 #region Battlefied
 
 func _on_battlefield_character_world_path_point_reached(world_pos: Vector2, linked_character_id: int) -> void:
-	var character_resource: CharacterResource = Datacenter._character_resources[linked_character_id]
+	var character_resource: CharacterResource = datacenter._character_resources[linked_character_id]
 	character_resource.cell_id = MapManager.get_cell_id_from_world_position(world_pos) # MapManager is called because cell_id is related to it
 	character_world_path_point_reached.emit(world_pos, linked_character_id)
 

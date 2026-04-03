@@ -8,7 +8,7 @@ var actions: Actions
 
 # Modules
 var database: Database
-# var datacenter: Datacenter
+var datacenter: Datacenter
 # var gofus_translator: GofusTranslator
 # var asset_loader: AssetLoader
 # var battlefield: Battlefield
@@ -30,13 +30,16 @@ func _ready() -> void:
 
 	# Modules init
 	database = Database.new()
+	datacenter = Datacenter.new()
+
 	add_child(database)
+	add_child(datacenter)
 
 	# Managers init
 
-	MapManager.initialize(database)
-	CharactersManager.initialize(database)
-	DialogManager.initialize(database)
+	MapManager.initialize(database, datacenter)
+	CharactersManager.initialize(database, datacenter)
+	DialogManager.initialize(database, datacenter)
 
 
 	MapManager.scripted_cell_triggered.connect(func(action_resource: ActionResource): execute_action(action_resource))
@@ -65,7 +68,7 @@ func execute_action(action_resource: ActionResource) -> void:
 
 	match action_resource.action_id:
 		ActionResource.ActionId.TELEPORTATION:
-			actions.teleport(Datacenter.player_character_resource.id, action_resource.param_1, action_resource.param_2)
+			actions.teleport(datacenter.player_character_resource.id, action_resource.param_1, action_resource.param_2)
 
 
 func change_map(p_map_id: int):

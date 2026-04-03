@@ -21,8 +21,8 @@ func teleport(character_id: int, p_map_id: int, p_cell_id: int = -1) -> void:
 
 
 func start_dialog_with_npc(p_npc_id: int):
-	var map_resource: MapResource = Datacenter.get_current_map()
-	var npc_resource = Datacenter.get_character_resource(p_npc_id) as NonPlayableCharacterResource
+	var map_resource_id: int = MapManager.get_current_map_id()
+	var npc_resource = CharactersManager.get_character_resource(p_npc_id) as NonPlayableCharacterResource
 
 	var npc_name: String = npc_resource.name
 	var npc_name_with_npc_template_id: String = npc_name + " (" + str(npc_resource.npc_template_id) + ")"
@@ -30,11 +30,11 @@ func start_dialog_with_npc(p_npc_id: int):
 	# Set npc_init_dialog_id
 	var npc_init_dialog_map_to_id: Dictionary[int, int] = npc_resource.init_dialog_map_to_id
 	var npc_init_dialog_question_id = -1
-	if not npc_init_dialog_map_to_id.has(map_resource.map_id):
-		print("[CharactersManager] Map id %s not found in npc init dialog dictionary %s" % [map_resource.map_id, npc_init_dialog_map_to_id])
+	if not npc_init_dialog_map_to_id.has(map_resource_id):
+		print("[Actions] Map id %s not found in npc init dialog dictionary %s" % [map_resource_id, npc_init_dialog_map_to_id])
 		npc_init_dialog_question_id = npc_init_dialog_map_to_id[-1]
 	else:
-		npc_init_dialog_question_id = npc_init_dialog_map_to_id[map_resource.map_id]
+		npc_init_dialog_question_id = npc_init_dialog_map_to_id[map_resource_id]
 
 	DialogManager.start_dialog(npc_init_dialog_question_id, npc_name_with_npc_template_id)
 
@@ -47,7 +47,7 @@ func respond_to_npc(p_action_id: int, p_param: int):
 
 
 func continue_dialog(p_dialog_question_id) -> void:
-	var npc_name: String = Datacenter.dialog_resource.dialog_title
+	var npc_name: String = DialogManager.get_dialog_resource().dialog_title
 	DialogManager.continue_dialog(npc_name, p_dialog_question_id)
 
 

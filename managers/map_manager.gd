@@ -1,6 +1,6 @@
 # MapManager.gd
 # AutoLoad singleton
-# Orchestrates map loading by coordinating database, Compressor, and Datacenter to build MapResource
+# Orchestrates map loading by coordinating database, Compressor, and datacenter to build MapResource
 extends Node
 
 
@@ -14,7 +14,7 @@ var object2_tiles: int = 0
 
 # Modules
 var database: Database
-# var datacenter: Datacenter
+var datacenter: Datacenter
 # var gofus_translator: GofusTranslator
 # var asset_loader: AssetLoader
 # var battlefield: Battlefield
@@ -22,8 +22,9 @@ var database: Database
 
 
 
-func initialize(p_database: Database) -> void:
+func initialize(p_database: Database, p_datacenter: Datacenter) -> void:
 	database = p_database
+	datacenter = p_datacenter
 
 
 
@@ -55,7 +56,7 @@ func create_map(map_id: int) -> bool:
 	
 	print("[MapManager] Current map resource : width=%d, height=%d, bgID=%d, cell count=%d" % [map_resource.size.x, map_resource.size.y, map_resource.background_id, map_resource.cell_count])
 	
-	Datacenter.set_current_map_resource(map_resource)
+	datacenter.set_current_map_resource(map_resource)
 
 	# 3. AssetLoader and CellResource sprite init
 
@@ -109,13 +110,13 @@ func create_map(map_id: int) -> bool:
 
 
 func clear_map() -> void:
-	Datacenter.map_resource = null
+	datacenter.map_resource = null
 	Battlefield.clear()
 
 
 ## path = results[0], directions = results[1]
 func get_world_path_and_directions(p_from_cell_id: int, p_to_cell_id: int) -> Array[Array]:
-	var map_resource: MapResource = Datacenter.map_resource
+	var map_resource: MapResource = datacenter.map_resource
 
 	# Grid path
 	var cell_id_path: PackedInt64Array = Battlefield.spatial_handler.find_path(map_resource.size.x, p_from_cell_id, p_to_cell_id)
@@ -138,12 +139,12 @@ func highlight_cell() -> void:
 
 ## cell id -> cell world pos
 func get_cell_world_position_from_cell_id(p_cell_id: int) -> Vector2:
-	return Datacenter.map_resource.cell_resources[p_cell_id].world_position
+	return datacenter.map_resource.cell_resources[p_cell_id].world_position
 
 
 ## cell world pos -> cell id
 func get_cell_id_from_world_position(p_world_position: Vector2) -> int:
-	var map_resource = Datacenter.map_resource
+	var map_resource = datacenter.map_resource
 
 	for cell_resource in map_resource.cell_resources:
 		if p_world_position == cell_resource.world_position:
@@ -154,7 +155,7 @@ func get_cell_id_from_world_position(p_world_position: Vector2) -> int:
 
 
 func get_current_map_id() -> int:
-	return Datacenter.map_resource.map_id
+	return datacenter.map_resource.map_id
 
 
 func _on_cell_clicked(cell_id: int) -> void:
@@ -173,7 +174,7 @@ func _on_cell_unhovered(cell_id: int) -> void:
 
 func _on_character_manager_character_world_path_point_reached(p_world_position: Vector2, linked_character_id: int) -> void:
 	var cell_id = get_cell_id_from_world_position(p_world_position)
-	var cell_resource: CellResource = Datacenter.map_resource.cell_resources[cell_id]
+	var cell_resource: CellResource = datacenter.map_resource.cell_resources[cell_id]
 	if cell_resource.action_resource != null:
 		scripted_cell_triggered.emit(cell_resource.action_resource)
 		print("[MapManager] Scripted cell triggered at cell ID %d with action id %s" % [cell_id, cell_resource.action_resource.action_id])

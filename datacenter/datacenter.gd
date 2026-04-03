@@ -1,7 +1,6 @@
 # Datacenter.gd
-# AutoLoad singleton
-# Singleton API that holds and provides access to the current game states as Resource
-
+# Holds and provides access to the current game states as Resource
+class_name Datacenter
 extends Node
 
 

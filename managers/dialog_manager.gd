@@ -4,16 +4,16 @@ extends Node
 
 # Modules
 var database: Database
-# var datacenter: Datacenter
+var datacenter: Datacenter
 # var gofus_translator: GofusTranslator
 # var asset_loader: AssetLoader
 # var battlefield: Battlefield
 # var ui: UI
 
 
-func initialize(p_database: Database) -> void:
+func initialize(p_database: Database, p_datacenter: Datacenter) -> void:
 	database = p_database
-
+	datacenter = p_datacenter
 
 
 func start_dialog(p_init_dialog_question_id: int, p_dialog_title: String) -> void:
@@ -22,7 +22,7 @@ func start_dialog(p_init_dialog_question_id: int, p_dialog_title: String) -> voi
 		Ui.open_dialog(p_dialog_title, "", [], [])
 		return
 
-	Datacenter.dialog_resource = dialog_resource
+	datacenter.dialog_resource = dialog_resource
 	Ui.open_dialog(p_dialog_title, dialog_resource.dialog_question_text, dialog_resource.player_response_texts, dialog_resource.player_response_action_resources)
 
 
@@ -32,13 +32,17 @@ func continue_dialog(p_dialog_title: String, p_dialog_question_id: int) -> void:
 		Ui.update_dialog(p_dialog_title, "", [], [])
 		return
 
-	Datacenter.dialog_resource = dialog_resource
+	datacenter.dialog_resource = dialog_resource
 	Ui.update_dialog(p_dialog_title, dialog_resource.dialog_question_text, dialog_resource.player_response_texts, dialog_resource.player_response_action_resources)
 
 
 func leave_dialog() -> void:
-	Datacenter.dialog_resource = null
+	datacenter.dialog_resource = null
 	Ui.close_dialog()
+
+
+func get_dialog_resource() -> DialogResource:
+	return datacenter.dialog_resource
 
 
 func _create_dialog_resource(p_dialog_title: String, p_dialog_question_id: int) -> DialogResource:

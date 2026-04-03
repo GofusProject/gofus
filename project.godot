@@ -18,7 +18,6 @@ boot_splash/bg_color=Color(0, 0, 0, 1)
 
 [autoload]
 
-Datacenter="*res://datacenter/datacenter.gd"
 AssetLoader="*res://assets/asset_loader.gd"
 Compressor="*res://utils/compressor.gd"
 GofusTranslator="*res://lang/gofus_translator.gd"
