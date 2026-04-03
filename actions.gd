@@ -3,6 +3,23 @@ extends Node
 
 
 
+func teleport(character_id: int, p_map_id: int, p_cell_id: int) -> void:
+
+	if MapManager.get_current_map_id() != p_map_id:
+		Ui.reset()
+		CharactersManager.clear_characters()
+		MapManager.clear_map()
+
+		var is_map_created = MapManager.create_map(p_map_id)
+		if not is_map_created:
+			push_error("[Actions] Teleport failed")
+			return
+		CharactersManager.create_npcs()
+	
+	var world_position = MapManager.get_cell_world_position_from_cell_id(p_cell_id)
+	CharactersManager.teleport_character(character_id, world_position)
+
+
 func start_dialog_with_npc(p_npc_id: int):
 	var map_resource: MapResource = Datacenter.get_current_map()
 	var npc_resource = Datacenter.get_character_resource(p_npc_id) as NonPlayableCharacterResource
@@ -39,7 +56,7 @@ func leave_dialog():
 
 
 func move_playable_character_on_map(to_cell_id: int):
-	var character_resource: CharacterResource = CharactersManager.get_playable_character_resource()
+	var character_resource: CharacterResource = CharactersManager.get_player_character_resource()
 	var results: Array[Array] = MapManager.get_world_path_and_directions(character_resource.cell_id, to_cell_id)
 	var path = results[0]
 	var directions = results[1]

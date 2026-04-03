@@ -67,3 +67,7 @@ func move_character(p_character_id: int, p_path: Array[Vector2],  p_orientations
 	var animated_character_sprite_2d: AnimatedCharacterSprite2D = get_animated_character_sprite_2d_by_character_id(p_character_id)
 	animated_character_sprite_2d.follow_path(p_path, p_orientations)
 
+
+func teleport_character(p_character_id: int, p_world_position: Vector2) -> void:
+	var animated_character_sprite_2d: AnimatedCharacterSprite2D = get_animated_character_sprite_2d_by_character_id(p_character_id)
+	animated_character_sprite_2d.position = p_world_position

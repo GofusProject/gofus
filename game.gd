@@ -4,10 +4,12 @@ extends Node
 
 var map_id: int = 10354
 var player_id: int = 1
-
+var actions: Actions
 
 
 func _ready() -> void:
+	actions = Actions.new()
+	MapManager.scripted_cell_triggered.connect(func(action_resource: ActionResource): execute_action(action_resource))
 	change_map(map_id)
 	pass
 
@@ -27,6 +29,14 @@ func _input(event: InputEvent) -> void:
 
 
 
+func execute_action(action_resource: ActionResource) -> void:
+	# if action.condition and not action.condition.is_met(character):
+	# 	return
+
+	match action_resource.action_id:
+		ActionResource.ActionId.TELEPORTATION:
+			actions.teleport(Datacenter.player_character_resource.id, action_resource.param_1, action_resource.param_2)
+
 
 func change_map(p_map_id: int):
 	Ui.reset()
@@ -37,9 +47,5 @@ func change_map(p_map_id: int):
 	if not is_map_created:
 		push_error("[Game] Map changed failed")
 		return
+	CharactersManager.create_player_character(player_id)
 	CharactersManager.create_npcs()
-	create_player(player_id)
-
-
-func create_player(p_player_id) -> void:
-	CharactersManager.create_playable_character(p_player_id)
