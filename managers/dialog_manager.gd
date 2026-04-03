@@ -8,45 +8,47 @@ var datacenter: Datacenter
 var gofus_translator: GofusTranslator
 var asset_loader: AssetLoader
 var battlefield: Battlefield
-# var ui: UI
+var ui: UI
 
 
 func initialize(p_database: Database,
 	p_datacenter: Datacenter,
 	p_gofus_translator: GofusTranslator,
 	p_asset_loader: AssetLoader,
-	p_battlefield: Battlefield) -> void:
+	p_battlefield: Battlefield,
+	p_ui: UI) -> void:
 
 	database = p_database
 	datacenter = p_datacenter
 	gofus_translator = p_gofus_translator
 	asset_loader = p_asset_loader
 	battlefield = p_battlefield
+	ui = p_ui
 
 
 func start_dialog(p_init_dialog_question_id: int, p_dialog_title: String) -> void:
 	var dialog_resource: DialogResource = _create_dialog_resource(p_dialog_title, p_init_dialog_question_id)
 	if dialog_resource == null:
-		Ui.open_dialog(p_dialog_title, "", [], [])
+		ui.open_dialog(p_dialog_title, "", [], [])
 		return
 
 	datacenter.dialog_resource = dialog_resource
-	Ui.open_dialog(p_dialog_title, dialog_resource.dialog_question_text, dialog_resource.player_response_texts, dialog_resource.player_response_action_resources)
+	ui.open_dialog(p_dialog_title, dialog_resource.dialog_question_text, dialog_resource.player_response_texts, dialog_resource.player_response_action_resources)
 
 
 func continue_dialog(p_dialog_title: String, p_dialog_question_id: int) -> void:
 	var dialog_resource: DialogResource = _create_dialog_resource(p_dialog_title, p_dialog_question_id)
 	if dialog_resource == null:
-		Ui.update_dialog(p_dialog_title, "", [], [])
+		ui.update_dialog(p_dialog_title, "", [], [])
 		return
 
 	datacenter.dialog_resource = dialog_resource
-	Ui.update_dialog(p_dialog_title, dialog_resource.dialog_question_text, dialog_resource.player_response_texts, dialog_resource.player_response_action_resources)
+	ui.update_dialog(p_dialog_title, dialog_resource.dialog_question_text, dialog_resource.player_response_texts, dialog_resource.player_response_action_resources)
 
 
 func leave_dialog() -> void:
 	datacenter.dialog_resource = null
-	Ui.close_dialog()
+	ui.close_dialog()
 
 
 func get_dialog_resource() -> DialogResource:

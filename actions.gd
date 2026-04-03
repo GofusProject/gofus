@@ -6,7 +6,7 @@ extends Node
 func teleport(character_id: int, p_map_id: int, p_cell_id: int = -1) -> void:
 
 	if MapManager.get_current_map_id() != p_map_id:
-		Ui.reset()
+		Game.ui.reset()
 		CharactersManager.clear_characters()
 		MapManager.clear_map()
 

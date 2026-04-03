@@ -13,7 +13,8 @@ var gofus_translator: GofusTranslator
 var asset_loader: AssetLoader
 var battlefield: Battlefield
 const BATTLEFIELD_SCENE: PackedScene = preload("res://graphics/battlefield/scenes/Battlefield.tscn")
-# var ui: UI
+var ui: UI
+const UI_SCENE: PackedScene = preload("res://graphics/ui/scenes/ui.tscn")
 
 # Manager
 var map_manager
@@ -32,25 +33,27 @@ func _ready() -> void:
 	gofus_translator = GofusTranslator.new()
 	asset_loader = AssetLoader.new()
 	battlefield = BATTLEFIELD_SCENE.instantiate()
+	ui = UI_SCENE.instantiate()
 
 	add_child(database)
 	add_child(datacenter)
 	add_child(gofus_translator)
 	add_child(asset_loader)
 	add_child(battlefield)
+	add_child(ui)
 
 	# Managers init
-	MapManager.initialize(database, datacenter, gofus_translator, asset_loader, battlefield)
-	CharactersManager.initialize(database, datacenter, gofus_translator, asset_loader, battlefield)
-	DialogManager.initialize(database, datacenter, gofus_translator, asset_loader, battlefield)
+	MapManager.initialize(database, datacenter, gofus_translator, asset_loader, battlefield, ui)
+	CharactersManager.initialize(database, datacenter, gofus_translator, asset_loader, battlefield, ui)
+	DialogManager.initialize(database, datacenter, gofus_translator, asset_loader, battlefield, ui)
 
 	# Signal connection
 	MapManager.setup_signals()
 	CharactersManager.setup_signals()
+	Player.setup_signals()
 
 	MapManager.scripted_cell_triggered.connect(func(action_resource: ActionResource): execute_action(action_resource))
 	change_map(map_id)
-	pass
 
 
 func _input(event: InputEvent) -> void:

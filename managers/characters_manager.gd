@@ -15,20 +15,22 @@ var datacenter: Datacenter
 var gofus_translator: GofusTranslator
 var asset_loader: AssetLoader
 var battlefield: Battlefield
-# var ui: UI
+var ui: UI
 
 
 func initialize(p_database: Database,
 	p_datacenter: Datacenter,
 	p_gofus_translator: GofusTranslator,
 	p_asset_loader: AssetLoader,
-	p_battlefield: Battlefield) -> void:
+	p_battlefield: Battlefield,
+	p_ui: UI) -> void:
 
 	database = p_database
 	datacenter = p_datacenter
 	gofus_translator = p_gofus_translator
 	asset_loader = p_asset_loader
 	battlefield = p_battlefield
+	ui = p_ui
 
 
 func setup_signals() -> void:
@@ -122,7 +124,7 @@ func clear_characters() -> void:
 	# Player character is readded because its persistance.  
 	datacenter.add_character_resource(datacenter.player_character_resource)
 	battlefield.character_sprite_handler.clear()
-	Ui.close_character_popup_menu()
+	ui.close_character_popup_menu()
 
 
 func get_character_resource(p_character_id) -> CharacterResource:
@@ -155,7 +157,7 @@ func hide_character_over_head() -> void:
 
 
 func open_character_popup_menu(p_character_id: int) -> void:
-	Ui.close_character_popup_menu()
+	ui.close_character_popup_menu()
 
 	var character_resource = datacenter.get_character_resource(p_character_id)
 
@@ -172,14 +174,14 @@ func open_character_popup_menu(p_character_id: int) -> void:
 				"id": npc_interaction_ids[i],
 				"name": npc_interaction_texts[i]
 			})
-		Ui.open_npc_popup_menu(npc_interaction_data)
+		ui.open_npc_popup_menu(npc_interaction_data)
 
 	elif character_resource is PlayableCharacterResource:
-		Ui.close_character_popup_menu()
+		ui.close_character_popup_menu()
 
 
 func close_character_popup_menu() -> void:
-	Ui.close_character_popup_menu()
+	ui.close_character_popup_menu()
 
 
 #endregion

@@ -21,13 +21,16 @@ var selected_npc_id: int = -1
 
 
 func _ready() -> void:
-	Ui.interaction.connect(func(p_action_resource): execute_action(p_action_resource))
-	Ui.gofus_popup_menu_button_pressed.connect(_on_gofus_popup_menu_button_pressed) # to remove
+	coloring_helper = ColoringHelper.new()
+
+
+func setup_signals() -> void:
+	Game.ui.interaction.connect(func(p_action_resource): execute_action(p_action_resource))
+	Game.ui.gofus_popup_menu_button_pressed.connect(_on_gofus_popup_menu_button_pressed) # to remove
 	Game.battlefield.cell_clicked.connect(_on_battlefield_cell_clicked)
-	Game.battlefield.character_sprite_handler.character_hovered.connect(_on_character_hovered)		# TODO: Battlfield should relay mouse input here
+	Game.battlefield.character_sprite_handler.character_hovered.connect(_on_character_hovered)
 	Game.battlefield.character_sprite_handler.character_unhovered.connect(_on_character_unhovered)
 	Game.battlefield.character_sprite_handler.character_clicked.connect(_on_character_clicked)
-	coloring_helper = ColoringHelper.new()
 
 
 func execute_action(action_resource: ActionResource) -> void:
