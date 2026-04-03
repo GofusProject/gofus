@@ -17,26 +17,31 @@ var database: Database
 var datacenter: Datacenter
 var gofus_translator: GofusTranslator
 var asset_loader: AssetLoader
-# var battlefield: Battlefield
+var battlefield: Battlefield
 # var ui: UI
 
 
 
-func initialize(p_database: Database, p_datacenter: Datacenter, p_gofus_translator: GofusTranslator, p_asset_loader: AssetLoader) -> void:
+func initialize(p_database: Database,
+	p_datacenter: Datacenter,
+	p_gofus_translator: GofusTranslator,
+	p_asset_loader: AssetLoader,
+	p_battlefield: Battlefield) -> void:
+
 	database = p_database
 	datacenter = p_datacenter
 	gofus_translator = p_gofus_translator
 	asset_loader = p_asset_loader
+	battlefield = p_battlefield
 
 
 
-func _ready() -> void:
-	Battlefield.cell_clicked.connect(_on_cell_clicked)
-	Battlefield.cell_hovered.connect(_on_cell_hovered)
-	Battlefield.cell_unhovered.connect(_on_cell_unhovered)
+func setup_signals() -> void:
+	battlefield.cell_clicked.connect(_on_cell_clicked)
+	battlefield.cell_hovered.connect(_on_cell_hovered)
+	battlefield.cell_unhovered.connect(_on_cell_unhovered)
 
 	CharactersManager.character_world_path_point_reached.connect(_on_character_manager_character_world_path_point_reached)
-	print("[MapManager] Ready")
 
 
 ## Orchestrate map creation process
@@ -70,7 +75,7 @@ func create_map(map_id: int) -> bool:
 		if cell_resource.ground_tile_id != 0:
 			var ground_texture = asset_loader.get_ground_tile_texture(cell_resource.ground_tile_id)
 			var ground_sprite_metadata: Dictionary = asset_loader.get_ground_sprite_metadata(cell_resource.ground_tile_id)
-			var ground_offset = Vector2(
+			var ground_offset = Vector2( # TODO: Convert in SpriteMetadataResource
 				ground_sprite_metadata["horizontal"],
 				ground_sprite_metadata["vertical"]
 			)
@@ -81,7 +86,7 @@ func create_map(map_id: int) -> bool:
 		if cell_resource.object1_id != 0:
 			var object1_sprite_texture = asset_loader.get_object_sprite_texture(cell_resource.object1_id)
 			var object1_bounds_metadata: Dictionary = asset_loader.get_object_sprite_metadata(cell_resource.object1_id)
-			var object1_offset = Vector2(
+			var object1_offset = Vector2( # TODO: Convert in SpriteMetadataResource
 				object1_bounds_metadata["horizontal"],
 				object1_bounds_metadata["vertical"]
 			)
@@ -91,7 +96,7 @@ func create_map(map_id: int) -> bool:
 		if cell_resource.object2_id != 0:
 			var object2_sprite_texture = asset_loader.get_object_sprite_texture(cell_resource.object2_id)
 			var object2_bounds_metadata: Dictionary = asset_loader.get_object_sprite_metadata(cell_resource.object2_id)
-			var object2_offset = Vector2(
+			var object2_offset = Vector2( # TODO: Convert in SpriteMetadataResource
 				object2_bounds_metadata["horizontal"],
 				object2_bounds_metadata["vertical"]
 			)
@@ -109,14 +114,14 @@ func create_map(map_id: int) -> bool:
 
 
 	# Battlefield
-	Battlefield.build_map(map_resource.background_texture, map_resource.size.x, map_resource.cell_resources, map_resource.diamond_grid_start, map_resource. diamond_grid_size)
+	battlefield.build_map(map_resource.background_texture, map_resource.size.x, map_resource.cell_resources, map_resource.diamond_grid_start, map_resource. diamond_grid_size)
 	PerformanceTracker.end_timer()
 	return true
 
 
 func clear_map() -> void:
 	datacenter.map_resource = null
-	Battlefield.clear()
+	battlefield.clear()
 
 
 ## path = results[0], directions = results[1]
@@ -124,7 +129,7 @@ func get_world_path_and_directions(p_from_cell_id: int, p_to_cell_id: int) -> Ar
 	var map_resource: MapResource = datacenter.map_resource
 
 	# Grid path
-	var cell_id_path: PackedInt64Array = Battlefield.spatial_handler.find_path(map_resource.size.x, p_from_cell_id, p_to_cell_id)
+	var cell_id_path: PackedInt64Array = battlefield.spatial_handler.find_path(map_resource.size.x, p_from_cell_id, p_to_cell_id)
 
 	var world_path: Array[Vector2] = []
 	var directions: Array[SpatialHandler.Direction] = []
@@ -132,14 +137,14 @@ func get_world_path_and_directions(p_from_cell_id: int, p_to_cell_id: int) -> Ar
 		var cell_id = cell_id_path[i]
 		world_path.append(map_resource.cell_resources[cell_id].world_position)
 		if i < cell_id_path.size() - 1:
-			directions.append(Battlefield.spatial_handler.get_direction_from_cell_id_to_cell_id(map_resource.size.x, cell_id, cell_id_path[i + 1]))
+			directions.append(battlefield.spatial_handler.get_direction_from_cell_id_to_cell_id(map_resource.size.x, cell_id, cell_id_path[i + 1]))
 	
 	# Results
 	return [world_path, directions]
 
 
 func highlight_cell() -> void:
-	Battlefield.highlight_cell()
+	battlefield.highlight_cell()
 
 
 ## cell id -> cell world pos

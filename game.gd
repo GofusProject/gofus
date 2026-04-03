@@ -11,7 +11,8 @@ var database: Database
 var datacenter: Datacenter
 var gofus_translator: GofusTranslator
 var asset_loader: AssetLoader
-# var battlefield: Battlefield
+var battlefield: Battlefield
+const BATTLEFIELD_SCENE: PackedScene = preload("res://graphics/battlefield/scenes/Battlefield.tscn")
 # var ui: UI
 
 # Manager
@@ -30,18 +31,22 @@ func _ready() -> void:
 	datacenter = Datacenter.new()
 	gofus_translator = GofusTranslator.new()
 	asset_loader = AssetLoader.new()
+	battlefield = BATTLEFIELD_SCENE.instantiate()
 
 	add_child(database)
 	add_child(datacenter)
 	add_child(gofus_translator)
 	add_child(asset_loader)
+	add_child(battlefield)
 
 	# Managers init
+	MapManager.initialize(database, datacenter, gofus_translator, asset_loader, battlefield)
+	CharactersManager.initialize(database, datacenter, gofus_translator, asset_loader, battlefield)
+	DialogManager.initialize(database, datacenter, gofus_translator, asset_loader, battlefield)
 
-	MapManager.initialize(database, datacenter, gofus_translator, asset_loader)
-	CharactersManager.initialize(database, datacenter, gofus_translator, asset_loader)
-	DialogManager.initialize(database, datacenter, gofus_translator, asset_loader)
-
+	# Signal connection
+	MapManager.setup_signals()
+	CharactersManager.setup_signals()
 
 	MapManager.scripted_cell_triggered.connect(func(action_resource: ActionResource): execute_action(action_resource))
 	change_map(map_id)

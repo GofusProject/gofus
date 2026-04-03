@@ -14,19 +14,25 @@ var database: Database
 var datacenter: Datacenter
 var gofus_translator: GofusTranslator
 var asset_loader: AssetLoader
-# var battlefield: Battlefield
+var battlefield: Battlefield
 # var ui: UI
 
 
-func initialize(p_database: Database, p_datacenter: Datacenter, p_gofus_translator: GofusTranslator, p_asset_loader: AssetLoader) -> void:
+func initialize(p_database: Database,
+	p_datacenter: Datacenter,
+	p_gofus_translator: GofusTranslator,
+	p_asset_loader: AssetLoader,
+	p_battlefield: Battlefield) -> void:
+
 	database = p_database
 	datacenter = p_datacenter
 	gofus_translator = p_gofus_translator
 	asset_loader = p_asset_loader
+	battlefield = p_battlefield
 
 
-func _ready() -> void:
-	Battlefield.character_sprite_handler.character_world_path_point_reached.connect(_on_battlefield_character_world_path_point_reached)
+func setup_signals() -> void:
+	battlefield.character_sprite_handler.character_world_path_point_reached.connect(_on_battlefield_character_world_path_point_reached)
 
 
 func create_player_character(p_player_id) -> void:
@@ -53,7 +59,7 @@ func create_player_character(p_player_id) -> void:
 	var character_id = datacenter.add_character_resource(player_character_resource)
 
 
-	Battlefield.character_sprite_handler.add_animated_character_sprite_2d(
+	battlefield.character_sprite_handler.add_animated_character_sprite_2d(
 		character_id,
 		player_character_resource.sprite_frames,
 		player_character_resource.sprite_metadata_resources,
@@ -102,7 +108,7 @@ func create_npcs() -> void:
 		var character_id: int = datacenter.add_character_resource(non_playable_character_resource)
 
 		# Rendering
-		Battlefield.character_sprite_handler.add_animated_character_sprite_2d(
+		battlefield.character_sprite_handler.add_animated_character_sprite_2d(
 			character_id,
 			non_playable_character_resource.sprite_frames,
 			non_playable_character_resource.sprite_metadata_resources,
@@ -115,7 +121,7 @@ func clear_characters() -> void:
 	datacenter._character_resources.clear()
 	# Player character is readded because its persistance.  
 	datacenter.add_character_resource(datacenter.player_character_resource)
-	Battlefield.character_sprite_handler.clear()
+	battlefield.character_sprite_handler.clear()
 	Ui.close_character_popup_menu()
 
 
@@ -128,11 +134,11 @@ func get_player_character_resource() -> PlayerCharacterResource:
 
 
 func move_character(p_character_resource: CharacterResource, p_path: Array[Vector2], p_orientations: Array[CharacterSpriteHandler.Orientation]) -> void:
-	Battlefield.character_sprite_handler.move_character(p_character_resource.id, p_path, p_orientations)
+	battlefield.character_sprite_handler.move_character(p_character_resource.id, p_path, p_orientations)
 
 
 func teleport_character(p_character_id: int, p_world_position: Vector2, p_cell_id: int) -> void:
-	Battlefield.character_sprite_handler.teleport_character(p_character_id, p_world_position)
+	battlefield.character_sprite_handler.teleport_character(p_character_id, p_world_position)
 	var character_resource = datacenter.player_character_resource
 	character_resource.cell_id = p_cell_id
 
@@ -141,11 +147,11 @@ func teleport_character(p_character_id: int, p_world_position: Vector2, p_cell_i
 
 func show_character_over_head(character_id: int) -> void:
 	var character_resource: CharacterResource = datacenter.get_character_resource(character_id)
-	Battlefield.show_character_over_head(character_id, character_resource.name)
+	battlefield.show_character_over_head(character_id, character_resource.name)
 
 
 func hide_character_over_head() -> void:
-	Battlefield.hide_character_over_head()
+	battlefield.hide_character_over_head()
 
 
 func open_character_popup_menu(p_character_id: int) -> void:

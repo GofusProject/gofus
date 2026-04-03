@@ -21,11 +21,13 @@ enum Orientation {
 	NORTH_EAST = 7
 }
 
+var battlefield: Battlefield
+
 
 
 func add_animated_character_sprite_2d(p_linked_character_id: int, p_sprite_frames: SpriteFrames, p_character_sprite_metadata: Dictionary[String, SpriteMetadataResource], p_direction: int, p_cell_id: int, p_player_character_layer: bool = false) -> void:
 
-	var animated_character_sprite_2d = Battlefield.ANIMATED_CHARACTER_SPRITE_2D_SCENE.instantiate()
+	var animated_character_sprite_2d = battlefield.ANIMATED_CHARACTER_SPRITE_2D_SCENE.instantiate()
 	animated_character_sprite_2d.initialize(p_linked_character_id, p_sprite_frames, p_character_sprite_metadata, p_direction)
 	animated_character_sprite_2d.position = MapManager.get_cell_world_position_from_cell_id(p_cell_id) # Position should be a parameter
 
@@ -43,21 +45,21 @@ func add_animated_character_sprite_2d(p_linked_character_id: int, p_sprite_frame
 	)
 
 	if p_player_character_layer == false:
-		Battlefield.character_sprites.add_child(animated_character_sprite_2d)
+		battlefield.character_sprites.add_child(animated_character_sprite_2d)
 	else:
-		Battlefield.player_character_layer.add_child(animated_character_sprite_2d)
+		battlefield.player_character_layer.add_child(animated_character_sprite_2d)
 
 
 func clear() -> void:
-	for child in Battlefield.character_sprites.get_children():
+	for child in battlefield.character_sprites.get_children():
 		child.queue_free()
 
 
 func get_animated_character_sprite_2d_by_character_id(p_character_id: int) -> AnimatedCharacterSprite2D:
-	for child in Battlefield.character_sprites.get_children():
+	for child in battlefield.character_sprites.get_children():
 		if child.linked_character_id == p_character_id:
 			return child
-	for child in Battlefield.player_character_layer.get_children():
+	for child in battlefield.player_character_layer.get_children():
 		if child.linked_character_id == p_character_id:
 			return child	
 	push_error("[CharacterSpriteHandler] No AnimatedCharacterSprite2D found for character id %d" % p_character_id)

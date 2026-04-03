@@ -3,11 +3,12 @@ extends Node
 
 
 var over_head_y = -50
+var battlefield: Battlefield # TODO: Move to UI
 
 
 func create_over_head(p_animated_character_sprite_2d: AnimatedCharacterSprite2D, p_name: String) -> void:
-	var text_over_head = Battlefield.TEXT_OVER_HEAD_SCENE.instantiate()
-	Battlefield.over_head_layer.add_child(text_over_head)
+	var text_over_head = battlefield.TEXT_OVER_HEAD_SCENE.instantiate()
+	battlefield.over_head_layer.add_child(text_over_head)
 
 	# Text
 	var label: Label = text_over_head.get_node_or_null("Background/Label")
@@ -22,5 +23,5 @@ func create_over_head(p_animated_character_sprite_2d: AnimatedCharacterSprite2D,
 
 
 func destroy_all_over_head() -> void:
-	for child in Battlefield.over_head_layer.get_children():
+	for child in battlefield.over_head_layer.get_children():
 		child.queue_free()

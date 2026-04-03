@@ -13,7 +13,6 @@ func _ready() -> void:
 
 	test_animated_character_sprite_2d = add_animated_character_sprite_2d(1, 10, 1)
 
-
 	# Add a button for changing animation resource
 	var resource_button = Button.new()
 	resource_button.text = "Change Resource"

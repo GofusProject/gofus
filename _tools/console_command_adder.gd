@@ -11,4 +11,4 @@ func console_change_map(param: String):
 	Game.change_map(int(param))
 
 func console_display_cell_ids():
-	Battlefield.display_cell_ids()
+	Game.battlefield.display_cell_ids()

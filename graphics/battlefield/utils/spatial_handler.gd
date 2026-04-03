@@ -21,6 +21,7 @@ enum Direction {
 	NORTH_EAST = 7
 }
 
+var battlefield: Battlefield
 var astar_grid: AStarGrid2D
 
 
@@ -194,5 +195,5 @@ func get_cell_id_at_direction(from_cell_id: int, direction: Direction, p_map_wid
 
 func clear() -> void:
 	astar_grid = null
-	for child in Battlefield.debug_astar_layer.get_children():
+	for child in battlefield.debug_astar_layer.get_children():
 		child.queue_free()

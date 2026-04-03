@@ -7,6 +7,7 @@ class_name MapHandler
   
 
 
+var battlefield: Battlefield
 # Object pools - arrays of reusable nodes
 var _ground_sprite_pool: Array[Sprite2D] = []
 var _object1_sprite_pool: Array[Sprite2D] = []
@@ -38,19 +39,19 @@ func _get_pooled_sprite2D(pool: Array, index: int, layer: Node) -> Sprite2D:
 
 
 func _get_ground_sprite2D() -> Sprite2D:
-	var sprite : Sprite2D = _get_pooled_sprite2D(_ground_sprite_pool, _ground_pool_index, Battlefield.ground_layer)
+	var sprite : Sprite2D = _get_pooled_sprite2D(_ground_sprite_pool, _ground_pool_index, battlefield.ground_layer)
 	_ground_pool_index += 1
 	return sprite
 
 
 func _get_object1_sprite2D() -> Sprite2D:
-	var sprite : Sprite2D = _get_pooled_sprite2D(_object1_sprite_pool, _object1_pool_index, Battlefield.object1_layer)
+	var sprite : Sprite2D = _get_pooled_sprite2D(_object1_sprite_pool, _object1_pool_index, battlefield.object1_layer)
 	_object1_pool_index += 1
 	return sprite
 
 
 func _get_object2_sprite2D() -> Sprite2D:
-	var sprite : Sprite2D = _get_pooled_sprite2D(_object2_sprite_pool, _object2_pool_index, Battlefield.object2_layer)
+	var sprite : Sprite2D = _get_pooled_sprite2D(_object2_sprite_pool, _object2_pool_index, battlefield.object2_layer)
 	_object2_pool_index += 1
 	return sprite
 
@@ -70,7 +71,7 @@ func _get_cell_id_label() -> Label:
 		label.add_theme_constant_override("outline_size", 2)
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		Battlefield.cell_ids_layer.add_child(label)
+		battlefield.cell_ids_layer.add_child(label)
 		_label_pool.append(label)
 		_label_pool_index += 1
 		return label
@@ -100,7 +101,7 @@ func _reset_pools() -> void:
 
 
 func render_background(p_background_texture: Texture2D) -> void:
-	Battlefield.background.texture = p_background_texture
+	battlefield.background.texture = p_background_texture
 
 
 ## Called by the Battlefield to render the all map
@@ -216,7 +217,7 @@ func render_map(p_background_texture: Texture2D, p_map_width: int, p_cell_resour
 			staggered_grid_y += 1
   
 			if world_x_offset == 0:
-				world_x_offset = Battlefield.CELL_HALF_WIDTH
+				world_x_offset = battlefield.CELL_HALF_WIDTH
 				max_staggered_grid_x -= 1
 			else:
 				world_x_offset = 0
@@ -228,8 +229,8 @@ func render_map(p_background_texture: Texture2D, p_map_width: int, p_cell_resour
 		# Dofus has a different way to calculate this (Pathfinding.as, getCaseCoordonnee(), just before return)
 		cell_resource.staggered_grid_position = Vector2i(staggered_grid_x, staggered_grid_y)
 		cell_resource.world_position = Vector2(
-			staggered_grid_x * Battlefield.CELL_WIDTH + world_x_offset,
-			staggered_grid_y * Battlefield.CELL_HALF_HEIGHT - Battlefield.LEVEL_HEIGHT * (cell_resource.cell_level - 7)
+			staggered_grid_x * battlefield.CELL_WIDTH + world_x_offset,
+			staggered_grid_y * battlefield.CELL_HALF_HEIGHT - battlefield.LEVEL_HEIGHT * (cell_resource.cell_level - 7)
 			)
 
 		render_cell(
@@ -277,30 +278,30 @@ func render_grid_cell(p_world_position: Vector2, ground_slope: int, movement: in
 	cell_visual.width = 1.5
 	cell_visual.antialiased = true
 	cell_visual.position = pos
-	var raw = Battlefield.SLOPE_POINTS[ground_slope]
+	var raw = battlefield.SLOPE_POINTS[ground_slope]
 	var points = PackedVector2Array()
 	for p in raw:
-		points.append(Vector2(p[0] * Battlefield.slope_points_scaling, p[1] * Battlefield.slope_points_scaling))
+		points.append(Vector2(p[0] * battlefield.slope_points_scaling, p[1] * battlefield.slope_points_scaling))
 	cell_visual.points = points
-	Battlefield.grid_layer.add_child(cell_visual)
+	battlefield.grid_layer.add_child(cell_visual)
 
 
 func clear() -> void:
 	# Clear background
-	if Battlefield.background != null:
-		Battlefield.background.texture = null
+	if battlefield.background != null:
+		battlefield.background.texture = null
 	
 	# Hide all pooled sprites and labels
 	_reset_pools()
 
 	# A implementer en pool
-	for child in Battlefield.grid_layer.get_children():
+	for child in battlefield.grid_layer.get_children():
 		child.queue_free()
 
 
 ## grid pos -> cell world pos
 func get_cell_world_position_from_grid_position(grid_pos: Vector2i) -> Vector2:
-	var x_offset: float = Battlefield.CELL_HALF_WIDTH if grid_pos.y % 2 == 1 else 0.0
-	var world_x: float = grid_pos.x * Battlefield.CELL_WIDTH + x_offset
-	var world_y: float = grid_pos.y * Battlefield.CELL_HALF_HEIGHT
+	var x_offset: float = battlefield.CELL_HALF_WIDTH if grid_pos.y % 2 == 1 else 0.0
+	var world_x: float = grid_pos.x * battlefield.CELL_WIDTH + x_offset
+	var world_y: float = grid_pos.y * battlefield.CELL_HALF_HEIGHT
 	return Vector2(world_x, world_y)

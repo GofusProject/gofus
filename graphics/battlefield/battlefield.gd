@@ -1,4 +1,4 @@
-# battlefield.gd
+class_name Battlefield
 extends Node2D
 
 
@@ -71,6 +71,12 @@ func _ready() -> void:
 	over_head_handler = OverHeadHandler.new()
 	cell_interaction_handler = CellInteractionHandler.new()
 	spatial_handler = SpatialHandler.new()
+
+	map_handler.battlefield = self
+	character_sprite_handler.battlefield = self
+	over_head_handler.battlefield = self
+	cell_interaction_handler.battlefield = self
+	spatial_handler.battlefield = self
 
 	background = get_node_or_null("Background")
 	ground_layer = get_node_or_null("GroundLayer")

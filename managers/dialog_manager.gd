@@ -7,15 +7,21 @@ var database: Database
 var datacenter: Datacenter
 var gofus_translator: GofusTranslator
 var asset_loader: AssetLoader
-# var battlefield: Battlefield
+var battlefield: Battlefield
 # var ui: UI
 
 
-func initialize(p_database: Database, p_datacenter: Datacenter, p_gofus_translator: GofusTranslator, p_asset_loader: AssetLoader) -> void:
+func initialize(p_database: Database,
+	p_datacenter: Datacenter,
+	p_gofus_translator: GofusTranslator,
+	p_asset_loader: AssetLoader,
+	p_battlefield: Battlefield) -> void:
+
 	database = p_database
 	datacenter = p_datacenter
 	gofus_translator = p_gofus_translator
 	asset_loader = p_asset_loader
+	battlefield = p_battlefield
 
 
 func start_dialog(p_init_dialog_question_id: int, p_dialog_title: String) -> void:
