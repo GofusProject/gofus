@@ -38,7 +38,7 @@ func create_map(map_id: int) -> bool:
 	
 	Datacenter.set_current_map_resource(map_resource)
 
-	# 3. Battlefield, AssetLoader and CellResource (2nd init)
+	# 3. AssetLoader and CellResource sprite init
 
 	for cell_resource in map_resource.cell_resources:
 
@@ -73,6 +73,18 @@ func create_map(map_id: int) -> bool:
 			cell_resource.initialize_object2_texture_and_offset(object2_sprite_texture, object2_offset)
 			object2_tiles += 1
 
+	# Scripted cells init
+	var scripted_cells_data: Array[Dictionary] = Database.get_scripted_cell_data(map_id)
+	if scripted_cells_data.is_empty():
+		push_warning("[MapManager] No scripted cells for map %d" % map_id)
+
+
+	for scripted_cell_data in scripted_cells_data:
+		var cell_resource = map_resource.cell_resources[scripted_cell_data["cell_id"]]
+		cell_resource.initialize_action_properties(scripted_cell_data)
+
+
+	# Battlefield
 	Battlefield.build_map(map_resource.background_id, map_resource.size.x, map_resource.cell_resources, map_resource.diamond_grid_start, map_resource. diamond_grid_size)
 	PerformanceTracker.end_timer()
 	return true

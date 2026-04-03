@@ -4,7 +4,7 @@
 extends Node
 
 const DB_PATH: String = "res://database/gofus_database.db"
-const VERBOSITY_LEVEL: int = SQLite.VERBOSE
+const VERBOSITY_LEVEL: int = SQLite.NORMAL
 
 var db: SQLite = null
 
@@ -95,8 +95,8 @@ func get_player_data(p_id: int) -> Dictionary:
 	return _fetch_one("players", p_id)
 
 
-func get_scripted_cell_data(p_id: int) -> Array[Dictionary]:
-	return _fetch_one("scripted_cells", p_id)
+func get_scripted_cell_data(p_map_id: int) -> Array[Dictionary]:
+	return _fetch_where("scripted_cells", "map_id", p_map_id)
 
 
 

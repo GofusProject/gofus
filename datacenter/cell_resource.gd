@@ -50,6 +50,13 @@ var object: int # Derived from object2_id and is_object2_interactive. See Compre
 var object_external: String
 var is_object_external_interactive: bool
 
+# Action / Scripted cell
+var action_id: ActionResource.ActionId
+var event_id: int = -1
+var action_arg_1: int = -1
+var action_arg_2: int = -1
+var conditions # to implement (see scripted cells table to see the format)
+
 
 
 func _init(p_id: int, p_raw_data: String) -> void:
@@ -97,3 +104,17 @@ func initialize_object1_texture_and_offset(p_object1_texture: Texture2D, p_objec
 func initialize_object2_texture_and_offset(p_object2_texture: Texture2D, p_object2_offset: Vector2) -> void:
 	object2_texture = p_object2_texture
 	object2_offset = p_object2_offset
+
+
+func initialize_action_properties(scripted_cell_data: Dictionary) -> void:
+	action_id = int(scripted_cell_data["action_id"])
+	event_id = int(scripted_cell_data["event_id"])
+	event_id = int(scripted_cell_data["event_id"])
+
+	var action_args_string: Array = scripted_cell_data["action_args"].split(",")
+	action_arg_1 = int(action_args_string[0])
+	action_arg_2 = int(action_args_string[1])
+	
+	conditions = scripted_cell_data["conditions"]
+
+	print("Scripted cell id: ", id) 
