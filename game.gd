@@ -39,9 +39,6 @@ func execute_action(action_resource: ActionResource) -> void:
 
 
 func change_map(p_map_id: int):
-	Ui.reset()
-	CharactersManager.clear_characters()
-	MapManager.clear_map()
 
 	var is_map_created = MapManager.create_map(p_map_id)
 	if not is_map_created:

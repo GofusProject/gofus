@@ -49,6 +49,7 @@ var object2_layer: Node2D
 var interaction_layer: Node2D
 var cell_ids_layer: Node2D
 var character_sprites: Node2D
+var player_character_layer: Node2D
 var over_head_layer: Node2D
 var grid_layer: Node2D
 var cell_interaction_layer: Node2D
@@ -78,6 +79,7 @@ func _ready() -> void:
 	interaction_layer = get_node_or_null("InteractionLayer")
 	cell_ids_layer = get_node_or_null("CellIDSLayer")
 	character_sprites = get_node_or_null("CharacterSprites")
+	player_character_layer = get_node_or_null("PlayerCharacterLayer")
 	over_head_layer = get_node_or_null("OverHeadLayer")
 	grid_layer = get_node_or_null("GridLayer")
 	cell_interaction_layer = get_node_or_null("CellInteractionLayer")

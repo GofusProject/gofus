@@ -23,6 +23,7 @@ var collision_shape: CollisionShape2D
 const WALK_SPEEDS = [0.07,0.06,0.06,0.06,0.07,0.06,0.06,0.06]
 const MOUNT_SPEEDS = [0.23,0.2,0.2,0.2,0.23,0.2,0.2,0.2]
 const RUN_SPEEDS = [0.17,0.15,0.15,0.15,0.17,0.15,0.15,0.15]
+var speed_modifier: int = 48
 var next_point: Vector2 = Vector2(-1, -1)
 var path: Array[Vector2] = []
 var path_directions: Array[CharacterSpriteHandler.Orientation]
@@ -40,7 +41,9 @@ func _process(delta: float) -> void:
 		# si arrivé au prochain point on enlève le point du path
 		if position.distance_to(next_point) == 0:
 			world_path_point_reached.emit(next_point, linked_character_id)
-			path.remove_at(0)
+
+			if not path.is_empty(): # Don't know why but happens when triggering a teleport cell
+				path.remove_at(0)
 
 			# If path empty, reset and return
 			if path.is_empty():
@@ -56,7 +59,7 @@ func _process(delta: float) -> void:
 			play(_set_animation_to_play("run", orientation_id))
 		
 
-		position = position.move_toward(next_point, RUN_SPEEDS[1] * 48 ) # TO CHANGE
+		position = position.move_toward(next_point, RUN_SPEEDS[1] * speed_modifier ) # TO CHANGE
 
 
 func initialize(p_linked_character_id: int, p_sprite_frames_id: int, p_direction: int) -> void:
@@ -109,6 +112,11 @@ func follow_path(p_path: Array[Vector2], p_orientations: Array[CharacterSpriteHa
 	
 	play(_set_animation_to_play("run", orientation_id))
 
+
+func reset_movement() -> void:
+	path.clear()
+	next_point = Vector2(-1, -1)
+	path_directions.clear()
 
 
 func _set_animation_to_play(animation_state_name: String, orientation: int) -> String:

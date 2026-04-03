@@ -3,7 +3,7 @@ extends Node
 
 
 
-func teleport(character_id: int, p_map_id: int, p_cell_id: int) -> void:
+func teleport(character_id: int, p_map_id: int, p_cell_id: int = -1) -> void:
 
 	if MapManager.get_current_map_id() != p_map_id:
 		Ui.reset()
@@ -17,7 +17,7 @@ func teleport(character_id: int, p_map_id: int, p_cell_id: int) -> void:
 		CharactersManager.create_npcs()
 	
 	var world_position = MapManager.get_cell_world_position_from_cell_id(p_cell_id)
-	CharactersManager.teleport_character(character_id, world_position)
+	CharactersManager.teleport_character(character_id, world_position, p_cell_id)
 
 
 func start_dialog_with_npc(p_npc_id: int):

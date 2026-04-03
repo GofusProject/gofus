@@ -14,6 +14,7 @@ func _ready() -> void:
 
 
 func create_player_character(p_player_id) -> void:
+
 	var player_data = Database.get_player_data(p_player_id)
 	if player_data.is_empty():
 		push_error("[Game] Player data empty for player id %d" % p_player_id)
@@ -24,11 +25,14 @@ func create_player_character(p_player_id) -> void:
 	Datacenter.player_character_resource = player_character_resource
 	var character_id = Datacenter.add_character_resource(player_character_resource)
 
+
 	Battlefield.character_sprite_handler.add_animated_character_sprite_2d(
 		character_id,
 		player_character_resource.sprite_frames_id,
 		player_character_resource.direction,
-		player_character_resource.cell_id)
+		player_character_resource.cell_id,
+		true
+	)
 
 
 func create_npcs() -> void:
@@ -66,6 +70,8 @@ func create_npcs() -> void:
 
 func clear_characters() -> void:
 	Datacenter._character_resources.clear()
+	# Player character is readded because its persistance.  
+	Datacenter.add_character_resource(Datacenter.player_character_resource)
 	Battlefield.character_sprite_handler.clear()
 	Ui.close_character_popup_menu()
 
@@ -76,6 +82,12 @@ func get_player_character_resource() -> PlayerCharacterResource:
 
 func move_character(p_character_resource: CharacterResource, p_path: Array[Vector2], p_orientations: Array[CharacterSpriteHandler.Orientation]) -> void:
 	Battlefield.character_sprite_handler.move_character(p_character_resource.id, p_path, p_orientations)
+
+
+func teleport_character(p_character_id: int, p_world_position: Vector2, p_cell_id: int) -> void:
+	Battlefield.character_sprite_handler.teleport_character(p_character_id, p_world_position)
+	var character_resource = Datacenter.player_character_resource
+	character_resource.cell_id = p_cell_id
 
 
 #region UI
