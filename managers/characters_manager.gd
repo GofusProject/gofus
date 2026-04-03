@@ -13,28 +13,28 @@ func _ready() -> void:
 	Battlefield.character_sprite_handler.character_world_path_point_reached.connect(_on_battlefield_character_world_path_point_reached)
 
 
-func create_playable_character(p_player_id) -> void:
+func create_player_character(p_player_id) -> void:
 	var player_data = Database.get_player_data(p_player_id)
 	if player_data.is_empty():
 		push_error("[Game] Player data empty for player id %d" % p_player_id)
 		return
 
-	var playable_character_resource = PlayablePlayerResource.new(player_data)
-	Datacenter.playable_character_resource = playable_character_resource
-	var character_id = Datacenter.add_character_resource(playable_character_resource)
+	var player_character_resource = PlayerCharacterResource.new(player_data)
+	# Added in datacenter in both player_character_resource and character_resources[]
+	Datacenter.player_character_resource = player_character_resource
+	var character_id = Datacenter.add_character_resource(player_character_resource)
 
 	Battlefield.character_sprite_handler.add_animated_character_sprite_2d(
 		character_id,
-		playable_character_resource.sprite_frames_id,
-		playable_character_resource.direction,
-		playable_character_resource.cell_id)
+		player_character_resource.sprite_frames_id,
+		player_character_resource.direction,
+		player_character_resource.cell_id)
 
 
 func create_npcs() -> void:
 
 	var map_resource = Datacenter.get_current_map()
 	var npc_ids: Array[int] = map_resource.npc_ids
-	clear_characters()
 
 	for npc_id in npc_ids:
 
@@ -70,8 +70,8 @@ func clear_characters() -> void:
 	Ui.close_character_popup_menu()
 
 
-func get_playable_character_resource() -> PlayablePlayerResource:
-	return Datacenter.playable_character_resource
+func get_player_character_resource() -> PlayerCharacterResource:
+	return Datacenter.player_character_resource
 
 
 func move_character(p_character_resource: CharacterResource, p_path: Array[Vector2], p_orientations: Array[CharacterSpriteHandler.Orientation]) -> void:
@@ -109,7 +109,7 @@ func open_character_popup_menu(p_character_id: int) -> void:
 			})
 		Ui.open_npc_popup_menu(npc_interaction_data)
 
-	elif character_resource is PlayablePlayerResource:
+	elif character_resource is PlayableCharacterResource:
 		Ui.close_character_popup_menu()
 
 
