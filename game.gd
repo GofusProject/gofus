@@ -6,6 +6,23 @@ var map_id: int = 10354
 var player_id: int = 1
 var actions: Actions
 
+# Modules
+var database
+var datacenter
+var gofus_translator
+var asset_loader
+var battlefield
+var ui
+
+# Manager
+var character_manager
+var map_manager
+var dialog_manager
+
+
+
+
+
 
 func _ready() -> void:
 	actions = Actions.new()
