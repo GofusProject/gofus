@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://c8evu7drilu7"]
+[gd_scene load_steps=2 format=3 uid="uid://c8evu7drilu7"]
 
 [ext_resource type="Script" uid="uid://bkdft6p2lmije" path="res://graphics/battlefield/battlefield.gd" id="1_7hm7j"]
-[ext_resource type="Script" uid="uid://dd3q76udlgigi" path="res://graphics/battlefield/grid_layer.gd" id="2_7hm7j"]
 
 [node name="Battlefield" type="Node2D"]
 y_sort_enabled = true
@@ -24,7 +23,6 @@ y_sort_enabled = true
 [node name="GridLayer" type="Node2D" parent="."]
 modulate = Color(1, 1, 1, 0.3019608)
 z_index = 3
-script = ExtResource("2_7hm7j")
 
 [node name="CharacterSprites" type="Node2D" parent="."]
 z_index = 3

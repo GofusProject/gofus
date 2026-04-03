@@ -4,6 +4,7 @@ extends AnimatedSprite2D
 
 var linked_character_id: int
 var orientation_id: int
+## Orientation letter is derived from orientation_id
 var orientation_letter: String
 var animation_name: String
 
@@ -92,6 +93,11 @@ func initialize(p_linked_character_id: int, p_sprite_frames: SpriteFrames, p_spr
 	var anim_to_play: String = _set_animation_to_play("static", orientation_id) # "static" is the default animation for npcs on map
 
 	play(anim_to_play)
+
+	# Force update because animation_changed triggers only if the animation set is different from the current animation. 
+	# What happens is that offsets are not update in case that the first sprite frames animation is the one used at 
+	# initialization because animation_changed does not trigger.
+	_update_offset_and_area_2D()
 
 
 func set_highlight(toggle: bool) -> void:
@@ -184,8 +190,7 @@ func _is_pixel_opaque(global_mouse: Vector2) -> bool:
 	return a > 0.1
 
 
-func _on_animation_changed() -> void:
-
+func _update_offset_and_area_2D() -> void:
 	# update offset. Important to set as offset and not position for y sorting
 	if sprite_metadata_resources.has(animation):
 		offset = sprite_metadata_resources[animation].offset
@@ -201,6 +206,11 @@ func _on_animation_changed() -> void:
 	if not collision_shape.shape is RectangleShape2D:
 		collision_shape.shape = RectangleShape2D.new()
 	(collision_shape.shape as RectangleShape2D).size = tex_size
+
+
+func _on_animation_changed() -> void:
+	_update_offset_and_area_2D()
+
 
 
 func _on_area_2d_mouse_exited() -> void:

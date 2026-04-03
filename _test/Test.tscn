@@ -8,3 +8,5 @@ script = ExtResource("1_5kc3e")
 [node name="PathfindingHandler" type="Node2D" parent="."]
 
 [node name="GridLayer" type="Node2D" parent="."]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
