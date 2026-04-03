@@ -1,6 +1,7 @@
 # Database.gd
 # AutoLoad singleton
 # Handles data persistence via SQLite and provides quick access to data
+class_name Database
 extends Node
 
 const DB_PATH: String = "res://database/gofus_database.db"

@@ -2,6 +2,20 @@ extends Node
 
 
 
+# Modules
+var database: Database
+# var datacenter: Datacenter
+# var gofus_translator: GofusTranslator
+# var asset_loader: AssetLoader
+# var battlefield: Battlefield
+# var ui: UI
+
+
+func initialize(p_database: Database) -> void:
+	database = p_database
+
+
+
 func start_dialog(p_init_dialog_question_id: int, p_dialog_title: String) -> void:
 	var dialog_resource: DialogResource = _create_dialog_resource(p_dialog_title, p_init_dialog_question_id)
 	if dialog_resource == null:
@@ -29,7 +43,7 @@ func leave_dialog() -> void:
 
 func _create_dialog_resource(p_dialog_title: String, p_dialog_question_id: int) -> DialogResource:
 	# Create npc_dialog_resource from p_dialog_question_id
-	var dialog_question_data: Dictionary = Database.get_dialog_question_data(p_dialog_question_id)
+	var dialog_question_data: Dictionary = database.get_dialog_question_data(p_dialog_question_id)
 	var dialog_question_lang: String = GofusTranslator.get_dialog_question_text(p_dialog_question_id)
 	if dialog_question_data.is_empty() or dialog_question_lang.is_empty():
 		print("[CharactersManager] Npc init dialog data or lang is empty for id ", p_dialog_question_id)
@@ -40,7 +54,7 @@ func _create_dialog_resource(p_dialog_title: String, p_dialog_question_id: int) 
 
 	# Add player_response_texts
 	for player_response_id in dialog_resource.player_response_ids:
-		var player_response_data = Database.get_dialog_response_action_data(player_response_id)
+		var player_response_data = database.get_dialog_response_action_data(player_response_id)
 		var player_response_text = GofusTranslator.get_dialog_response_text(player_response_id)
 		if player_response_data.is_empty() or player_response_text == "":
 			printerr("[CharactersManager] Player response dictionary or lang is empty for id ", player_response_id)

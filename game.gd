@@ -7,16 +7,16 @@ var player_id: int = 1
 var actions: Actions
 
 # Modules
-var database
-var datacenter
-var gofus_translator
-var asset_loader
-var battlefield
-var ui
+var database: Database
+# var datacenter: Datacenter
+# var gofus_translator: GofusTranslator
+# var asset_loader: AssetLoader
+# var battlefield: Battlefield
+# var ui: UI
 
 # Manager
-var character_manager
 var map_manager
+var character_manager
 var dialog_manager
 
 
@@ -25,7 +25,20 @@ var dialog_manager
 
 
 func _ready() -> void:
+
 	actions = Actions.new()
+
+	# Modules init
+	database = Database.new()
+	add_child(database)
+
+	# Managers init
+
+	MapManager.initialize(database)
+	CharactersManager.initialize(database)
+	DialogManager.initialize(database)
+
+
 	MapManager.scripted_cell_triggered.connect(func(action_resource: ActionResource): execute_action(action_resource))
 	change_map(map_id)
 	pass

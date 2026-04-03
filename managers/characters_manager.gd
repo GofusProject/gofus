@@ -9,13 +9,27 @@ signal character_world_path_point_reached(world_pos: Vector2, linked_character_i
 
 
 
+# Modules
+var database: Database
+# var datacenter: Datacenter
+# var gofus_translator: GofusTranslator
+# var asset_loader: AssetLoader
+# var battlefield: Battlefield
+# var ui: UI
+
+
+func initialize(p_database: Database) -> void:
+	database = p_database
+
+
+
 func _ready() -> void:
 	Battlefield.character_sprite_handler.character_world_path_point_reached.connect(_on_battlefield_character_world_path_point_reached)
 
 
 func create_player_character(p_player_id) -> void:
 
-	var player_data = Database.get_player_data(p_player_id)
+	var player_data = database.get_player_data(p_player_id)
 	if player_data.is_empty():
 		push_error("[Game] Player data empty for player id %d" % p_player_id)
 		return
@@ -42,12 +56,12 @@ func create_npcs() -> void:
 
 	for npc_id in npc_ids:
 
-		var npc_data: Dictionary = Database.get_npc_data(npc_id)
+		var npc_data: Dictionary = database.get_npc_data(npc_id)
 		if npc_data.is_empty():
 			push_error("[CharacterManager] Npc data empty for npc id %s" % npc_id)
 			return
 
-		var npc_template_data = Database.get_npc_template_data(int(npc_data.npc_template_id))
+		var npc_template_data = database.get_npc_template_data(int(npc_data.npc_template_id))
 		if npc_template_data.is_empty():
 			push_error("[CharacterManager] Npc template data empty for npc template id %s" % npc_data.npc_template_id)
 			return

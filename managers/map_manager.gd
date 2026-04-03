@@ -1,6 +1,6 @@
 # MapManager.gd
 # AutoLoad singleton
-# Orchestrates map loading by coordinating Database, Compressor, and Datacenter to build MapResource
+# Orchestrates map loading by coordinating database, Compressor, and Datacenter to build MapResource
 extends Node
 
 
@@ -11,6 +11,20 @@ signal scripted_cell_triggered(action_resource: ActionResource)
 var ground_tiles: int = 0
 var object1_tiles: int = 0
 var object2_tiles: int = 0
+
+# Modules
+var database: Database
+# var datacenter: Datacenter
+# var gofus_translator: GofusTranslator
+# var asset_loader: AssetLoader
+# var battlefield: Battlefield
+# var ui: UI
+
+
+
+func initialize(p_database: Database) -> void:
+	database = p_database
+
 
 
 func _ready() -> void:
@@ -28,7 +42,7 @@ func create_map(map_id: int) -> bool:
 	PerformanceTracker.start_timer("MapManager", "Map creation")
 	
 	# 1. Database
-	var map_dict: Dictionary = Database.get_map_data(map_id)
+	var map_dict: Dictionary = database.get_map_data(map_id)
 	if map_dict.is_empty():
 		push_error("[MapManager] No map dictionary for map %d" % map_id)
 		return false
@@ -79,7 +93,7 @@ func create_map(map_id: int) -> bool:
 			object2_tiles += 1
 
 	# Scripted cells init
-	var scripted_cells_data: Array[Dictionary] = Database.get_scripted_cell_data(map_id)
+	var scripted_cells_data: Array[Dictionary] = database.get_scripted_cell_data(map_id)
 	if scripted_cells_data.is_empty():
 		push_warning("[MapManager] No scripted cells for map %d" % map_id)
 
