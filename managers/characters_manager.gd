@@ -12,15 +12,16 @@ signal character_world_path_point_reached(world_pos: Vector2, linked_character_i
 # Modules
 var database: Database
 var datacenter: Datacenter
-# var gofus_translator: GofusTranslator
+var gofus_translator: GofusTranslator
 # var asset_loader: AssetLoader
 # var battlefield: Battlefield
 # var ui: UI
 
 
-func initialize(p_database: Database, p_datacenter: Datacenter) -> void:
+func initialize(p_database: Database, p_datacenter: Datacenter, p_gofus_translator: GofusTranslator) -> void:
 	database = p_database
 	datacenter = p_datacenter
+	gofus_translator = p_gofus_translator
 
 
 
@@ -69,7 +70,7 @@ func create_npcs() -> void:
 			return
 
 
-		var npc_template_name = GofusTranslator.get_npc_template_name(int(npc_data.npc_template_id))
+		var npc_template_name = gofus_translator.get_npc_template_name(int(npc_data.npc_template_id))
 		if npc_template_name.is_empty():
 			push_error("[CharacterManager] Npc template lang data empty for npc template lang id %s" % npc_data.npc_template_id)
 			return
@@ -131,7 +132,7 @@ func open_character_popup_menu(p_character_id: int) -> void:
 		var npc_interaction_ids: Array[int] = character_resource.interaction_ids
 		var npc_interaction_texts: Array[String] = []
 		for npc_interaction_id in npc_interaction_ids:
-			var interaction_text = GofusTranslator.get_npc_interaction_text(npc_interaction_id)
+			var interaction_text = gofus_translator.get_npc_interaction_text(npc_interaction_id)
 			npc_interaction_texts.append(interaction_text)
 		var npc_interaction_data: Array[Dictionary] = []
 		for i in npc_interaction_ids.size():

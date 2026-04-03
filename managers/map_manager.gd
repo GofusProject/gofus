@@ -15,16 +15,17 @@ var object2_tiles: int = 0
 # Modules
 var database: Database
 var datacenter: Datacenter
-# var gofus_translator: GofusTranslator
+var gofus_translator: GofusTranslator
 # var asset_loader: AssetLoader
 # var battlefield: Battlefield
 # var ui: UI
 
 
 
-func initialize(p_database: Database, p_datacenter: Datacenter) -> void:
+func initialize(p_database: Database, p_datacenter: Datacenter, p_gofus_translator: GofusTranslator) -> void:
 	database = p_database
 	datacenter = p_datacenter
+	gofus_translator = p_gofus_translator
 
 
 
