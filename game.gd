@@ -10,7 +10,7 @@ var actions: Actions
 var database: Database
 var datacenter: Datacenter
 var gofus_translator: GofusTranslator
-# var asset_loader: AssetLoader
+var asset_loader: AssetLoader
 # var battlefield: Battlefield
 # var ui: UI
 
@@ -18,9 +18,6 @@ var gofus_translator: GofusTranslator
 var map_manager
 var character_manager
 var dialog_manager
-
-
-
 
 
 
@@ -32,16 +29,18 @@ func _ready() -> void:
 	database = Database.new()
 	datacenter = Datacenter.new()
 	gofus_translator = GofusTranslator.new()
+	asset_loader = AssetLoader.new()
 
 	add_child(database)
 	add_child(datacenter)
 	add_child(gofus_translator)
+	add_child(asset_loader)
 
 	# Managers init
 
-	MapManager.initialize(database, datacenter, gofus_translator)
-	CharactersManager.initialize(database, datacenter, gofus_translator)
-	DialogManager.initialize(database, datacenter, gofus_translator)
+	MapManager.initialize(database, datacenter, gofus_translator, asset_loader)
+	CharactersManager.initialize(database, datacenter, gofus_translator, asset_loader)
+	DialogManager.initialize(database, datacenter, gofus_translator, asset_loader)
 
 
 	MapManager.scripted_cell_triggered.connect(func(action_resource: ActionResource): execute_action(action_resource))

@@ -13,17 +13,16 @@ signal character_world_path_point_reached(world_pos: Vector2, linked_character_i
 var database: Database
 var datacenter: Datacenter
 var gofus_translator: GofusTranslator
-# var asset_loader: AssetLoader
+var asset_loader: AssetLoader
 # var battlefield: Battlefield
 # var ui: UI
 
 
-func initialize(p_database: Database, p_datacenter: Datacenter, p_gofus_translator: GofusTranslator) -> void:
+func initialize(p_database: Database, p_datacenter: Datacenter, p_gofus_translator: GofusTranslator, p_asset_loader: AssetLoader) -> void:
 	database = p_database
 	datacenter = p_datacenter
 	gofus_translator = p_gofus_translator
-
-
+	asset_loader = p_asset_loader
 
 
 func _ready() -> void:
@@ -38,6 +37,17 @@ func create_player_character(p_player_id) -> void:
 		return
 
 	var player_character_resource = PlayerCharacterResource.new(player_data)
+
+	player_character_resource.sprite_frames = asset_loader.get_character_sprite_frames(player_character_resource.sprite_frames_id)
+
+	# Metadata (offsets...)
+	var character_sprite_metadata: Dictionary = asset_loader.get_character_sprite_metadata(player_character_resource.sprite_frames_id)
+	var character_sprite_metadata_resources: Dictionary[String, SpriteMetadataResource] = {}
+	for key in character_sprite_metadata.keys():
+		var sprite_metadata_resource = SpriteMetadataResource.new(character_sprite_metadata[key])
+		character_sprite_metadata_resources[key] = sprite_metadata_resource
+	player_character_resource.sprite_metadata_resources = character_sprite_metadata_resources
+
 	# Added in datacenter in both player_character_resource and character_resources[]
 	datacenter.player_character_resource = player_character_resource
 	var character_id = datacenter.add_character_resource(player_character_resource)
@@ -45,7 +55,8 @@ func create_player_character(p_player_id) -> void:
 
 	Battlefield.character_sprite_handler.add_animated_character_sprite_2d(
 		character_id,
-		player_character_resource.sprite_frames_id,
+		player_character_resource.sprite_frames,
+		player_character_resource.sprite_metadata_resources,
 		player_character_resource.direction,
 		player_character_resource.cell_id,
 		true
@@ -76,13 +87,28 @@ func create_npcs() -> void:
 			return
 
 		var non_playable_character_resource = NonPlayableCharacterResource.new(npc_data, npc_template_data, npc_template_name)
+
+		# Sprite frame
+		non_playable_character_resource.sprite_frames = asset_loader.get_character_sprite_frames(non_playable_character_resource.sprite_frames_id)
+
+		# Metadata (offsets...)
+		var character_sprite_metadata: Dictionary = asset_loader.get_character_sprite_metadata(non_playable_character_resource.sprite_frames_id)
+		var character_sprite_metadata_resources: Dictionary[String, SpriteMetadataResource] = {}
+		for key in character_sprite_metadata.keys():
+			var sprite_metadata_resource = SpriteMetadataResource.new(character_sprite_metadata[key])
+			character_sprite_metadata_resources[key] = sprite_metadata_resource
+		non_playable_character_resource.sprite_metadata_resources = character_sprite_metadata_resources
+
 		var character_id: int = datacenter.add_character_resource(non_playable_character_resource)
 
+		# Rendering
 		Battlefield.character_sprite_handler.add_animated_character_sprite_2d(
 			character_id,
-			non_playable_character_resource.sprite_frames_id,
+			non_playable_character_resource.sprite_frames,
+			non_playable_character_resource.sprite_metadata_resources,
 			non_playable_character_resource.direction,
-			non_playable_character_resource.cell_id)
+			non_playable_character_resource.cell_id
+		)
 
 
 func clear_characters() -> void:

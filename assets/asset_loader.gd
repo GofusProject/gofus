@@ -1,5 +1,5 @@
 ## Manages loading and caching of assets (gfx, sprites...)
-
+class_name AssetLoader
 extends Node
 
 
@@ -127,29 +127,43 @@ func get_character_sprite_frames(sprite_frames_id: int) -> SpriteFrames:
 	return _character_sprite_frames_cache[sprite_frames_id]
 
 
+# # Metadata
+# func get_character_sprite_metadata(sprite_frames_id: int, anim: String) -> Vector2:
+
+# 	# Get Sprite frames metadata
+# 	if not _character_sprite_metadata_cache.has(sprite_frames_id):
+# 		print("[AssetLoader] Sprite frames id not found:", sprite_frames_id)
+# 		return Vector2.ZERO
+
+# 	var character_sprite_metadata: Dictionary = _character_sprite_metadata_cache[sprite_frames_id]
+
+# 	# Get animation metadata
+# 	if not character_sprite_metadata.has(anim):
+# 		print("[AssetLoader] Animation not found for sprite frames", sprite_frames_id, "anim:", anim)
+# 		return Vector2.ZERO
+
+# 	var anim_metadata: Dictionary = character_sprite_metadata[anim]
+
+# 	# Get bounds
+# 	var horizontal: float = float(anim_metadata.get("horizontal", 0.0))
+# 	var vertical: float = float(anim_metadata.get("vertical", 0.0))
+
+# 	# Return
+# 	return Vector2(horizontal, vertical)
+
+
 # Metadata
-func get_character_sprite_offset(sprite_frames_id: int, anim: String) -> Vector2:
+func get_character_sprite_metadata(sprite_frames_id: int) -> Dictionary:
 
 	# Get Sprite frames metadata
 	if not _character_sprite_metadata_cache.has(sprite_frames_id):
 		print("[AssetLoader] Sprite frames id not found:", sprite_frames_id)
-		return Vector2.ZERO
+		return {}
 
 	var character_sprite_metadata: Dictionary = _character_sprite_metadata_cache[sprite_frames_id]
 
-	# Get animation metadata
-	if not character_sprite_metadata.has(anim):
-		print("[AssetLoader] Animation not found for sprite frames", sprite_frames_id, "anim:", anim)
-		return Vector2.ZERO
-
-	var anim_metadata: Dictionary = character_sprite_metadata[anim]
-
-	# Get bounds
-	var horizontal: float = float(anim_metadata.get("horizontal", 0.0))
-	var vertical: float = float(anim_metadata.get("vertical", 0.0))
-
 	# Return
-	return Vector2(horizontal, vertical)
+	return character_sprite_metadata
 
 
 func get_ground_sprite_metadata(ground_id: int) -> Dictionary:

@@ -16,16 +16,17 @@ var object2_tiles: int = 0
 var database: Database
 var datacenter: Datacenter
 var gofus_translator: GofusTranslator
-# var asset_loader: AssetLoader
+var asset_loader: AssetLoader
 # var battlefield: Battlefield
 # var ui: UI
 
 
 
-func initialize(p_database: Database, p_datacenter: Datacenter, p_gofus_translator: GofusTranslator) -> void:
+func initialize(p_database: Database, p_datacenter: Datacenter, p_gofus_translator: GofusTranslator, p_asset_loader: AssetLoader) -> void:
 	database = p_database
 	datacenter = p_datacenter
 	gofus_translator = p_gofus_translator
+	asset_loader = p_asset_loader
 
 
 
@@ -59,13 +60,16 @@ func create_map(map_id: int) -> bool:
 	
 	datacenter.set_current_map_resource(map_resource)
 
-	# 3. AssetLoader and CellResource sprite init
+	# 3. AssetLoader, CellResource sprite init and Background texture init
+
+	if map_resource.background_id != 0:
+		map_resource.background_texture = asset_loader.get_background_texture(map_resource.background_id)
 
 	for cell_resource in map_resource.cell_resources:
 
 		if cell_resource.ground_tile_id != 0:
-			var ground_texture = AssetLoader.get_ground_tile_texture(cell_resource.ground_tile_id)
-			var ground_sprite_metadata: Dictionary = AssetLoader.get_ground_sprite_metadata(cell_resource.ground_tile_id)
+			var ground_texture = asset_loader.get_ground_tile_texture(cell_resource.ground_tile_id)
+			var ground_sprite_metadata: Dictionary = asset_loader.get_ground_sprite_metadata(cell_resource.ground_tile_id)
 			var ground_offset = Vector2(
 				ground_sprite_metadata["horizontal"],
 				ground_sprite_metadata["vertical"]
@@ -75,8 +79,8 @@ func create_map(map_id: int) -> bool:
 			ground_tiles += 1
 
 		if cell_resource.object1_id != 0:
-			var object1_sprite_texture = AssetLoader.get_object_sprite_texture(cell_resource.object1_id)
-			var object1_bounds_metadata: Dictionary = AssetLoader.get_object_sprite_metadata(cell_resource.object1_id)
+			var object1_sprite_texture = asset_loader.get_object_sprite_texture(cell_resource.object1_id)
+			var object1_bounds_metadata: Dictionary = asset_loader.get_object_sprite_metadata(cell_resource.object1_id)
 			var object1_offset = Vector2(
 				object1_bounds_metadata["horizontal"],
 				object1_bounds_metadata["vertical"]
@@ -85,8 +89,8 @@ func create_map(map_id: int) -> bool:
 			object1_tiles += 1
 
 		if cell_resource.object2_id != 0:
-			var object2_sprite_texture = AssetLoader.get_object_sprite_texture(cell_resource.object2_id)
-			var object2_bounds_metadata: Dictionary = AssetLoader.get_object_sprite_metadata(cell_resource.object2_id)
+			var object2_sprite_texture = asset_loader.get_object_sprite_texture(cell_resource.object2_id)
+			var object2_bounds_metadata: Dictionary = asset_loader.get_object_sprite_metadata(cell_resource.object2_id)
 			var object2_offset = Vector2(
 				object2_bounds_metadata["horizontal"],
 				object2_bounds_metadata["vertical"]
@@ -105,7 +109,7 @@ func create_map(map_id: int) -> bool:
 
 
 	# Battlefield
-	Battlefield.build_map(map_resource.background_id, map_resource.size.x, map_resource.cell_resources, map_resource.diamond_grid_start, map_resource. diamond_grid_size)
+	Battlefield.build_map(map_resource.background_texture, map_resource.size.x, map_resource.cell_resources, map_resource.diamond_grid_start, map_resource. diamond_grid_size)
 	PerformanceTracker.end_timer()
 	return true
 

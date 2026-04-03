@@ -18,7 +18,6 @@ boot_splash/bg_color=Color(0, 0, 0, 1)
 
 [autoload]
 
-AssetLoader="*res://assets/asset_loader.gd"
 Compressor="*res://utils/compressor.gd"
 Battlefield="*res://graphics/battlefield/scenes/Battlefield.tscn"
 Ui="*res://graphics/ui/scenes/ui.tscn"

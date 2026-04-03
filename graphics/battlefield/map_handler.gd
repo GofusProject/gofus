@@ -99,8 +99,8 @@ func _reset_pools() -> void:
 	_label_pool_index = 0
 
 
-func render_background(p_background_id: int) -> void:
-	Battlefield.background.texture = AssetLoader.get_background_texture(p_background_id)
+func render_background(p_background_texture: Texture2D) -> void:
+	Battlefield.background.texture = p_background_texture
 
 
 ## Called by the Battlefield to render the all map
@@ -195,14 +195,14 @@ func render_cell(
 	cell_id_label.position = world_position - label_size / 2
 
 
-func render_map(p_background_id, p_map_width: int, p_cell_resources: Array[CellResource]) -> void:
+func render_map(p_background_texture: Texture2D, p_map_width: int, p_cell_resources: Array[CellResource]) -> void:
 	print("[Battlefield] Rendering map...")
 	var render_start_time : int = Time.get_ticks_usec()
 
 	clear()
 
-	if Battlefield.background != null and p_background_id != 0:
-		render_background(p_background_id)
+	if p_background_texture != null:
+		render_background(p_background_texture)
 
 	var staggered_grid_x: int = -1
 	var staggered_grid_y: int = 0

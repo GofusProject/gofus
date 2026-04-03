@@ -3,7 +3,6 @@ class_name AnimatedCharacterSprite2D
 extends AnimatedSprite2D
 
 var linked_character_id: int
-var sprite_frames_id: int
 var orientation_id: int
 var orientation_letter: String
 var animation_name: String
@@ -14,12 +13,16 @@ var _cached_image: Image
 var _cached_animation: StringName
 var _cached_frame: int
 
+# Interaction
 var is_hovered: bool
 var is_selected: bool
 var area_2d: Area2D
 var collision_shape: CollisionShape2D
 
-# Speed definitions indexed by orientation_id
+# Visual
+var sprite_metadata_resources: Dictionary[String, SpriteMetadataResource]
+
+# Speed indexed by orientation_id
 const WALK_SPEEDS = [0.07,0.06,0.06,0.06,0.07,0.06,0.06,0.06]
 const MOUNT_SPEEDS = [0.23,0.2,0.2,0.2,0.23,0.2,0.2,0.2]
 const RUN_SPEEDS = [0.17,0.15,0.15,0.15,0.17,0.15,0.15,0.15]
@@ -62,7 +65,7 @@ func _process(delta: float) -> void:
 		position = position.move_toward(next_point, RUN_SPEEDS[1] * speed_modifier ) # TO CHANGE
 
 
-func initialize(p_linked_character_id: int, p_sprite_frames_id: int, p_direction: int) -> void:
+func initialize(p_linked_character_id: int, p_sprite_frames: SpriteFrames, p_sprite_metadata_resources: Dictionary[String, SpriteMetadataResource], p_direction: int) -> void:
 	area_2d = get_node_or_null("Area2D")
 	collision_shape = area_2d.get_node_or_null("CollisionShape2D")
 	animation_changed.connect(_on_animation_changed)
@@ -73,17 +76,18 @@ func initialize(p_linked_character_id: int, p_sprite_frames_id: int, p_direction
 	set_highlight(false)
 
 	linked_character_id	= p_linked_character_id
-	sprite_frames_id	= p_sprite_frames_id
 	orientation_id			= p_direction
 
 	centered = false
 	y_sort_enabled = true
 
 	# Sprite frames resource
-	sprite_frames = AssetLoader.get_character_sprite_frames(sprite_frames_id)
+	sprite_frames = p_sprite_frames
 	if sprite_frames == null:
 		push_error("[", self, "] No sprite frames to display")
 		return
+
+	sprite_metadata_resources = p_sprite_metadata_resources
 
 	var anim_to_play: String = _set_animation_to_play("static", orientation_id) # "static" is the default animation for npcs on map
 
@@ -183,7 +187,8 @@ func _is_pixel_opaque(global_mouse: Vector2) -> bool:
 func _on_animation_changed() -> void:
 
 	# update offset. Important to set as offset and not position for y sorting
-	offset = AssetLoader.get_character_sprite_offset(sprite_frames_id, animation)
+	if sprite_metadata_resources.has(animation):
+		offset = sprite_metadata_resources[animation].offset
 
 	# update area 2D position and collision shape size
 	var tex = sprite_frames.get_frame_texture(animation, frame)

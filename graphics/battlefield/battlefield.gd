@@ -89,9 +89,9 @@ func _ready() -> void:
 
 
 
-func build_map(p_background_id, p_map_staggered_width: int, p_cell_resources: Array[CellResource], p_grid_start: Vector2i, p_grid_size: Vector2i) -> void:
+func build_map(p_background_texture: Texture2D, p_map_staggered_width: int, p_cell_resources: Array[CellResource], p_grid_start: Vector2i, p_grid_size: Vector2i) -> void:
 
-	map_handler.render_map(p_background_id, p_map_staggered_width, p_cell_resources)
+	map_handler.render_map(p_background_texture, p_map_staggered_width, p_cell_resources)
 	spatial_handler.setup_astar_2d_grid(p_map_staggered_width, p_cell_resources)
 
 	for cell_resource in p_cell_resources:

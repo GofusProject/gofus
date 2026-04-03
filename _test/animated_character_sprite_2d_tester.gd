@@ -5,10 +5,12 @@ extends Node2D
 var test_animated_character_sprite_2d: AnimatedCharacterSprite2D
 @export var resource_name: String = ""
 @export var animation_name: String = ""
-
+var asset_loader: AssetLoader
 
 
 func _ready() -> void:
+	asset_loader = AssetLoader.new()
+
 	test_animated_character_sprite_2d = add_animated_character_sprite_2d(1, 10, 1)
 
 
@@ -29,7 +31,7 @@ func _ready() -> void:
 
 
 func _on_resource_button_pressed() -> void:
-	test_animated_character_sprite_2d.sprite_frames = AssetLoader.get_character_sprite_frames(int(resource_name))
+	test_animated_character_sprite_2d.sprite_frames = asset_loader.get_character_sprite_frames(int(resource_name))
 
 
 func _on_animation_button_pressed() -> void:

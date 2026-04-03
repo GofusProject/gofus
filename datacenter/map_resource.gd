@@ -23,6 +23,7 @@ var sniffed: int
 var music_id: int
 var ambiance_id: int
 var background_id: int
+var background_texture: Texture2D
 var out_door: int
 var max_merchant: int
 var cell_resources: Array[CellResource]

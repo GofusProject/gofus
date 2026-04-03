@@ -13,6 +13,8 @@ var cell_id: int
 var map_id: int
 ## Path to SpriteFrames in assets folder.
 var sprite_frames_id: int
+var sprite_frames: SpriteFrames
+var sprite_metadata_resources: Dictionary[String, SpriteMetadataResource] # Animation name -> SpriteMetadataResource
 ## Initial facing direction (default 1).
 var direction: int
 ## Color customization
