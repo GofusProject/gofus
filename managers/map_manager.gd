@@ -61,8 +61,13 @@ func create_map(map_id: int) -> bool:
 	# 2. Datacenter and MapResource
 	var map_resource: MapResource = MapResource.new(map_dict)
 	if map_resource.cell_count == 0:
-		push_error("[MapManager] MapResource initialization failed for map %d" % map_id)
+		push_error("[MapManager] MapResource initialization failed for map %d: cell count = 0" % map_id)
 		return false
+
+	if map_resource.active_cells == 0:
+		push_error("[MapManager] MapResource initialization failed for map %d: no active cells" % map_id)
+		return false
+
 	
 	print("[MapManager] Current map resource : width=%d, height=%d, bgID=%d, cell count=%d" % [map_resource.size.x, map_resource.size.y, map_resource.background_id, map_resource.cell_count])
 	
