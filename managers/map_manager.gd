@@ -128,11 +128,37 @@ func create_map(map_id: int) -> bool:
 		print("[MapManager] Scripted cells initialized:\n%s" % "\n".join(debug_cell_actions))
 
 
+	var sub_area_data: Dictionary = {}
+	var area_data: Dictionary = {}
+	var super_area_data: Dictionary = {}
+
+	# Areas
+	sub_area_data = database.get_sub_area_data(map_resource.sub_area_id)
+	if sub_area_data.is_empty():
+		push_warning("[MapManager] No sub area data for sub area id %d" % map_resource.sub_area_id)
+
+	if not sub_area_data.is_empty():
+		area_data = database.get_area_data(int(sub_area_data["area_id"]))
+		if area_data.is_empty():
+			push_warning("[MapManager] No area data for area id %d" % sub_area_data["area_id"])
+
+	if not area_data.is_empty():
+		super_area_data = database.get_super_area_data(int(area_data["super_area_id"]))
+		if super_area_data.is_empty():
+			push_warning("[MapManager] No super area data for super area id %d" % area_data["super_area_id"])
+
+
+	var area_resources = AreaResources.new(sub_area_data, area_data, super_area_data)
+	datacenter.area_resources = area_resources
+
+
+
 	# Battlefield
 	battlefield.build_map(map_resource.background_texture, map_resource.size.x, map_resource.cell_resources, map_resource.diamond_grid_start, map_resource. diamond_grid_size)
 	
 	# UI
-	
+
+
 
 	PerformanceTracker.end_timer()
 	return true

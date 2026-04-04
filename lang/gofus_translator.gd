@@ -99,5 +99,5 @@ func get_area_name(p_area_id: int) -> String:
 	return _get_from_cache(_area_cache, p_area_id, "Area")
 
 
-func get_subarea_name(p_subarea_id: int) -> String:
+func get_sub_area_name(p_subarea_id: int) -> String:
 	return _get_from_cache(_subarea_cache, p_subarea_id, "SubArea")

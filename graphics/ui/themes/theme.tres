@@ -1,0 +1,8 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://b0tqaupx1et6b"]
+
+[ext_resource type="FontFile" uid="uid://b6or5e8ck6u2d" path="res://graphics/verdana.ttf" id="1_j8mdf"]
+
+[resource]
+Label/colors/font_color = Color(1, 1, 1, 1)
+Label/font_sizes/font_size = 22
+Label/fonts/font = ExtResource("1_j8mdf")

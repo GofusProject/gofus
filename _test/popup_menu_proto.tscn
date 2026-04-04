@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://bxukehr107abn"]
 
 [ext_resource type="Script" uid="uid://dhkypjuhxiu6h" path="res://graphics/ui/gofus_popup_menu.gd" id="1_0omad"]
-[ext_resource type="Theme" uid="uid://bojre3ca5rdyj" path="res://assets/popup_menu_theme.tres" id="1_m3nqj"]
+[ext_resource type="Theme" uid="uid://bojre3ca5rdyj" path="res://graphics/ui/themes/popup_menu_theme.tres" id="1_m3nqj"]
 
 [sub_resource type="Theme" id="Theme_popup"]
 default_font_size = 12

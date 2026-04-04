@@ -8,6 +8,7 @@ var map_resource: MapResource = null
 var _character_resources: Array[CharacterResource] = []
 var dialog_resource: DialogResource = null
 var player_character_resource: PlayerCharacterResource = null # equivalent of LocalPlayer.as
+var area_resources: AreaResources = null
 
 
 ## Emitted when the current map changes
