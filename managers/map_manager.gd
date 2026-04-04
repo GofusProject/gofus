@@ -168,7 +168,11 @@ func get_cell_id_from_world_position(p_world_position: Vector2) -> int:
 
 
 func get_current_map_id() -> int:
-	return datacenter.map_resource.map_id
+	if datacenter.map_resource != null:
+		return datacenter.map_resource.map_id
+	else:
+		push_warning("[MapManager] No current map resource, cannot return map id")
+		return -1
 
 
 ## Seems ok to have a method dedicated to send character (or other system) related variables

@@ -60,7 +60,10 @@ func add_animated_character_sprite_2d(
 
 func clear() -> void:
 	for child in battlefield.character_sprites.get_children():
-		child.queue_free()
+		# Need to use free() instead of queue_free()
+		# Otherwise, when changing map, some animated sprite are still here while the newer
+		# are initiated
+		child.free()
 
 
 func get_animated_character_sprite_2d_by_character_id(p_character_id: int) -> AnimatedCharacterSprite2D:

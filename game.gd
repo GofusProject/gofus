@@ -108,34 +108,6 @@ func execute_action(action_resource: ActionResource) -> void:
 
 
 func create_map(p_map_id: int):
-
-	var is_map_created = map_manager.create_map(p_map_id)
-	if not is_map_created:
-		push_error("[Game] Map changed failed")
-		return
-
-	# Player creation 
-	var player_character_id: int = characters_manager.create_player_character(player_id)
-	if player_character_id != -1:
-		var player_character_cell_id = characters_manager.get_character_cell_id(player_character_id)
-		var player_world_position = map_manager.get_cell_world_position_from_cell_id(player_character_cell_id)
-		characters_manager.teleport_character(player_character_id, player_world_position, player_character_cell_id)
-		if is_debug_mode: print("[Game] Player character created with id %d and teleported to cell id %d (world position: %s)" % [player_character_id, player_character_cell_id, player_world_position])
-	else:
-		push_error("[Game] Player character creation failed")
-
-
-	# Npcs creation
-	var npc_ids: Array[int] = map_manager.get_current_map_npc_ids()
-
-	for npc_id in npc_ids:
-		if is_debug_mode: print("[Game] Create NPC character with npc id:", npc_id)
-		var npc_character_id: int = characters_manager.create_npc(npc_id)
-		if npc_character_id == -1:
-			continue
-		
-		var npc_character_cell_id = characters_manager.get_character_cell_id(npc_character_id)
-		var npc_world_position = map_manager.get_cell_world_position_from_cell_id(npc_character_cell_id)
-		characters_manager.teleport_character(npc_character_id, npc_world_position, npc_character_cell_id)
+	actions.create_map_and_characters(p_map_id, player_id)
 		
 	

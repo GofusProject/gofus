@@ -20,36 +20,13 @@ func initialize(p_map_manager: MapManager, p_characters_manager: CharactersManag
 
 func teleport(character_id: int, p_map_id: int, p_cell_id: int = -1) -> void:
 
+	if map_manager.get_current_map_id() != p_map_id && character_id != 0:
+		push_error("[Actions] Teleportation failed: cannot teleport character id %d to map id %d because it's an npc)" % [character_id, p_map_id])
+		return
+
 	# Map creation if current map id != new map id
 	if map_manager.get_current_map_id() != p_map_id:
-		Game.ui.reset()
-		characters_manager.clear_characters()
-		map_manager.clear_map()
-
-		var is_map_created = map_manager.create_map(p_map_id)
-		if not is_map_created:
-			push_error("[Actions] Teleport failed")
-			return
-
-		var npc_ids: Array[int] = map_manager.get_current_map_npc_ids()
-
-		for npc_id in npc_ids:
-			if is_debug_mode: print("[Actions] Create NPC character with npc id:", npc_id)
-			var npc_character_id: int = characters_manager.create_npc(npc_id)
-			if npc_character_id == -1:
-				continue
-
-			var npc_character_cell_id = characters_manager.get_character_cell_id(npc_character_id)
-			var npc_world_position = map_manager.get_cell_world_position_from_cell_id(npc_character_cell_id)
-			characters_manager.teleport_character(npc_character_id, npc_world_position, npc_character_cell_id)
-			print("pos expected: ", npc_world_position)
-			print("animated_sprite pos: ", Game.battlefield.character_sprite_handler.get_animated_character_sprite_2d_by_character_id(npc_character_id).position)
-			# MAIS ICI C'EST BON ????
-
-		# A partir d'ici, il y en 2 qui ont une pos de 0, 0: TO REMOVE
-			
-
-
+		create_map_and_characters(p_map_id)
 
 	# Player teleportation
 	var world_position = map_manager.get_cell_world_position_from_cell_id(p_cell_id)
@@ -57,8 +34,42 @@ func teleport(character_id: int, p_map_id: int, p_cell_id: int = -1) -> void:
 	characters_manager.teleport_character(character_id, world_position, p_cell_id)
 	
 
-func create_map_and_characters(p_map_id: int, do_create_player: bool = false)
+## If player id != -1, the player is created
+func create_map_and_characters(p_map_id: int, p_player_id: int = -1) -> void:
 
+	if map_manager.get_current_map_id() != -1:
+		Game.ui.reset()
+		characters_manager.clear_characters() # WARNING: Animated sprite are cleared with free() instead of queue_free()
+		map_manager.clear_map()
+
+	var is_map_created = map_manager.create_map(p_map_id)
+	if not is_map_created:
+		push_error("[Game] Map changed failed")
+		return
+
+	if p_player_id != -1:
+		# Player creation 
+		var player_character_id: int = characters_manager.create_player_character(p_player_id)
+		if player_character_id != -1:
+			var player_character_cell_id = characters_manager.get_character_cell_id(player_character_id)
+			var player_world_position = map_manager.get_cell_world_position_from_cell_id(player_character_cell_id)
+			characters_manager.teleport_character(player_character_id, player_world_position, player_character_cell_id)
+			if is_debug_mode: print("[Game] Player character created with id %d and teleported to cell id %d (world position: %s)" % [player_character_id, player_character_cell_id, player_world_position])
+		else:
+			push_error("[Game] Player character creation failed")
+
+	# Npcs creation
+	var npc_ids: Array[int] = map_manager.get_current_map_npc_ids()
+
+	for npc_id in npc_ids:
+		if is_debug_mode: print("[Game] Create NPC character with npc id:", npc_id)
+		var npc_character_id: int = characters_manager.create_npc(npc_id)
+		if npc_character_id == -1:
+			continue
+		
+		var npc_character_cell_id = characters_manager.get_character_cell_id(npc_character_id)
+		var npc_world_position = map_manager.get_cell_world_position_from_cell_id(npc_character_cell_id)
+		characters_manager.teleport_character(npc_character_id, npc_world_position, npc_character_cell_id)
 
 
 func start_dialog_with_npc(p_npc_id: int):
