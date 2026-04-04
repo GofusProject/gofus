@@ -116,4 +116,3 @@ func initialize_action_properties(scripted_cell_data: Dictionary) -> void:
 	)
 
 	event_id = int(scripted_cell_data["event_id"])
-	print("Scripted cell id: ", id) 

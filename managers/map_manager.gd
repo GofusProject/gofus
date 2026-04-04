@@ -6,7 +6,7 @@ extends Node
 
 signal scripted_cell_triggered(action_resource: ActionResource)
 
-var is_debug_mode: bool = false
+var is_debug_mode: bool = true
 
 # Counters for statistics
 var ground_tiles: int = 0
@@ -119,6 +119,13 @@ func create_map(map_id: int) -> bool:
 	for scripted_cell_data in scripted_cells_data:
 		var cell_resource = map_resource.cell_resources[scripted_cell_data["cell_id"]]
 		cell_resource.initialize_action_properties(scripted_cell_data)
+
+	if is_debug_mode:
+		var debug_cell_actions = []
+		for scripted_cell_data in scripted_cells_data:
+			var cell_resource = map_resource.cell_resources[scripted_cell_data["cell_id"]]
+			debug_cell_actions.append("- cell %s: action %s" % [cell_resource.id, cell_resource.action_resource.action_id])
+		print("[MapManager] Scripted cells initialized:\n%s" % "\n".join(debug_cell_actions))
 
 
 	# Battlefield
