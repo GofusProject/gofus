@@ -1,4 +1,4 @@
-id,super_area_id,name
+id,super_area_id,indicative_name
 0,0,Amakna
 1,0,L\'île des Wabbits
 2,0,L\'île de Moon
@@ -36,6 +36,7 @@ id,super_area_id,name
 36,0,Sanctuaire des Familiers
 37,0,Donjon des Craqueleurs
 39,0,Donjon des Bworks
+38,0,Serveur de Test
 40,0,Donjon des Scarafeuilles
 41,0,Donjon des Champs
 42,0,Zone arctique
@@ -44,6 +45,8 @@ id,super_area_id,name
 45,3,Incarnam
 46,0,Ile d\'Otomaï
 47,0,Village des Zoths
+1020,0,Dimension MJ
+1022,0,Duty Free
 48,0,Ile de Frigost
 49,0,Amakna
 50,0,Cimes de Cania

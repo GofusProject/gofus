@@ -1,6 +1,9 @@
 extends Resource
 class_name MapResource
 
+
+var is_debug_mode: bool = false
+
 var map_id: int
 var date: String
 ## Staggered isometric grid FOR RENDERING ONLY
@@ -8,12 +11,12 @@ var date: String
 ## Dofus use staggered with x going downward and y going down right 
 var size: Vector2i 
 var places: String
-var key: String
-var map_data: String
+var key: String # Empty, was needed to decypher Ankama map
 var npc_ids: Array[int]
 var monsters: String
 var capabilities: int
-var map_pos: String
+var map_position: Vector2i
+var sub_area_id: int
 var numgroup: int
 var min_size: int
 var fix_size: int
@@ -26,6 +29,8 @@ var background_id: int
 var background_texture: Texture2D
 var out_door: int
 var max_merchant: int
+# Cells
+var map_data: String
 var cell_resources: Array[CellResource]
 var cell_count: int
 var active_cells: int = 0
@@ -47,7 +52,6 @@ func _init(map_dict: Dictionary) -> void:
 	map_data      = str(map_dict["map_data"])
 	monsters      = str(map_dict["monsters"])
 	capabilities  = int(map_dict["capabilities"])
-	map_pos        = str(map_dict["map_pos"])
 	numgroup      = int(map_dict["numgroup"])
 	min_size      = int(map_dict["min_size"])
 	fix_size      = int(map_dict["fix_size"])
@@ -60,6 +64,12 @@ func _init(map_dict: Dictionary) -> void:
 	out_door      = int(map_dict["out_door"])
 	max_merchant  = int(map_dict["max_merchant"])
 	
+	# Map position and sub area
+	var map_pos = map_dict["map_pos"].split(",")
+	map_position = Vector2i(int(map_pos[0]), int(map_pos[1]))
+	sub_area_id = int(map_pos[2])
+	if is_debug_mode: print("[MapResource] Map %d position: %s, sub area id: %d" % [map_id, map_position, sub_area_id])
+
 	# Parse npc_ids
 	npc_ids = []
 	if map_dict["npc_ids"] != "":

@@ -76,6 +76,14 @@ func get_map_data(p_id: int) -> Dictionary:
 	return _fetch_one("maps", p_id)
 
 
+func get_area_data(p_id: int) -> Dictionary:
+	return _fetch_one("areas", p_id)
+
+
+func get_sub_area_data(p_id: int) -> Dictionary:
+	return _fetch_one("sub_areas", p_id)
+
+
 func get_npc_template_data(p_id: int) -> Dictionary:
 	return _fetch_one("npc_templates", p_id)
 

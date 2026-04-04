@@ -7,12 +7,19 @@ const NPC_TEMPLATE_CSV_PATH:           String = "res://lang/npc_template_lang.cs
 const NPC_INTERACTIONS_CSV_PATH:       String = "res://lang/npc_interactions_lang.csv"
 const DIALOG_QUESTIONS_CSV_PATH:       String = "res://lang/dialog_questions_lang.csv"
 const DIALOG_RESPONSES_CSV_PATH:       String = "res://lang/dialog_responses_lang.csv"
+const SUPER_AREA_CSV_PATH:             String = "res://lang/super_area_lang.csv"
+const AREA_CSV_PATH:                   String = "res://lang/area_lang.csv"
+const SUBAREA_CSV_PATH:                String = "res://lang/subarea_lang.csv"
+
 
 # For now langage switching is not implemented (only fr is loaded)
 var _npc_templates_cache:              Dictionary[int, String] = {}
 var _npc_interactions_cache:           Dictionary[int, String] = {}
 var _dialog_questions_cache:           Dictionary[int, String] = {}
 var _dialog_responses_cache:           Dictionary[int, String] = {}
+var _super_area_cache:                Dictionary[int, String] = {}
+var _area_cache:                      Dictionary[int, String] = {}
+var _subarea_cache:                   Dictionary[int, String] = {}
 
 
 
@@ -25,6 +32,9 @@ func _ready() -> void:
 	_load_csv_into_cache(NPC_INTERACTIONS_CSV_PATH, _npc_interactions_cache)
 	_load_csv_into_cache(DIALOG_QUESTIONS_CSV_PATH, _dialog_questions_cache)
 	_load_csv_into_cache(DIALOG_RESPONSES_CSV_PATH, _dialog_responses_cache)
+	_load_csv_into_cache(SUPER_AREA_CSV_PATH, _super_area_cache)
+	_load_csv_into_cache(AREA_CSV_PATH, _area_cache)
+	_load_csv_into_cache(SUBAREA_CSV_PATH, _subarea_cache)
 
 	var build_end_time: int = Time.get_ticks_usec()
 	var build_time_sec: float = (build_end_time - build_start_time) / 1_000_000.0
@@ -77,3 +87,15 @@ func get_dialog_question_text(p_dialog_question_id: int) -> String:
 
 func get_dialog_response_text(p_dialog_response_id: int) -> String:
 	return _get_from_cache(_dialog_responses_cache, p_dialog_response_id, "DialogResponse")
+
+
+func get_super_area_name(p_super_area_id: int) -> String:
+	return _get_from_cache(_super_area_cache, p_super_area_id, "SuperArea")
+
+
+func get_area_name(p_area_id: int) -> String:
+	return _get_from_cache(_area_cache, p_area_id, "Area")
+
+
+func get_subarea_name(p_subarea_id: int) -> String:
+	return _get_from_cache(_subarea_cache, p_subarea_id, "SubArea")
