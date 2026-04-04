@@ -1,3 +1,4 @@
+class_name DialogManager
 extends Node
 
 
@@ -60,7 +61,7 @@ func _create_dialog_resource(p_dialog_title: String, p_dialog_question_id: int) 
 	var dialog_question_data: Dictionary = database.get_dialog_question_data(p_dialog_question_id)
 	var dialog_question_lang: String = gofus_translator.get_dialog_question_text(p_dialog_question_id)
 	if dialog_question_data.is_empty() or dialog_question_lang.is_empty():
-		print("[CharactersManager] Npc init dialog data or lang is empty for id ", p_dialog_question_id)
+		print("[DialogManager] Npc init dialog data or lang is empty for id ", p_dialog_question_id)
 		return null
 
 	var dialog_resource: DialogResource = DialogResource.new(dialog_question_data, dialog_question_lang, p_dialog_title)
@@ -71,7 +72,7 @@ func _create_dialog_resource(p_dialog_title: String, p_dialog_question_id: int) 
 		var player_response_data = database.get_dialog_response_action_data(player_response_id)
 		var player_response_text = gofus_translator.get_dialog_response_text(player_response_id)
 		if player_response_data.is_empty() or player_response_text == "":
-			printerr("[CharactersManager] Player response dictionary or lang is empty for id ", player_response_id)
+			printerr("[DialogManager] Player response dictionary or lang is empty for id ", player_response_id)
 			continue
 
 		dialog_resource.initialize_response(player_response_data, player_response_text)
