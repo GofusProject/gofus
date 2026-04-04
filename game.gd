@@ -7,6 +7,8 @@ var map_id: int = 10354
 var player_id: int = 1
 var actions: Actions
 
+var player: Player
+
 # Modules
 var database: Database
 var datacenter: Datacenter
@@ -73,8 +75,9 @@ func _ready() -> void:
 	actions.initialize(map_manager, characters_manager, dialog_manager)
 
 	# Player
-	Player.actions = actions
-	Player.setup_signals()
+	player = Player.new()
+	player.actions = actions
+	player.setup_signals()
 
 	map_manager.scripted_cell_triggered.connect(func(action_resource: ActionResource): execute_action(action_resource))
 	change_map(map_id)

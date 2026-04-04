@@ -141,10 +141,11 @@ func move_character(p_character_resource: CharacterResource, p_path: Array[Vecto
 
 
 func teleport_character(p_character_id: int, p_world_position: Vector2, p_cell_id: int) -> void:
+	if is_debug_mode: print("[CharactersManager] Teleport character id %d to cell id %d (world position: %s)" % [p_character_id, p_cell_id, p_world_position])
 	battlefield.character_sprite_handler.teleport_character(p_character_id, p_world_position)
 	var character_resource = datacenter.get_character_resource(p_character_id)
 	character_resource.cell_id = p_cell_id
-	if is_debug_mode: print("[CharactersManager] Teleported character id %d to cell id %d (world position: %s)" % [p_character_id, p_cell_id, p_world_position])
+	
 	
 
 #region UI

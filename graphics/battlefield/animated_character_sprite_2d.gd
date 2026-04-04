@@ -67,6 +67,7 @@ func _process(delta: float) -> void:
 
 
 func initialize(p_linked_character_id: int, p_sprite_frames: SpriteFrames, p_sprite_metadata_resources: Dictionary[String, SpriteMetadataResource], p_direction: int) -> void:
+	# World position is set by Actions.teleport()
 	area_2d = get_node_or_null("Area2D")
 	collision_shape = area_2d.get_node_or_null("CollisionShape2D")
 	animation_changed.connect(_on_animation_changed)

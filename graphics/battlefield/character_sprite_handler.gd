@@ -21,6 +21,8 @@ enum Orientation {
 	NORTH_EAST = 7
 }
 
+var is_debug_mode: bool = true
+
 var battlefield: Battlefield
 
 
@@ -83,6 +85,12 @@ func move_character(p_character_id: int, p_path: Array[Vector2],  p_orientations
 
 
 func teleport_character(p_character_id: int, p_world_position: Vector2) -> void:
+	if is_debug_mode: print("[CharacterSpriteHandler] Teleport character id %d to world position %s" % [p_character_id, p_world_position])
+	
 	var animated_character_sprite_2d: AnimatedCharacterSprite2D = get_animated_character_sprite_2d_by_character_id(p_character_id)
+	if animated_character_sprite_2d == null:
+		push_error("[CharacterSpriteHandler] Teleport failed: no AnimatedCharacterSprite2D found for character id %d" % p_character_id)
+		return
+
 	animated_character_sprite_2d.reset_movement()
 	animated_character_sprite_2d.position = p_world_position

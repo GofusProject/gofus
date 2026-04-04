@@ -20,6 +20,7 @@ func initialize(p_map_manager: MapManager, p_characters_manager: CharactersManag
 
 func teleport(character_id: int, p_map_id: int, p_cell_id: int = -1) -> void:
 
+	# Map creation if current map id != new map id
 	if map_manager.get_current_map_id() != p_map_id:
 		Game.ui.reset()
 		characters_manager.clear_characters()
@@ -41,8 +42,10 @@ func teleport(character_id: int, p_map_id: int, p_cell_id: int = -1) -> void:
 			var npc_world_position = map_manager.get_cell_world_position_from_cell_id(npc_character_cell_id)
 			characters_manager.teleport_character(npc_character_id, npc_world_position, npc_character_cell_id)
 	
+	# Player teleportation
 	var world_position = map_manager.get_cell_world_position_from_cell_id(p_cell_id)
 	characters_manager.teleport_character(character_id, world_position, p_cell_id)
+	if is_debug_mode: print("[Actions] Teleported character id %d to map id %d and cell id %d (world position: %s)" % [character_id, p_map_id, p_cell_id, world_position])
 
 
 func start_dialog_with_npc(p_npc_id: int):
@@ -66,7 +69,7 @@ func start_dialog_with_npc(p_npc_id: int):
 
 func respond_to_npc(p_action_id: int, p_param: int):
 	var action_resource = ActionResource.new(p_action_id, p_param)
-	Player.execute_action(action_resource)
+	Game.player.execute_action(action_resource)
 	if not p_action_id == ActionResource.ActionId.CONTINUE_DIALOG:
 		dialog_manager.leave_dialog()
 

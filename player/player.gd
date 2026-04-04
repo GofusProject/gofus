@@ -1,3 +1,4 @@
+class_name Player
 extends Node
 
 
@@ -24,6 +25,7 @@ func _ready() -> void:
 
 
 func setup_signals() -> void:
+	# I ll see if I keep player linked to ui/battlefield or managers
 	Game.ui.interaction.connect(func(p_action_resource): execute_action(p_action_resource))
 	Game.ui.gofus_popup_menu_button_pressed.connect(_on_gofus_popup_menu_button_pressed) # to remove
 	Game.battlefield.cell_clicked.connect(_on_battlefield_cell_clicked)
