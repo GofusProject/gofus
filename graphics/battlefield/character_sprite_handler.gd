@@ -30,12 +30,12 @@ func add_animated_character_sprite_2d(
 	p_sprite_frames: SpriteFrames,
 	p_character_sprite_metadata: Dictionary[String, SpriteMetadataResource],
 	p_direction: int,
-	p_cell_id: int,
 	p_player_character_layer: bool = false) -> void:
 
 	var animated_character_sprite_2d: AnimatedCharacterSprite2D = battlefield.ANIMATED_CHARACTER_SPRITE_2D_SCENE.instantiate()
 	animated_character_sprite_2d.initialize(p_linked_character_id, p_sprite_frames, p_character_sprite_metadata, p_direction)
-	animated_character_sprite_2d.position = MapManager.get_cell_world_position_from_cell_id(p_cell_id) # Position should be a parameter
+	# To allow decoupling between MapManager and CharacterManager,
+	# world position is set via CharacterManager.tp_character()
 
 	animated_character_sprite_2d.hovered.connect(func(animated_character_sprite_2d_id: int) -> void:
 		character_hovered.emit(animated_character_sprite_2d_id)

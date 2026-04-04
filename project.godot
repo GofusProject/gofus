@@ -19,9 +19,6 @@ boot_splash/bg_color=Color(0, 0, 0, 1)
 [autoload]
 
 Compressor="*res://utils/compressor.gd"
-MapManager="*res://managers/map_manager.gd"
-DialogManager="*res://managers/dialog_manager.gd"
-CharactersManager="*res://managers/characters_manager.gd"
 Console="*res://addons/console/console.gd"
 ConsoleCommandAdder="*res://_tools/console_command_adder.gd"
 Game="*res://Game.tscn"

@@ -5,8 +5,8 @@ extends AnimatedSprite2D
 var linked_character_id: int
 var orientation_id: int
 ## Orientation letter is derived from orientation_id
-var orientation_letter: String
-var animation_name: String
+var orientation_letter: String # L, R, B...
+var animation_state_name: String # run, static...
 
 
 # Cache to avoid get_image() every frame
@@ -129,9 +129,9 @@ func reset_movement() -> void:
 	path_directions.clear()
 
 
-func _set_animation_to_play(animation_state_name: String, orientation: int) -> String:
+func _set_animation_to_play(p_animation_state_name: String, orientation: int) -> String:
 
-	var anim_to_play: String = animation_state_name
+	var anim_to_play: String = p_animation_state_name
 
 	flip_h = false
 	match orientation:

@@ -1,13 +1,13 @@
 ## Manager responsible for handling character data and interactions in the game.
 ## It serves as a central point for managing character resources, including playable characters and NPCs,
-
+class_name CharactersManager
 extends Node
 
 
 
 signal character_world_path_point_reached(world_pos: Vector2, linked_character_id: int)
 
-
+var is_debug_mode: bool = true
 
 # Modules
 var database: Database
@@ -37,12 +37,12 @@ func setup_signals() -> void:
 	battlefield.character_sprite_handler.character_world_path_point_reached.connect(_on_battlefield_character_world_path_point_reached)
 
 
-func create_player_character(p_player_id) -> void:
+func create_player_character(p_player_id: int) -> int:
 
 	var player_data = database.get_player_data(p_player_id)
 	if player_data.is_empty():
 		push_error("[Game] Player data empty for player id %d" % p_player_id)
-		return
+		return -1
 
 	var player_character_resource = PlayerCharacterResource.new(player_data)
 
@@ -58,65 +58,62 @@ func create_player_character(p_player_id) -> void:
 
 	# Added in datacenter in both player_character_resource and character_resources[]
 	datacenter.player_character_resource = player_character_resource
-	var character_id = datacenter.add_character_resource(player_character_resource)
+	var player_character_id = datacenter.add_character_resource(player_character_resource)
 
 
 	battlefield.character_sprite_handler.add_animated_character_sprite_2d(
-		character_id,
+		player_character_id,
 		player_character_resource.sprite_frames,
 		player_character_resource.sprite_metadata_resources,
 		player_character_resource.direction,
-		player_character_resource.cell_id,
 		true
 	)
 
-
-func create_npcs() -> void:
-
-	var map_resource = datacenter.get_current_map()
-	var npc_ids: Array[int] = map_resource.npc_ids
-
-	for npc_id in npc_ids:
-
-		var npc_data: Dictionary = database.get_npc_data(npc_id)
-		if npc_data.is_empty():
-			push_error("[CharacterManager] Npc data empty for npc id %s" % npc_id)
-			return
-
-		var npc_template_data = database.get_npc_template_data(int(npc_data.npc_template_id))
-		if npc_template_data.is_empty():
-			push_error("[CharacterManager] Npc template data empty for npc template id %s" % npc_data.npc_template_id)
-			return
+	return player_character_id
 
 
-		var npc_template_name = gofus_translator.get_npc_template_name(int(npc_data.npc_template_id))
-		if npc_template_name.is_empty():
-			push_error("[CharacterManager] Npc template lang data empty for npc template lang id %s" % npc_data.npc_template_id)
-			return
+func create_npc(p_npc_id: int) -> int:
 
-		var non_playable_character_resource = NonPlayableCharacterResource.new(npc_data, npc_template_data, npc_template_name)
+	var npc_data: Dictionary = database.get_npc_data(p_npc_id)
+	if npc_data.is_empty():
+		push_error("[CharacterManager] Npc data empty for npc id %s" % p_npc_id)
+		return -1
 
-		# Sprite frame
-		non_playable_character_resource.sprite_frames = asset_loader.get_character_sprite_frames(non_playable_character_resource.sprite_frames_id)
+	var npc_template_data = database.get_npc_template_data(int(npc_data.npc_template_id))
+	if npc_template_data.is_empty():
+		push_error("[CharacterManager] Npc template data empty for npc template id %s" % npc_data.npc_template_id)
+		return -1
 
-		# Metadata (offsets...)
-		var character_sprite_metadata: Dictionary = asset_loader.get_character_sprite_metadata(non_playable_character_resource.sprite_frames_id)
-		var character_sprite_metadata_resources: Dictionary[String, SpriteMetadataResource] = {}
-		for key in character_sprite_metadata.keys():
-			var sprite_metadata_resource = SpriteMetadataResource.new(character_sprite_metadata[key])
-			character_sprite_metadata_resources[key] = sprite_metadata_resource
-		non_playable_character_resource.sprite_metadata_resources = character_sprite_metadata_resources
 
-		var character_id: int = datacenter.add_character_resource(non_playable_character_resource)
+	var npc_template_name = gofus_translator.get_npc_template_name(int(npc_data.npc_template_id))
+	if npc_template_name.is_empty():
+		push_error("[CharacterManager] Npc template lang data empty for npc template lang id %s" % npc_data.npc_template_id)
+		return -1
 
-		# Rendering
-		battlefield.character_sprite_handler.add_animated_character_sprite_2d(
-			character_id,
-			non_playable_character_resource.sprite_frames,
-			non_playable_character_resource.sprite_metadata_resources,
-			non_playable_character_resource.direction,
-			non_playable_character_resource.cell_id
-		)
+	var non_playable_character_resource = NonPlayableCharacterResource.new(npc_data, npc_template_data, npc_template_name)
+
+	# Sprite frame
+	non_playable_character_resource.sprite_frames = asset_loader.get_character_sprite_frames(non_playable_character_resource.sprite_frames_id)
+
+	# Metadata (offsets...)
+	var character_sprite_metadata: Dictionary = asset_loader.get_character_sprite_metadata(non_playable_character_resource.sprite_frames_id)
+	var character_sprite_metadata_resources: Dictionary[String, SpriteMetadataResource] = {}
+	for key in character_sprite_metadata.keys():
+		var sprite_metadata_resource = SpriteMetadataResource.new(character_sprite_metadata[key])
+		character_sprite_metadata_resources[key] = sprite_metadata_resource
+	non_playable_character_resource.sprite_metadata_resources = character_sprite_metadata_resources
+
+	var character_id: int = datacenter.add_character_resource(non_playable_character_resource)
+
+	# Rendering
+	battlefield.character_sprite_handler.add_animated_character_sprite_2d(
+		character_id,
+		non_playable_character_resource.sprite_frames,
+		non_playable_character_resource.sprite_metadata_resources,
+		non_playable_character_resource.direction
+	)
+
+	return character_id
 
 
 func clear_characters() -> void:
@@ -135,15 +132,20 @@ func get_player_character_resource() -> PlayerCharacterResource:
 	return datacenter.player_character_resource
 
 
+func get_character_cell_id(p_character_id: int) -> int:
+	return datacenter.get_character_resource(p_character_id).cell_id
+
+
 func move_character(p_character_resource: CharacterResource, p_path: Array[Vector2], p_orientations: Array[CharacterSpriteHandler.Orientation]) -> void:
 	battlefield.character_sprite_handler.move_character(p_character_resource.id, p_path, p_orientations)
 
 
 func teleport_character(p_character_id: int, p_world_position: Vector2, p_cell_id: int) -> void:
 	battlefield.character_sprite_handler.teleport_character(p_character_id, p_world_position)
-	var character_resource = datacenter.player_character_resource
+	var character_resource = datacenter.get_character_resource(p_character_id)
 	character_resource.cell_id = p_cell_id
-
+	if is_debug_mode: print("[CharactersManager] Teleported character id %d to cell id %d (world position: %s)" % [p_character_id, p_cell_id, p_world_position])
+	
 
 #region UI
 
@@ -191,8 +193,6 @@ func close_character_popup_menu() -> void:
 #region Battlefied
 
 func _on_battlefield_character_world_path_point_reached(world_pos: Vector2, linked_character_id: int) -> void:
-	var character_resource: CharacterResource = datacenter._character_resources[linked_character_id]
-	character_resource.cell_id = MapManager.get_cell_id_from_world_position(world_pos) # MapManager is called because cell_id is related to it
 	character_world_path_point_reached.emit(world_pos, linked_character_id)
 
 #endregion

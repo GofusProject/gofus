@@ -21,6 +21,8 @@ enum Direction {
 	NORTH_EAST = 7
 }
 
+var is_debug: bool = true
+
 var battlefield: Battlefield
 var astar_grid: AStarGrid2D
 
@@ -57,6 +59,7 @@ func setup_astar_2d_grid(p_map_staggered_width: int, p_cell_resources: Array[Cel
 		# Didn't find a way to calculate map diamond size.x, so for now I take the highest cell ressource diamond grid x
 		if cell_resource.diamond_grid_position.x > diamond_grid_size.x: # diamond_grid_size.x
 			diamond_grid_size.x = cell_resource.diamond_grid_position.x
+	if is_debug: print("[SpatialHandler] Diamond grid size calculated: ", diamond_grid_size)
 
 
 	# A* Star setup 
@@ -66,6 +69,7 @@ func setup_astar_2d_grid(p_map_staggered_width: int, p_cell_resources: Array[Cel
 	astar_grid.default_compute_heuristic = AStarGrid2D.HEURISTIC_OCTILE # Set to this heuristic so that the path do not zig zag
 	astar_grid.default_estimate_heuristic = AStarGrid2D.HEURISTIC_OCTILE
 	astar_grid.update()
+	if is_debug: print("[SpatialHandler] AStar grid region set to: ", astar_grid.region)
 
 
 	# Set astar grid walkability based on cell movement property
@@ -76,15 +80,29 @@ func setup_astar_2d_grid(p_map_staggered_width: int, p_cell_resources: Array[Cel
 
 
 func find_path(p_map_width: int, p_from_cell_id: int, p_to_cell_id: int) -> Array[int]:
+	if is_debug: print("[SpatialHandler] Finding path from %s to %s..." % [p_from_cell_id, p_to_cell_id])
+
 	var from_grid_pos: Vector2i = get_grid_pos_from_cell_id(p_map_width, p_from_cell_id)
 	var to_grid_pos: Vector2i = get_grid_pos_from_cell_id(p_map_width, p_to_cell_id)
 
+
+	if is_debug: print("[SpatialHandler] Find path from %s (is solid: %s, in bounds: %s) to %s (is solid: %s, in bounds: %s)" % [
+		from_grid_pos, astar_grid.is_point_solid(from_grid_pos), astar_grid.region.has_point(from_grid_pos),
+		to_grid_pos, astar_grid.is_point_solid(to_grid_pos), astar_grid.region.has_point(to_grid_pos)
+	])
 	var grid_path: Array[Vector2i] = astar_grid.get_id_path(from_grid_pos, to_grid_pos)
+
+	if is_debug: 
+		print("[SpatialHandler] Grid path found: ", grid_path) 
 
 	var path_cell_ids: Array[int] = []
 	for grid_pos: Vector2i in grid_path:
 		path_cell_ids.append(get_cell_id_from_grid_pos(p_map_width, grid_pos.x, grid_pos.y))
+	if is_debug: print("[SpatialHandler] Cell id path found: ", path_cell_ids) 
+
 	return path_cell_ids
+
+
 
 
 func get_direction_from_grid_pos(p_from_grid_pos: Vector2i, p_to_grid_pos: Vector2i) -> int:

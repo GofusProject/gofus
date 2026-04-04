@@ -1,11 +1,12 @@
-# MapManager.gd
-# AutoLoad singleton
-# Orchestrates map loading by coordinating database, Compressor, and datacenter to build MapResource
+## Orchestrates map loading by coordinating database, Compressor, and datacenter to build MapResource
+class_name MapManager
 extends Node
 
 
 
 signal scripted_cell_triggered(action_resource: ActionResource)
+
+var is_debug: bool = true
 
 # Counters for statistics
 var ground_tiles: int = 0
@@ -38,12 +39,12 @@ func initialize(p_database: Database,
 
 
 
-func setup_signals() -> void:
+func setup_signals(p_characters_manager: CharactersManager) -> void:
 	battlefield.cell_clicked.connect(_on_cell_clicked)
 	battlefield.cell_hovered.connect(_on_cell_hovered)
 	battlefield.cell_unhovered.connect(_on_cell_unhovered)
 
-	CharactersManager.character_world_path_point_reached.connect(_on_character_manager_character_world_path_point_reached)
+	p_characters_manager.character_world_path_point_reached.connect(_on_character_manager_character_world_path_point_reached)
 
 
 ## Orchestrate map creation process
@@ -126,7 +127,7 @@ func clear_map() -> void:
 	battlefield.clear()
 
 
-## path = results[0], directions = results[1]
+## world path = results[0], directions = results[1]
 func get_world_path_and_directions(p_from_cell_id: int, p_to_cell_id: int) -> Array[Array]:
 	var map_resource: MapResource = datacenter.map_resource
 
@@ -170,6 +171,11 @@ func get_current_map_id() -> int:
 	return datacenter.map_resource.map_id
 
 
+## Seems ok to have a method dedicated to send character (or other system) related variables
+func get_current_map_npc_ids() -> Array[int]:
+	return datacenter.map_resource.npc_ids
+
+
 func _on_cell_clicked(cell_id: int) -> void:
 	print("[MapManager] Cell clicked: %d" % cell_id)
 
@@ -184,8 +190,9 @@ func _on_cell_unhovered(cell_id: int) -> void:
 	pass
 
 
-func _on_character_manager_character_world_path_point_reached(p_world_position: Vector2, linked_character_id: int) -> void:
+func _on_character_manager_character_world_path_point_reached(p_world_position: Vector2, p_character_id: int) -> void:
 	var cell_id = get_cell_id_from_world_position(p_world_position)
+	datacenter.get_character_resource(p_character_id).cell_id = cell_id # update a **map** related variable on character
 	var cell_resource: CellResource = datacenter.map_resource.cell_resources[cell_id]
 	if cell_resource.action_resource != null:
 		scripted_cell_triggered.emit(cell_resource.action_resource)

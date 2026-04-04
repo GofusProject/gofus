@@ -15,8 +15,7 @@ enum NpcInteractions {
 
 var coloring_helper: ColoringHelper
 var selected_npc_id: int = -1
-
-@onready var actions: Actions = Actions.new()
+var actions: Actions # Set by Game at startupt
 
 
 
@@ -57,18 +56,21 @@ func execute_action(action_resource: ActionResource) -> void:
 
 #region Battlefield
 
+## Je pense qu'a terme ça se sera géré directement par le CharacterManager (sans passer par Player)
 func _on_character_hovered(character_id: int) -> void:
-	CharactersManager.show_character_over_head(character_id)
+	Game.characters_manager.show_character_over_head(character_id)
 	# coloring_helper.print_color_data(character_id)
 
 
+## Je pense qu'a terme ça se sera géré directement par le CharacterManager (sans passer par Player)
 func _on_character_unhovered(character_id: int) -> void:
-	CharactersManager.hide_character_over_head()
+	Game.characters_manager.hide_character_over_head()
 	# print("[Player] Character id ", character_id, " unhovered")
 
 
+## Je pense qu'a terme ça se sera géré directement par le CharacterManager (sans passer par Player)
 func _on_character_clicked(character_id: int) -> void:
-	CharactersManager.open_character_popup_menu(character_id)
+	Game.characters_manager.open_character_popup_menu(character_id)
 	selected_npc_id = character_id
 
 

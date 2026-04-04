@@ -3,26 +3,51 @@ extends Node
 
 
 
+var is_debug_mode: bool = true
+
+# Managers
+var map_manager: MapManager
+var characters_manager: CharactersManager
+var dialog_manager: DialogManager
+
+
+
+func initialize(p_map_manager: MapManager, p_characters_manager: CharactersManager, p_dialog_manager: DialogManager) -> void:
+	map_manager = p_map_manager
+	characters_manager = p_characters_manager
+	dialog_manager = p_dialog_manager
+
+
 func teleport(character_id: int, p_map_id: int, p_cell_id: int = -1) -> void:
 
-	if MapManager.get_current_map_id() != p_map_id:
+	if map_manager.get_current_map_id() != p_map_id:
 		Game.ui.reset()
-		CharactersManager.clear_characters()
-		MapManager.clear_map()
+		characters_manager.clear_characters()
+		map_manager.clear_map()
 
-		var is_map_created = MapManager.create_map(p_map_id)
+		var is_map_created = map_manager.create_map(p_map_id)
 		if not is_map_created:
 			push_error("[Actions] Teleport failed")
 			return
-		CharactersManager.create_npcs()
+
+		var npc_ids: Array[int] = map_manager.get_current_map_npc_ids()
+
+		for npc_id in npc_ids:
+			var npc_character_id: int = characters_manager.create_npc(npc_id)
+			if npc_character_id == -1:
+				continue
+			
+			var npc_character_cell_id = characters_manager.get_character_cell_id(npc_character_id)
+			var npc_world_position = map_manager.get_cell_world_position_from_cell_id(npc_character_cell_id)
+			characters_manager.teleport_character(npc_character_id, npc_world_position, npc_character_cell_id)
 	
-	var world_position = MapManager.get_cell_world_position_from_cell_id(p_cell_id)
-	CharactersManager.teleport_character(character_id, world_position, p_cell_id)
+	var world_position = map_manager.get_cell_world_position_from_cell_id(p_cell_id)
+	characters_manager.teleport_character(character_id, world_position, p_cell_id)
 
 
 func start_dialog_with_npc(p_npc_id: int):
-	var map_resource_id: int = MapManager.get_current_map_id()
-	var npc_resource = CharactersManager.get_character_resource(p_npc_id) as NonPlayableCharacterResource
+	var map_resource_id: int = map_manager.get_current_map_id()
+	var npc_resource = characters_manager.get_character_resource(p_npc_id) as NonPlayableCharacterResource
 
 	var npc_name: String = npc_resource.name
 	var npc_name_with_npc_template_id: String = npc_name + " (" + str(npc_resource.npc_template_id) + ")"
@@ -36,29 +61,30 @@ func start_dialog_with_npc(p_npc_id: int):
 	else:
 		npc_init_dialog_question_id = npc_init_dialog_map_to_id[map_resource_id]
 
-	DialogManager.start_dialog(npc_init_dialog_question_id, npc_name_with_npc_template_id)
+	dialog_manager.start_dialog(npc_init_dialog_question_id, npc_name_with_npc_template_id)
 
 
 func respond_to_npc(p_action_id: int, p_param: int):
 	var action_resource = ActionResource.new(p_action_id, p_param)
 	Player.execute_action(action_resource)
 	if not p_action_id == ActionResource.ActionId.CONTINUE_DIALOG:
-		DialogManager.leave_dialog()
+		dialog_manager.leave_dialog()
 
 
 func continue_dialog(p_dialog_question_id) -> void:
-	var npc_name: String = DialogManager.get_dialog_resource().dialog_title
-	DialogManager.continue_dialog(npc_name, p_dialog_question_id)
+	var npc_name: String = dialog_manager.get_dialog_resource().dialog_title
+	dialog_manager.continue_dialog(npc_name, p_dialog_question_id)
 
 
 func leave_dialog():
-	DialogManager.leave_dialog()
+	dialog_manager.leave_dialog()
 
 
 func move_playable_character_on_map(to_cell_id: int):
-	var character_resource: CharacterResource = CharactersManager.get_player_character_resource()
-	var results: Array[Array] = MapManager.get_world_path_and_directions(character_resource.cell_id, to_cell_id)
+	var character_resource: CharacterResource = characters_manager.get_player_character_resource()
+	if is_debug_mode: print("[Actions] Moving character id %d from cell id %d to cell id %d" % [character_resource.id, character_resource.cell_id, to_cell_id])
+	var results: Array[Array] = map_manager.get_world_path_and_directions(character_resource.cell_id, to_cell_id)
 	var path = results[0]
 	var directions = results[1]
 
-	CharactersManager.move_character(character_resource, path, directions)
+	characters_manager.move_character(character_resource, path, directions)
