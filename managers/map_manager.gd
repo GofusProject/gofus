@@ -6,7 +6,7 @@ extends Node
 
 signal scripted_cell_triggered(action_resource: ActionResource)
 
-var is_debug_mode: bool = true
+var is_debug_mode: bool = false
 
 # Counters for statistics
 var ground_tiles: int = 0
@@ -73,7 +73,7 @@ func create_map(map_id: int) -> bool:
 	
 	datacenter.set_current_map_resource(map_resource)
 
-	# 3. AssetLoader, CellResource sprite init and Background texture init
+	# 3. CellResource sprite init and Background texture init with Asset Loader
 
 	if map_resource.background_id != 0:
 		map_resource.background_texture = asset_loader.get_background_texture(map_resource.background_id)
@@ -130,6 +130,10 @@ func create_map(map_id: int) -> bool:
 
 	# Battlefield
 	battlefield.build_map(map_resource.background_texture, map_resource.size.x, map_resource.cell_resources, map_resource.diamond_grid_start, map_resource. diamond_grid_size)
+	
+	# UI
+	
+
 	PerformanceTracker.end_timer()
 	return true
 

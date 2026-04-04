@@ -3,6 +3,8 @@ extends Node
 
 
 
+var is_debug_mode: bool = false
+
 const NPC_TEMPLATE_CSV_PATH:           String = "res://lang/npc_template_lang.csv"
 const NPC_INTERACTIONS_CSV_PATH:       String = "res://lang/npc_interactions_lang.csv"
 const DIALOG_QUESTIONS_CSV_PATH:       String = "res://lang/dialog_questions_lang.csv"
@@ -24,7 +26,7 @@ var _subarea_cache:                   Dictionary[int, String] = {}
 
 
 func _ready() -> void:
-	print("[Translator] Initializing...")
+	if is_debug_mode: print("[Translator] Initializing...")
 	var build_start_time: int = Time.get_ticks_usec()
 	var mem_before : float = Performance.get_monitor(Performance.MEMORY_STATIC)
 
@@ -38,15 +40,15 @@ func _ready() -> void:
 
 	var build_end_time: int = Time.get_ticks_usec()
 	var build_time_sec: float = (build_end_time - build_start_time) / 1_000_000.0
-	print("[Translator] Ready (took %.2f sec)" % build_time_sec)
+	if is_debug_mode: print("[Translator] Ready (took %.2f sec)" % build_time_sec)
 	var mem_after : float = Performance.get_monitor(Performance.MEMORY_STATIC)
 	var mem_used : float = mem_after - mem_before
 	var mb: float = mem_used / (1024.0 * 1024.0)
-	print("[Translator] Approximate cache memory size: %.3f MB" % mb)
+	if is_debug_mode: print("[Translator] Approximate cache memory size: %.3f MB" % mb)
 
 
 func _load_csv_into_cache(csv_path: String, cache: Dictionary[int, String]) -> void:
-	print("[Translator] Loading from CSV: %s" % csv_path)
+	if is_debug_mode: print("[Translator] Loading from CSV: %s" % csv_path)
 	var file: FileAccess = FileAccess.open(csv_path, FileAccess.READ)
 	if not file:
 		push_error("[Translator] Failed to open CSV: " + csv_path)
@@ -63,7 +65,7 @@ func _load_csv_into_cache(csv_path: String, cache: Dictionary[int, String]) -> v
 		count += 1
 
 	file.close()
-	print("[Translator] Loaded %d entries from CSV" % count)
+	if is_debug_mode: print("[Translator] Loaded %d entries from CSV" % count)
 
 
 func _get_from_cache(cache: Dictionary, id: int, label: String) -> String:
