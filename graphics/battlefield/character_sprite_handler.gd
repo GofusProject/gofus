@@ -21,7 +21,7 @@ enum Orientation {
 	NORTH_EAST = 7
 }
 
-var is_debug_mode: bool = true
+var is_debug_mode: bool = false
 
 var battlefield: Battlefield
 

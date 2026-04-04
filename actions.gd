@@ -34,18 +34,31 @@ func teleport(character_id: int, p_map_id: int, p_cell_id: int = -1) -> void:
 		var npc_ids: Array[int] = map_manager.get_current_map_npc_ids()
 
 		for npc_id in npc_ids:
+			if is_debug_mode: print("[Actions] Create NPC character with npc id:", npc_id)
 			var npc_character_id: int = characters_manager.create_npc(npc_id)
 			if npc_character_id == -1:
 				continue
-			
+
 			var npc_character_cell_id = characters_manager.get_character_cell_id(npc_character_id)
 			var npc_world_position = map_manager.get_cell_world_position_from_cell_id(npc_character_cell_id)
 			characters_manager.teleport_character(npc_character_id, npc_world_position, npc_character_cell_id)
-	
+			print("pos expected: ", npc_world_position)
+			print("animated_sprite pos: ", Game.battlefield.character_sprite_handler.get_animated_character_sprite_2d_by_character_id(npc_character_id).position)
+			# MAIS ICI C'EST BON ????
+
+		# A partir d'ici, il y en 2 qui ont une pos de 0, 0: TO REMOVE
+			
+
+
+
 	# Player teleportation
 	var world_position = map_manager.get_cell_world_position_from_cell_id(p_cell_id)
+	if is_debug_mode: print("[Actions] Teleport player character (character id: %d) to map id %d and cell id %d (world position: %s)" % [character_id, p_map_id, p_cell_id, world_position])
 	characters_manager.teleport_character(character_id, world_position, p_cell_id)
-	if is_debug_mode: print("[Actions] Teleported character id %d to map id %d and cell id %d (world position: %s)" % [character_id, p_map_id, p_cell_id, world_position])
+	
+
+func create_map_and_characters(p_map_id: int, do_create_player: bool = false)
+
 
 
 func start_dialog_with_npc(p_npc_id: int):

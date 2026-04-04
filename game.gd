@@ -3,7 +3,7 @@ extends Node
 
 var is_debug_mode: bool = true
 
-var map_id: int = 10354
+var map_id: int = 10302
 var player_id: int = 1
 var actions: Actions
 
@@ -80,21 +80,21 @@ func _ready() -> void:
 	player.setup_signals()
 
 	map_manager.scripted_cell_triggered.connect(func(action_resource: ActionResource): execute_action(action_resource))
-	change_map(map_id)
+	create_map(map_id)
 
 
-func _input(event: InputEvent) -> void:
-	if event is InputEventKey:
-		if event.keycode == KEY_F12:
-			get_tree().quit()
+# func _input(event: InputEvent) -> void:
+# 	if event is InputEventKey:
+# 		if event.keycode == KEY_F12:
+# 			get_tree().quit()
 	
-	if event.is_action_pressed("ui_right"):
-			map_id += 1
-			change_map(map_id)
+# 	if event.is_action_pressed("ui_right"):
+# 			map_id += 1
+# 			create_map(map_id)
 
-	if event.is_action_pressed("ui_left"):
-			map_id -= 1
-			change_map(map_id)
+# 	if event.is_action_pressed("ui_left"):
+# 			map_id -= 1
+# 			create_map(map_id)
 
 
 
@@ -107,7 +107,7 @@ func execute_action(action_resource: ActionResource) -> void:
 			actions.teleport(datacenter.player_character_resource.id, action_resource.param_1, action_resource.param_2)
 
 
-func change_map(p_map_id: int):
+func create_map(p_map_id: int):
 
 	var is_map_created = map_manager.create_map(p_map_id)
 	if not is_map_created:
@@ -129,6 +129,7 @@ func change_map(p_map_id: int):
 	var npc_ids: Array[int] = map_manager.get_current_map_npc_ids()
 
 	for npc_id in npc_ids:
+		if is_debug_mode: print("[Game] Create NPC character with npc id:", npc_id)
 		var npc_character_id: int = characters_manager.create_npc(npc_id)
 		if npc_character_id == -1:
 			continue
@@ -136,7 +137,5 @@ func change_map(p_map_id: int):
 		var npc_character_cell_id = characters_manager.get_character_cell_id(npc_character_id)
 		var npc_world_position = map_manager.get_cell_world_position_from_cell_id(npc_character_cell_id)
 		characters_manager.teleport_character(npc_character_id, npc_world_position, npc_character_cell_id)
-		if is_debug_mode: print("[Game] NPC character created with id %d and teleported to cell id %d (world position: %s)" % [npc_character_id, npc_character_cell_id, npc_world_position])
-
-	# A la fin de cette boucle: player char cell id = 228 TO REMOVE
+		
 	

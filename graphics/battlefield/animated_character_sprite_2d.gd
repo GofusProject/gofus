@@ -2,12 +2,15 @@
 class_name AnimatedCharacterSprite2D
 extends AnimatedSprite2D
 
+
+var is_debug_mode: bool = true
+var previous_pos := Vector2(0,0)
+
 var linked_character_id: int
 var orientation_id: int
 ## Orientation letter is derived from orientation_id
 var orientation_letter: String # L, R, B...
 var animation_state_name: String # run, static...
-
 
 # Cache to avoid get_image() every frame
 var _cached_image: Image
@@ -37,6 +40,14 @@ signal hovered(animated_character_sprite_2d_id: int)
 signal unhovered(animated_character_sprite_2d_id: int)
 signal clicked(animated_character_sprite_2d_id: int)
 signal world_path_point_reached(world_pos: Vector2, linked_character_id: int)
+
+
+
+# Debug
+func _physics_process(_delta):
+	if global_position != previous_pos && is_debug_mode:
+		print("[AnimatedCharacterSprite2D] New position: ", global_position)
+	previous_pos = global_position
 
 
 func _process(delta: float) -> void:
@@ -245,3 +256,4 @@ func _on_area_2d_input_event(viewport: Node, event: InputEvent, shape_idx: int) 
 			set_highlight(false)
 			is_hovered = false
 			unhovered.emit(linked_character_id)
+

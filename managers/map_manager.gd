@@ -6,7 +6,7 @@ extends Node
 
 signal scripted_cell_triggered(action_resource: ActionResource)
 
-var is_debug: bool = true
+var is_debug_mode: bool = false
 
 # Counters for statistics
 var ground_tiles: int = 0
@@ -195,5 +195,5 @@ func _on_character_manager_character_world_path_point_reached(p_world_position: 
 	datacenter.get_character_resource(p_character_id).cell_id = cell_id # update a **map** related variable on character
 	var cell_resource: CellResource = datacenter.map_resource.cell_resources[cell_id]
 	if cell_resource.action_resource != null:
+		if is_debug_mode: print("[MapManager] Scripted cell triggered at cell ID %d with action id %s" % [cell_id, cell_resource.action_resource.action_id])
 		scripted_cell_triggered.emit(cell_resource.action_resource)
-		print("[MapManager] Scripted cell triggered at cell ID %d with action id %s" % [cell_id, cell_resource.action_resource.action_id])

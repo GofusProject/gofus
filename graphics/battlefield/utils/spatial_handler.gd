@@ -21,7 +21,7 @@ enum Direction {
 	NORTH_EAST = 7
 }
 
-var is_debug: bool = true
+var is_debug: bool = false
 
 var battlefield: Battlefield
 var astar_grid: AStarGrid2D

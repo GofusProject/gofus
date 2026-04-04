@@ -10,3 +10,5 @@ script = ExtResource("1_5kc3e")
 [node name="GridLayer" type="Node2D" parent="."]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+
+[node name="Node2D" type="Node2D" parent="."]
