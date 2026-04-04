@@ -1,0 +1,373 @@
+id,name
+0,//Amakna
+1,Port de Madrestam
+2,La montagne des Craqueleurs
+3,Le champ des Ingalsses
+4,La forêt d\'Amakna
+5,Le coin des Bouftous
+6,Le cimetière
+7,Les cryptes
+8,Campement des Bworks
+9,La forêt maléfique
+10,Le village
+11,Territoire des Porcos
+12,La péninsule des gelées
+13,Le temple Féca
+14,Le temple Osamodas
+15,Le temple Enutrof
+16,Le temple Sram
+17,Le temple Xélor
+18,Le temple Ecaflip
+19,Le temple Iop
+20,Le temple Crâ
+21,Le temple Sadida
+22,Bord de la fôret maléfique
+23,La presqu\'île des Dragoeufs
+25,Sous-terrains des Wabbits
+26,Le temple Eniripsa
+27,Côte d\'Asse
+28,Garnison d\'Amakna
+29,Souterrain
+30,Le berceau
+31,Le marécage
+32,//Sufokia
+33,//Forêt des Abraknydes
+34,//Prison
+35,Porte de Sufokia
+37,//Bonta
+38,//Plaine de Cania
+39,Le repaire des Roublards
+41,Le temple Sacrieur
+42,Route de Bonta
+43,Fortification de Bonta
+44,Quartier des Boulangers
+45,Quartier de la Milice
+46,Quartier des Bouchers
+47,Quartier des Forgerons
+48,Quartier des Bûcherons
+49,Quartier des Bricoleurs
+50,Quartier des Tailleurs
+51,Quartier des Bijoutiers
+53,//Brâkmar
+54,Massif de Cania
+55,Pénates du Corbac
+56,Forêt de Cania
+57,//Lande de Sidimote
+59,Cimetière de Bonta
+61,Cimetière des Torturés
+62,//Village Dopeul
+63,Prisme des Dopeuls
+64,Première salle du prisme
+65,Seconde salle du prisme
+66,Troisième salle du prisme
+67,Quatrième salle du prisme
+68,Les Champs de Cania
+69,Bois de Litneg
+70,Plaines Rocheuses
+71,"Gisgoul, le village devasté"
+72,Façade de Brâkmar
+73,Egout de Bonta
+74,//Entrainement Dopeuls
+75,Egout de Brâkmar
+76,//Village Brigandins
+77,La gelaxième dimension
+78,//La gelaxième dimension (royale)
+79,Première plate-forme
+80,Seconde plate-forme
+81,Prisme Brigandin
+82,Donjon des Bouftous
+83,//Tutorial
+84,//Foire du Trool
+85,//Jeu du Bouftou
+86,Gladiatrool
+87,//Amakna Sud
+88,//Tainela
+89,Tournoi Monde du Jeu
+91,Souterrain mystérieux
+92,Contour d\'Astrub
+93,La plage de Moon
+94,Donjon du Bworker
+95,Cité d\'Astrub
+96,Exploitation minière d\'Astrub
+97,Forêt d\'Astrub
+98,Champs d\'Astrub
+99,Souterrain d\'Astrub
+100,Souterrain profond d\'Astrub
+101,Le coin des Tofus
+102,Le champ du repos
+103,Territoire des Bandits
+105,//Pandala Neutre
+106,Bordure d\'Akwadala
+107,Bordure de Feudala
+108,Bordure d\'Aerdala
+109,Bordure de Terrdala
+110,//Amakna passé
+111,Porte Aerdala
+112,Porte Feudala
+113,Porte Akwadala
+114,Porte Terrdala
+115,Village d\'Aerdala
+116,Village de Feudala
+117,Village d\'Akwadala
+118,Village de Terrdala
+119,Village de Pandala
+120,Prisme Aerdala
+121,Prisme Feudala
+122,Prisme Akwadala
+123,Prisme Terrdala
+124,Caverne des Bulbes
+125,Repaire des Pandikazes - Première plate-forme
+126,Repaire des Pandikazes - Seconde plate-forme
+127,Repaire des Pandikazes - Troisième plate-forme
+128,Repaire des Pandikazes - Quatrième plate-forme
+129,Repaire des Pandikazes - Cinquième plate-forme
+130,Repaire des Pandikazes - Sixième plate-forme
+131,Repaire des Pandikazes - Septième plate-forme
+132,Repaire des Pandikazes - Huitième plate-forme
+133,Donjon des Kitsounes - Salle 1
+134,Donjon des Kitsounes - Salle 2
+135,Donjon des Kitsounes - Salle 3
+136,Donjon des Kitsounes - Salle 4
+137,Donjon des Kitsounes - Salle 4
+138,Donjon des Kitsounes - Salle 4
+139,Donjon des Kitsounes - Salle 5
+140,Donjon des Kitsounes - Salle 6
+141,Donjon des Kitsounes - Repaire du Tanukouï
+143,Pont de Pandala
+144,Donjon des Firefoux
+145,Donjon des Firefoux - Salle 1
+146,Donjon des Firefoux - Salle 2
+147,Donjon des Firefoux - Salle 3
+148,Donjon des Firefoux - Salle 4
+149,Donjon des Firefoux - Salle 5
+150,Donjon des Firefoux - Salle 6
+151,Donjon des Firefoux - Salle 7
+152,L\'île de Grobe
+153,Repaire des Pandikazes - Plate-forme finale
+154,//Donjon Cochon - Salle 1
+155,//Donjon Cochon - Salle 2
+156,//Donjon Cochon - Salle 3
+157,//Donjon Cochon - Salle 4
+158,//Donjon Cochon - Salle 5
+159,//Donjon Cochon - Salle 6
+161,Ile des Wabbits
+162,Ilot des Wabbits
+163,Ile des Wabbits Squelettes
+164,Île du château des Wabbits
+165,La jungle profonde de Moon
+166,Le chemin vers Moon
+167,Le bateau pirate
+168,Forêt des Abraknydes Sombres
+169,Orée de la forêt des Abraknydes
+170,Plaine des Scarafeuilles
+171,Forêt de Pandala
+173,Prairies d\'Astrub
+174,Campement des Bandits Manchots
+175,//Donjon Abraknyde - Salle 1
+177,Prairie des Blops
+178,Plaine des Porkass
+179,Le coin des Boos
+180,Le château d\'Amakna
+181,Souterrain du Château d\'Amakna
+182,Village des Eleveurs
+200,//Labyrinthe du Dragon Cochon
+201,//Donjon des Tofus - Salle 1
+202,//Donjon des Tofus - Salle 2
+203,//Donjon des Tofus - Salle 3
+204,//Donjon des Tofus - Salle 4
+205,//Donjon des Tofus - Salle 5
+206,//Donjon des Tofus - Salle 6
+207,//Donjon des Tofus - Salle 7
+208,//Donjon des Tofus - Salle 8
+209,L\'île du Minotoror
+210,Le labyrinthe du Minotoror
+211,La bibliothèque du Maître Corbac
+212,//Donjon des Canidés - Entrée
+213,//Donjon des Canidés - Salle 1
+214,//Donjon des Canidés - Salle 2
+215,//Donjon des Canidés - Salle 3
+216,//Donjon des Canidés - Salle 4
+217,//Donjon des Canidés - Salle 5
+218,//Donjon des Canidés - Salle 6
+219,//Donjon des Canidés - Salle 7
+220,//Donjon des Canidés - Salle 8
+221,//Donjon des Canidés - Salle 9
+222,//Donjon des Canidés - Salle 10
+223,//Caverne du Koulosse - Salle 1
+224,//Caverne du Koulosse - Salle 2
+225,//Caverne du Koulosse - Salle 3
+226,//Caverne du Koulosse - Salle 4
+227,//Caverne du Koulosse - Salle 5
+228,//Caverne du Koulosse - Salle 6
+229,//Caverne du Koulosse - L\'antre
+230,Cimetière primitif
+231,Lacs enchantés
+232,Marécages nauséabonds
+233,Marécages sans fond
+234,Forêt de Kaliptus
+235,Territoire des Dragodindes Sauvages
+236,Sanctuaire des Familiers
+243,//Donjon des Craqueleurs - Salle 1
+244,//Donjon des Craqueleurs - Salle 2
+245,//Donjon des Craqueleurs - Salle 3
+246,//Donjon des Craqueleurs - Salle 4
+247,//Donjon des Craqueleurs - Salle 5
+248,//Donjon des Craqueleurs - Salle 6
+249,//Donjon des Craqueleurs - Salle 7
+250,//Donjon des Craqueleurs - Salle 8
+251,//Donjon des Craqueleurs - Salle 10
+252,//Donjon des Craqueleurs - Salle 11
+253,Canyon sauvage
+254,//Repaire de Skeunk - Salle 1
+255,//Repaire de Skeunk - Salle 2
+256,//Repaire de Skeunk - Salle 3
+257,//Repaire de Skeunk - Emeraude
+258,//Repaire de Skeunk - Rubise
+259,//Repaire de Skeunk - Saphira
+260,//Repaire de Skeunk - Diamantine
+261,//Repaire de Skeunk - Antre
+266,//Repaire de Skeunk - Salle 4
+267,//Repaire de Skeunk - Salle 5
+268,//Donjon des Tofus - Salle 9
+269,//Donjon des Tofus - Salle 10
+270,//Donjon des Tofus - Salle 11
+271,//Donjon des Tofus - Salle 12
+272,//Donjon des Tofus - Salle 13
+273,//Donjon des Tofus - Salle 14
+274,//Donjon des Tofus - Salle 15
+275,Vallée de la Morh\'Kitu
+276,Campement des Gobelins
+277,Village des Bworks
+278,Elevage de Bouftous du Château d\'Amakna
+279,Bordure de Bonta
+280,Bordure de Brâkmar
+284,//Donjon des Bworks - Salle 1
+285,//Donjon des Bworks - Salle 2
+286,//Donjon des Bworks - Salle 3
+287,//Donjon des Bworks - Cachot
+288,//Donjon des Bworks - Salle 4
+289,//Donjon des Bworks - Salle 5
+290,//Donjon des Bworks - Salle 6
+291,//Donjon des Bworks - Salle 7
+292,//Donjon des Canidés - Salle 11
+293,//Donjon des Canidés - Salle 12
+294,//Donjon des Canidés - Salle 13
+295,//Donjon des Canidés - Salle 14
+296,//Donjon des Canidés - Salle 15
+297,//Donjon des Scarafeuilles - Salle 1
+298,//Donjon des Scarafeuilles - Salle 2
+299,//Donjon des Scarafeuilles - Salle 3
+300,//Donjon des Scarafeuilles - Salle 4
+301,//Donjon des Scarafeuilles - Salle 5
+302,//Donjon des Scarafeuilles - Salle 6
+303,//Donjon des Scarafeuilles - Salle 7
+304,//Donjon des Scarafeuilles - Salle 8
+306,//Donjon des Champs - Salle 1
+307,//Donjon des Champs - Salle 2
+308,//Donjon des Champs - Salle 3
+309,//Donjon des Champs - Salle 4
+310,//Donjon des Champs - Salle 5
+311,//Donjon des Champs - Salle 6
+312,//Donjon des Champs - Salle 7
+313,//Donjon des Tofus - Salle 16
+314,Sanctuaire des Dragoeufs
+315,Village des Dragoeufs
+316,Sous terrain des Dragoeufs
+317,//Donjon des Craqueleurs - Salle 9
+318,Alkatraz
+319,Le labyrinthe du Minotoror
+320,L\'île de Nowel
+321,Le donjon de Nowel
+322,//Donjon Cochon - Salle 7
+323,//Donjon Cochon - Salle 8
+324,//Donjon Cochon - Salle 9
+325,//Donjon Dragoeuf - Salle 1
+326,//Donjon Dragoeuf - Salle 2
+327,//Donjon Dragoeuf - Salle 3
+328,//Donjon Dragoeuf - Salle 4
+329,//Donjon Dragoeuf - Salle 5
+330,//Donjon Dragoeuf - Salle 6
+331,//Donjon Dragoeuf - Salle 7
+332,//Donjon Dragoeuf - Salle 8
+333,//Donjon Dragoeuf - Salle 9
+334,Baie de Cania
+335,Calanques d\'Astrub
+336,Donjon Ensablé
+337,Donjon des Rats de Bonta
+338,Donjon des Rats de Brâkmar
+339,Donjon des Rats du Château d\'Amakna
+440,Pitons rocheux
+441,Clairière
+442,Lac
+443,Forêt
+444,Champs
+445,Prairie
+446,Temple
+447,Donjon
+448,//Divers
+449,Cimetière
+450,//Sortie du temple
+451,Ile des naufragés
+452,Mer
+453,Plage de Corail
+454,Plaines herbeuses
+455,Jungle obscure
+457,Tourbière sans fond
+459,Canopée du Kimbo
+460,Grotte Hesque
+461,L\'arche d\'Otomaï
+462,La clairière de Floribonde
+463,Le laboratoire du Tynril
+464,Tronc de l\'arbre Hakam
+465,Le village des éleveurs
+466,Le village côtier
+467,Cimetière de l\'île d\'Otomaï
+468,//Village des Zoths
+469,Village de la Canopée
+470,Goulet du Rasboul
+471,Tourbière nauséabonde
+472,Feuillage de L\'arbre Hakam
+473,Le laboratoire caché
+474,Cale de l\'arche d\'Otomaï
+476,Pont de Grobe
+477,Prisme Zothier
+478,//Gardiens de la porte des Zoths
+479,Rivière Kawaii
+480,Montagne basse des Craqueleurs
+481,Clairière de Brouce Boulgour
+482,La Millifutaie
+483,Le chemin de fer abandonné
+484,Orée de la Millifutaie
+485,La campagne
+486,Le Bosquet du petit talus
+487,Grenier-Cachot de Pandala Air
+488,Souterrains d\'Amakna
+490,Rivage du golfe sufokien
+491,Donjon des Larves
+492,Passage vers Brâkmar
+493,Donjon des Blops
+494,Donjon Fungus
+495,Caverne des Fungus
+496,Sanctuaire de Qu\'Tan
+497,Belvédère d\'Ilyzaelle
+498,Sanctuaire Hotomani
+499,Cimetière de l\'île du Minotoror
+500,Cimetière du village des Zoths
+501,L\'îlot Estitch
+502,Quartier des bûcherons
+503,Quartier des bouchers
+504,Quartier de la milice
+505,Quartier des boulangers
+506,Quartier des bijoutiers
+507,Quartier des tailleurs
+508,Quartier des forgerons
+509,Quartier des bricoleurs
+510,Arène
+511,Centre-ville
+512,Arène
+513,Centre-ville
+514,Tour des ordres
+515,Tour des ordres
+536,Goultarminator
+537,Donjon des Forgerons
+538,Antre du Kralamoure Géant
