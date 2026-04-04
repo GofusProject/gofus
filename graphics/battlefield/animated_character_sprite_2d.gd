@@ -3,7 +3,7 @@ class_name AnimatedCharacterSprite2D
 extends AnimatedSprite2D
 
 
-var is_debug_mode: bool = true
+var is_debug_mode: bool = false
 var previous_pos := Vector2(0,0)
 
 var linked_character_id: int
@@ -43,11 +43,11 @@ signal world_path_point_reached(world_pos: Vector2, linked_character_id: int)
 
 
 
-# Debug
-func _physics_process(_delta):
-	if global_position != previous_pos && is_debug_mode:
-		print("[AnimatedCharacterSprite2D] New position: ", global_position)
-	previous_pos = global_position
+# Debug, uncomment to get position update
+# func _physics_process(_delta):
+# 	if global_position != previous_pos && is_debug_mode:
+# 		print("[AnimatedCharacterSprite2D] New position: ", global_position)
+# 	previous_pos = global_position
 
 
 func _process(delta: float) -> void:

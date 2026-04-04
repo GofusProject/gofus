@@ -3,7 +3,7 @@ extends Node
 
 
 
-var is_debug_mode: bool = true
+var is_debug_mode: bool = false
 
 # Managers
 var map_manager: MapManager
