@@ -10,7 +10,6 @@ signal cell_unhovered(cell_id: int)
 var map_handler: MapHandler
 var character_sprite_handler: CharacterSpriteHandler
 var over_head_handler: OverHeadHandler
-var cell_interaction_handler: CellInteractionHandler
 var spatial_handler: SpatialHandler
 
 # Cell
@@ -73,13 +72,11 @@ func _ready() -> void:
 	map_handler = MapHandler.new()
 	character_sprite_handler = CharacterSpriteHandler.new()
 	over_head_handler = OverHeadHandler.new()
-	cell_interaction_handler = CellInteractionHandler.new()
 	spatial_handler = SpatialHandler.new()
 
 	map_handler.battlefield = self
 	character_sprite_handler.battlefield = self
 	over_head_handler.battlefield = self
-	cell_interaction_handler.battlefield = self
 	spatial_handler.battlefield = self
 
 	background = get_node_or_null("Background")
@@ -104,14 +101,6 @@ func build_map(p_background_texture: Texture2D, p_map_staggered_width: int, p_ce
 	map_handler.render_map(p_background_texture, p_map_staggered_width, p_cell_resources)
 	spatial_handler.setup_astar_2d_grid(p_map_staggered_width, p_cell_resources)
 
-	for cell_resource in p_cell_resources:
-		cell_interaction_handler.create_cell_area(
-			cell_resource.world_position,
-			cell_resource.ground_slope,
-			cell_resource.movement,
-			cell_resource.id
-		)
-
 
 
 #region OverHeadHandler
@@ -132,5 +121,4 @@ func clear() -> void:
 	hide_character_over_head()
 	map_handler.clear()
 	character_sprite_handler.clear()
-	cell_interaction_handler.clear()
 	spatial_handler.clear()

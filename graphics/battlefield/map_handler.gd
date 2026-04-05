@@ -12,11 +12,13 @@ var battlefield: Battlefield
 var _ground_sprite_pool: Array[Sprite2D] = []
 var _object1_sprite_pool: Array[Sprite2D] = []
 var _object2_sprite_pool: Array[Sprite2D] = []
+var _area_pool: Array[Area2D] = []
 var _label_pool: Array[Label] = []
 # Pool usage indices (how many from each pool are currently in use)
 var _ground_pool_index: int = 0
 var _object1_pool_index: int = 0
 var _object2_pool_index: int = 0
+var _area_pool_index: int = 0
 var _label_pool_index: int = 0
 
 
@@ -54,6 +56,29 @@ func _get_object2_sprite2D() -> Sprite2D:
 	var sprite : Sprite2D = _get_pooled_sprite2D(_object2_sprite_pool, _object2_pool_index, battlefield.object2_layer)
 	_object2_pool_index += 1
 	return sprite
+
+
+func _get_cell_area_2d() -> Area2D:
+	var cell_area: Area2D
+
+	if _area_pool_index >= _area_pool.size():
+		cell_area = Area2D.new()
+		cell_area.monitoring = false
+		cell_area.monitorable = false
+
+		var collision_polygon_2d = CollisionPolygon2D.new()
+		collision_polygon_2d.name = "CollisionPolygon2D"
+		cell_area.add_child(collision_polygon_2d)
+
+		_area_pool.append(cell_area)
+		battlefield.cell_interaction_layer.add_child(cell_area)
+	else:
+		cell_area = _area_pool[_area_pool_index] as Area2D
+		cell_area.process_mode = Node.PROCESS_MODE_INHERIT
+
+	_area_pool_index += 1
+	return cell_area
+
 
 
 ## Get or create a label from the label pool
@@ -262,10 +287,47 @@ func render_map(p_background_texture: Texture2D, p_map_width: int, p_cell_resour
 			cell_resource.movement
 		)
 
+		create_cell_area(
+			cell_resource.world_position,
+			cell_resource.ground_slope,
+			cell_resource.movement,
+			cell_resource.id
+		)
+
 
 	var render_end_time : int = Time.get_ticks_usec()
 	var render_time_sec : float = (render_end_time - render_start_time) / 1_000_000.0
 	print("[Battlefield] Map rendered (took %.2f sec)" % render_time_sec)
+
+
+
+## Create or update cell area
+func create_cell_area(p_world_position: Vector2, ground_slope: int, movement: int, cell_id: int) -> void:
+	if movement == 0:
+		return
+
+	# get_pooled_area
+	var cell_area: Area2D = _get_cell_area_2d()
+
+	# Init
+	cell_area.position = p_world_position
+	cell_area.name = "Area2D" + str(cell_id)
+
+	# Bind signals carrying the live cell_id
+	cell_area.mouse_entered.connect(func() -> void: battlefield.cell_hovered.emit(cell_id))
+	cell_area.mouse_exited.connect(func() -> void: battlefield.cell_unhovered.emit(cell_id))
+	cell_area.input_event.connect(func(viewport, event, shape_idx) -> void:
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			battlefield.cell_clicked.emit(cell_id)
+	)
+
+	# Configure collision polygon
+	var collision_polygon_2d = cell_area.get_node("CollisionPolygon2D") as CollisionPolygon2D
+	var raw = battlefield.SLOPE_POINTS[ground_slope]
+	var points : PackedVector2Array = PackedVector2Array()
+	for p in raw:
+		points.append(Vector2(p[0] * battlefield.slope_points_scaling, p[1] * battlefield.slope_points_scaling))
+	collision_polygon_2d.polygon = points
 
 
 func render_grid_cell(p_world_position: Vector2, ground_slope: int, movement: int) -> void:
@@ -297,6 +359,22 @@ func clear() -> void:
 	# A implementer en pool
 	for child in battlefield.grid_layer.get_children():
 		child.queue_free()
+
+	# Reset cell areas
+	for cell_area: Area2D in battlefield.cell_interaction_layer.get_children():
+		# Disconnect all signals so the next acquire starts clean
+		for connection in cell_area.mouse_entered.get_connections():
+			cell_area.mouse_entered.disconnect(connection.callable)
+		for connection in cell_area.mouse_exited.get_connections():
+			cell_area.mouse_exited.disconnect(connection.callable)
+		for connection in cell_area.input_event.get_connections():
+			cell_area.input_event.disconnect(connection.callable)
+
+		var collision_polygon_2d = cell_area.get_node("CollisionPolygon2D") as CollisionPolygon2D
+		collision_polygon_2d.polygon = []
+		cell_area.process_mode = Node.PROCESS_MODE_DISABLED
+	
+	_area_pool_index = 0
 
 
 ## grid pos -> cell world pos

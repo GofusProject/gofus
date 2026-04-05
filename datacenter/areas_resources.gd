@@ -4,7 +4,7 @@ extends Resource
 
 
 
-var is_debug_mode: bool = true
+var is_debug_mode: bool = false
 
 var sub_area_id: int
 var music_id: int
