@@ -301,7 +301,6 @@ func render_map(p_background_texture: Texture2D, p_map_width: int, p_cell_resour
 	print("[Battlefield] Map rendered (took %.2f sec)" % render_time_sec)
 
 
-
 ## Create or update cell area
 func create_cell_area(p_world_position: Vector2, ground_slope: int, movement: int, cell_id: int) -> void:
 	if movement == 0:
@@ -318,7 +317,8 @@ func create_cell_area(p_world_position: Vector2, ground_slope: int, movement: in
 	cell_area.mouse_entered.connect(func() -> void: battlefield.cell_hovered.emit(cell_id))
 	cell_area.mouse_exited.connect(func() -> void: battlefield.cell_unhovered.emit(cell_id))
 	cell_area.input_event.connect(func(viewport, event, shape_idx) -> void:
-		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT \
+		and not viewport.is_input_handled(): # Prevent cell area2D to trigger when clicking on a character area2D
 			battlefield.cell_clicked.emit(cell_id)
 	)
 

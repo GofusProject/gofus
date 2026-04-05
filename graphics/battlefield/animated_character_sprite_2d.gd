@@ -250,6 +250,7 @@ func _on_area_2d_input_event(viewport: Node, event: InputEvent, shape_idx: int) 
 			hovered.emit(linked_character_id)
 		if event is InputEventMouseButton and event.pressed:
 			is_selected = true
+			get_viewport().set_input_as_handled() # Prevent cell area2D to trigger when clicking on a character area2D
 			clicked.emit(linked_character_id)
 	else:
 		if is_hovered != false:
