@@ -24,6 +24,7 @@ var _label_pool_index: int = 0
 
 
 func _get_pooled_sprite2D(pool: Array, index: int, layer: Node) -> Sprite2D:
+	# GDScript passes int by value, not by reference, so incrementing the index here is only local (won't affect map_handler._*_index)
 	if index < pool.size():
 		var sprite: Sprite2D = pool[index]
 		sprite.rotation_degrees = 0.0
@@ -42,7 +43,7 @@ func _get_pooled_sprite2D(pool: Array, index: int, layer: Node) -> Sprite2D:
 
 func _get_ground_sprite2D() -> Sprite2D:
 	var sprite : Sprite2D = _get_pooled_sprite2D(_ground_sprite_pool, _ground_pool_index, battlefield.ground_layer)
-	_ground_pool_index += 1
+	_ground_pool_index += 1 
 	return sprite
 
 
