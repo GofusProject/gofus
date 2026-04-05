@@ -28,7 +28,6 @@ func update(p_npc_name: String, p_npc_dialog: String, p_player_responses_text: A
 	question_label.text = p_npc_dialog
 	for i in p_player_responses_text.size():
 
-		# TODO: add button and rich text label on a panel container
 		var panel_container = PanelContainer.new()
 		panel_container.theme = npc_dialog_theme
 
@@ -56,25 +55,6 @@ func update(p_npc_name: String, p_npc_dialog: String, p_player_responses_text: A
 		panel_container.add_child(rich_text_label)
 		vbox_container.add_child(panel_container)
 		buttons.append(panel_container)
-
-
-
-		# var rich_text_button: RichTextButton = RichTextButton.new()
-		# rich_text_button.bbcode_enabled = true
-		# rich_text_button.custom_minimum_size = Vector2(0, 60.0)
-		# rich_text_button.theme = npc_dialog_theme
-		# rich_text_button.text = "[left][ul]" + p_player_responses_text[i] + "[/ul][/left]"
-
-		# rich_text_button.pressed.connect(
-		# 	func(): reponse_button_pressed.emit(
-		# 		ActionResource.new(
-		# 			ActionResource.ActionId.RESPOND_TO_NPC,
-		# 			p_responses_action_resources[i].action_id,
-		# 			p_responses_action_resources[i].param_1)
-		# 	)
-		# )
-		# buttons.append(rich_text_button)
-		# vbox_container.add_child(rich_text_button)
 
 
 func reset():

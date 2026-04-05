@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=6 format=3 uid="uid://bny4p2mm2ir4"]
+[gd_resource type="Theme" load_steps=5 format=3 uid="uid://bny4p2mm2ir4"]
 
 [ext_resource type="FontFile" uid="uid://b6or5e8ck6u2d" path="res://graphics/verdana.ttf" id="1_5vgdu"]
 
@@ -11,31 +11,12 @@ draw_center = false
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t5mtu"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rakqf"]
-bg_color = Color(1, 0.4, 0, 1)
-
 [resource]
 Button/colors/font_color = Color(0, 0, 0, 1)
 Button/styles/hover = SubResource("StyleBoxFlat_iwcta")
 Button/styles/normal = SubResource("StyleBoxFlat_abqev")
 Button/styles/pressed = SubResource("StyleBoxFlat_iwcta")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_t5mtu")
-RichTextButton/colors/font_color = Color(0, 0, 0, 1)
-RichTextButton/colors/font_disabled_color = Color(0, 0, 0, 1)
-RichTextButton/colors/font_focus_color = Color(0, 0, 0, 1)
-RichTextButton/colors/font_hover_color = Color(0, 0, 0, 1)
-RichTextButton/colors/font_hover_pressed_color = Color(0, 0, 0, 1)
-RichTextButton/colors/font_outline_color = Color(0, 0, 0, 1)
-RichTextButton/colors/font_pressed_color = Color(0, 0, 0, 1)
-RichTextButton/constants/outline_size = 0
-RichTextButton/font_sizes/font_size = 20
-RichTextButton/fonts/font = ExtResource("1_5vgdu")
-RichTextButton/styles/disabled = null
-RichTextButton/styles/focus = null
-RichTextButton/styles/hover = SubResource("StyleBoxFlat_rakqf")
-RichTextButton/styles/hover_pressed = null
-RichTextButton/styles/normal = null
-RichTextButton/styles/pressed = SubResource("StyleBoxFlat_rakqf")
 RichTextLabel/colors/default_color = Color(0, 0, 0, 1)
 RichTextLabel/font_sizes/normal_font_size = 20
 RichTextLabel/fonts/normal_font = ExtResource("1_5vgdu")
