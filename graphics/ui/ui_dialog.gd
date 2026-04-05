@@ -34,7 +34,9 @@ func update(p_npc_name: String, p_npc_dialog: String, p_player_responses_text: A
 
 		var rich_text_label = RichTextLabel.new()
 		rich_text_label.bbcode_enabled = true
-		rich_text_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		rich_text_label.mouse_filter = Control.MOUSE_FILTER_IGNORE # Allow the button to be clicked
+		rich_text_label.fit_content = true # Allow the label to expand downward
+		rich_text_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		rich_text_label.custom_minimum_size = Vector2(0, 60.0)
 		rich_text_label.theme = npc_dialog_theme
 		rich_text_label.text = "[left][ul]" + p_player_responses_text[i] + "[/ul][/left]"

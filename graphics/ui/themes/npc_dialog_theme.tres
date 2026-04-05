@@ -37,5 +37,5 @@ RichTextButton/styles/hover_pressed = null
 RichTextButton/styles/normal = null
 RichTextButton/styles/pressed = SubResource("StyleBoxFlat_rakqf")
 RichTextLabel/colors/default_color = Color(0, 0, 0, 1)
-RichTextLabel/font_sizes/normal_font_size = 22
+RichTextLabel/font_sizes/normal_font_size = 20
 RichTextLabel/fonts/normal_font = ExtResource("1_5vgdu")
