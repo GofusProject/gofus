@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://br44vk6e28fx5"]
 
-[ext_resource type="Script" uid="uid://gggs1oll2h5s" path="res://graphics/ui/ui_map_infos.gd" id="1_4a2ji"]
+[ext_resource type="Script" path="res://graphics/ui/ui_map_infos.gd" id="1_4a2ji"]
 [ext_resource type="Theme" uid="uid://b0tqaupx1et6b" path="res://graphics/ui/themes/theme.tres" id="2_b2jlt"]
 
 [node name="UIMapInfos" type="VBoxContainer"]
