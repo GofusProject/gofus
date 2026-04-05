@@ -21,23 +21,7 @@ extends Node2D
 # func _ready() -> void:
 # 	print(Database.get_scripted_cells_data(
 
-var animated_sprite_2D
-
-func _ready() -> void:
-	animated_sprite_2D = AnimatedSprite2D.new()
-	animated_sprite_2D.animation_changed.connect(_on_animation_changed)
-	add_child(animated_sprite_2D)
-	animated_sprite_2D.sprite_frames = load("res://assets/graphics/characters/9047/9047.tres")
-
-	var timer = Timer.new()
-	add_child(timer)
-	timer.wait_time = 0.1  # 1 second
-	timer.timeout.connect(_on_timer_timeout)
-	timer.start()
 
 
-func _on_animation_changed() -> void:
-	print("Anim changed")
-
-func _on_timer_timeout():
-	animated_sprite_2D.play("staticR")
+func _on_button_pressed() -> void:
+	print("plop")

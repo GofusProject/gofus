@@ -3,7 +3,7 @@ extends Node
 
 var is_debug_mode: bool = false
 
-var map_id: int = 10302
+var map_id: int = 10307
 var player_id: int = 1
 var actions: Actions
 
