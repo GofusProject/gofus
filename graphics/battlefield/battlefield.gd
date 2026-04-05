@@ -66,6 +66,10 @@ const TEXT_OVER_HEAD_SCENE: PackedScene = preload("res://graphics/battlefield/sc
 ## Initializes dependencies and event listening
 func _ready() -> void:
 
+	# Prevent cell area2D to trigger when clicking on a character area2D
+	get_viewport().physics_object_picking_sort = true
+	get_viewport().physics_object_picking_first_only = true
+
 	map_handler = MapHandler.new()
 	character_sprite_handler = CharacterSpriteHandler.new()
 	over_head_handler = OverHeadHandler.new()

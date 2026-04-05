@@ -236,7 +236,7 @@ func get_current_map_npc_ids() -> Array[int]:
 
 
 func _on_cell_clicked(cell_id: int) -> void:
-	print("[MapManager] Cell clicked: %d" % cell_id)
+	if is_debug_mode: print("[MapManager] Cell clicked: %d" % cell_id)
 
 
 func _on_cell_hovered(cell_id: int) -> void:
