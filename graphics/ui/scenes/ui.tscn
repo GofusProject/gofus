@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://bk6g0xpma1j5y"]
+[gd_scene load_steps=4 format=3 uid="uid://bk6g0xpma1j5y"]
 
 [ext_resource type="Script" uid="uid://r5o2j677ubrm" path="res://graphics/ui/ui.gd" id="1_7h415"]
 [ext_resource type="PackedScene" uid="uid://d1kx3o1esqh4i" path="res://graphics/ui/scenes/dialog_scene.tscn" id="2_tm2jt"]
+[ext_resource type="PackedScene" uid="uid://br44vk6e28fx5" path="res://graphics/ui/scenes/ui_map_infos.tscn" id="3_78ubx"]
 
 [node name="Ui" type="Control"]
 z_index = 100
@@ -14,21 +15,6 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_7h415")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-mouse_filter = 2
-
-[node name="GridLabel" type="Label" parent="VBoxContainer"]
-layout_mode = 2
-
-[node name="GridLabel2" type="Label" parent="VBoxContainer"]
-layout_mode = 2
-
-[node name="GridLabel3" type="Label" parent="VBoxContainer"]
-layout_mode = 2
-
 [node name="GofusPopupMenuLayer" type="Control" parent="."]
 anchors_preset = 0
 offset_right = 40.0
@@ -37,3 +23,10 @@ offset_bottom = 40.0
 [node name="Dialog" parent="." instance=ExtResource("2_tm2jt")]
 visible = false
 layout_mode = 1
+
+[node name="UIMapInfos" parent="." instance=ExtResource("3_78ubx")]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 21.0
+offset_bottom = 80.0

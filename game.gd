@@ -80,6 +80,7 @@ func _ready() -> void:
 	player.setup_signals()
 
 	map_manager.scripted_cell_triggered.connect(func(action_resource: ActionResource): execute_action(action_resource))
+	
 	create_map(map_id)
 
 

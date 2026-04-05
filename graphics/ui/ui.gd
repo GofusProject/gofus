@@ -11,8 +11,8 @@ signal npc_dialog_cross_button_pressed()
 
 
 # Themes
-const GOFUS_POPUP_MENU_THEME: Theme = preload("res://assets/popup_menu_theme.tres")
-const NPC_DIALOG_THEME: Theme = preload("res://assets/npc_dialog_theme.tres")
+const GOFUS_POPUP_MENU_THEME: Theme = preload("res://graphics/ui/themes/popup_menu_theme.tres")
+const NPC_DIALOG_THEME: Theme = preload("res://graphics/ui/themes/npc_dialog_theme.tres")
 # Scenes
 const GOFUS_POPUP_MENU_SCENE = preload("res://graphics/ui/scenes/gofus_popup_menu.tscn")
 const NPC_DIALOG_SCENE = preload("res://graphics/ui/scenes/dialog_scene.tscn")
@@ -20,9 +20,7 @@ const NPC_DIALOG_SCENE = preload("res://graphics/ui/scenes/dialog_scene.tscn")
 # Layers
 @onready var gofus_popup_menu_layer: Control = $GofusPopupMenuLayer
 @onready var dialog: Dialog = $Dialog
-@onready var grid_label_x: Label = $VBoxContainer/GridLabel
-@onready var grid_label_y: Label = $VBoxContainer/GridLabel2
-@onready var cell_id: Label = $VBoxContainer/GridLabel3
+@onready var ui_map_infos: VBoxContainer = $UIMapInfos
 
 
 func _ready() -> void:
@@ -63,3 +61,7 @@ func update_dialog(p_dialog_name: String, p_dialog_question_text: String, p_dial
 
 func close_dialog() -> void:
 	dialog.visible = false
+
+
+func udpate_ui_map_infos(p_area_name: String, p_sub_area_name: String, p_map_position: String) -> void:
+	ui_map_infos.update(p_area_name, p_sub_area_name, p_map_position)

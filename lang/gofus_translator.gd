@@ -72,6 +72,7 @@ func _get_from_cache(cache: Dictionary, id: int, label: String) -> String:
 	if not cache.has(id):
 		push_error("[Translator] %s %d not found in cache" % [label, id])
 		return ""
+	if is_debug_mode: print("[Translator] %s %d found in cache: %s" % [label, id, cache[id]])
 	return cache[id]
 
 

@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://br44vk6e28fx5"]
+
+[ext_resource type="Script" uid="uid://gggs1oll2h5s" path="res://graphics/ui/ui_map_infos.gd" id="1_4a2ji"]
+[ext_resource type="Theme" uid="uid://b0tqaupx1et6b" path="res://graphics/ui/themes/theme.tres" id="2_b2jlt"]
+
+[node name="UIMapInfos" type="VBoxContainer"]
+offset_right = 1.0
+offset_bottom = 60.0
+theme_override_constants/separation = 14
+script = ExtResource("1_4a2ji")
+
+[node name="AreaNamesLabel" type="Label" parent="."]
+layout_mode = 2
+theme = ExtResource("2_b2jlt")
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+
+[node name="MapPositionLabel" type="Label" parent="."]
+layout_mode = 2
+theme = ExtResource("2_b2jlt")
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
