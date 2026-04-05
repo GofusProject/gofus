@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://d1kx3o1esqh4i"]
 
-[ext_resource type="Script" uid="uid://jc2c58hq2vhl" path="res://graphics/ui/dialog.gd" id="1_3flak"]
+[ext_resource type="Script" uid="uid://jc2c58hq2vhl" path="res://graphics/ui/ui_dialog.gd" id="1_3flak"]
 [ext_resource type="FontFile" uid="uid://bnkt1p76hh2wx" path="res://graphics/verdana-bold.ttf" id="1_vtiau"]
 [ext_resource type="FontFile" uid="uid://b6or5e8ck6u2d" path="res://graphics/verdana.ttf" id="2_7xbd7"]
 [ext_resource type="Texture2D" uid="uid://ciq8h1jj44kfd" path="res://assets/graphics/ui/npc_dialogue_pic.png" id="5_mfj6m"]

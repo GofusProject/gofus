@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bk6g0xpma1j5y"]
 
 [ext_resource type="Script" uid="uid://r5o2j677ubrm" path="res://graphics/ui/ui.gd" id="1_7h415"]
-[ext_resource type="PackedScene" uid="uid://d1kx3o1esqh4i" path="res://graphics/ui/scenes/dialog_scene.tscn" id="2_tm2jt"]
+[ext_resource type="PackedScene" uid="uid://d1kx3o1esqh4i" path="res://graphics/ui/scenes/ui_dialog.tscn" id="2_tm2jt"]
 [ext_resource type="PackedScene" uid="uid://br44vk6e28fx5" path="res://graphics/ui/scenes/ui_map_infos.tscn" id="3_78ubx"]
 
 [node name="Ui" type="Control"]
@@ -20,7 +20,7 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Dialog" parent="." instance=ExtResource("2_tm2jt")]
+[node name="UIDialog" parent="." instance=ExtResource("2_tm2jt")]
 visible = false
 layout_mode = 1
 

@@ -1,4 +1,4 @@
-class_name Dialog
+class_name UIDialog
 extends Control
 
 

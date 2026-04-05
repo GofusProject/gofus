@@ -15,11 +15,11 @@ const GOFUS_POPUP_MENU_THEME: Theme = preload("res://graphics/ui/themes/popup_me
 const NPC_DIALOG_THEME: Theme = preload("res://graphics/ui/themes/npc_dialog_theme.tres")
 # Scenes
 const GOFUS_POPUP_MENU_SCENE = preload("res://graphics/ui/scenes/gofus_popup_menu.tscn")
-const NPC_DIALOG_SCENE = preload("res://graphics/ui/scenes/dialog_scene.tscn")
+const NPC_DIALOG_SCENE = preload("res://graphics/ui/scenes/ui_dialog.tscn")
 
 # Layers
 @onready var gofus_popup_menu_layer: Control = $GofusPopupMenuLayer
-@onready var dialog: Dialog = $Dialog
+@onready var dialog: UIDialog = $UIDialog
 @onready var ui_map_infos: VBoxContainer = $UIMapInfos
 
 
