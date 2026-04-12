@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dro2ypphiyigq"]
 
 [ext_resource type="Script" uid="uid://d1jvr3vhxdplm" path="res://_test/test.gd" id="1_5kc3e"]
-[ext_resource type="Theme" uid="uid://bny4p2mm2ir4" path="res://graphics/ui/themes/npc_dialog_theme.tres" id="2_68env"]
+[ext_resource type="SpriteFrames" uid="uid://5o0amyt2lmat" path="res://assets/graphics/characters/12/12.tres" id="2_68env"]
 
 [node name="Test" type="Node2D"]
 script = ExtResource("1_5kc3e")
@@ -11,36 +11,9 @@ script = ExtResource("1_5kc3e")
 [node name="GridLayer" type="Node2D" parent="."]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(266, 183)
+sprite_frames = ExtResource("2_68env")
+animation = &"walkB"
+frame_progress = 0.5937893
 
 [node name="Node2D" type="Node2D" parent="."]
-
-[node name="Container" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="PanelContainer" type="PanelContainer" parent="."]
-offset_left = 525.0
-offset_top = 389.0
-offset_right = 1260.0
-offset_bottom = 467.0
-theme = ExtResource("2_68env")
-
-[node name="Button" type="Button" parent="PanelContainer"]
-layout_mode = 2
-theme = ExtResource("2_68env")
-alignment = 0
-autowrap_mode = 1
-
-[node name="RichTextLabel" type="RichTextLabel" parent="PanelContainer"]
-custom_minimum_size = Vector2(60, 0)
-layout_mode = 2
-mouse_filter = 2
-theme = ExtResource("2_68env")
-bbcode_enabled = true
-text = "[ul] zbreeeeeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa  [/ul]"
-fit_content = true
-vertical_alignment = 1
-
-[connection signal="pressed" from="PanelContainer/Button" to="." method="_on_button_pressed"]

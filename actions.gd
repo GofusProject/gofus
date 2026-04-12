@@ -37,6 +37,7 @@ func teleport(character_id: int, p_map_id: int, p_cell_id: int = -1) -> void:
 ## If player id != -1, the player is created
 func create_map_and_characters(p_map_id: int, p_player_id: int = -1) -> void:
 
+	# If map is not built
 	if map_manager.get_current_map_id() != -1:
 		Game.ui.reset()
 		characters_manager.clear_characters() # WARNING: Animated sprite are cleared with free() instead of queue_free()
@@ -47,6 +48,7 @@ func create_map_and_characters(p_map_id: int, p_player_id: int = -1) -> void:
 		push_error("[Game] Map changed failed")
 		return
 
+	# If player doesn't exist
 	if p_player_id != -1:
 		# Player creation 
 		var player_character_id: int = characters_manager.create_player_character(p_player_id)

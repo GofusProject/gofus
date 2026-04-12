@@ -49,23 +49,23 @@ func setup_signals(p_characters_manager: CharactersManager) -> void:
 
 ## Orchestrate map creation process
 ## Return true if map successfully created, false if not
-func create_map(map_id: int) -> bool:
+func create_map(p_map_id: int) -> bool:
 	PerformanceTracker.start_timer("MapManager", "Map creation")
 	
 	# 1. Database
-	var map_dict: Dictionary = database.get_map_data(map_id)
+	var map_dict: Dictionary = database.get_map_data(p_map_id)
 	if map_dict.is_empty():
-		push_error("[MapManager] No map dictionary for map %d" % map_id)
+		push_error("[MapManager] No map dictionary for map %d" % p_map_id)
 		return false
 	
 	# 2. Datacenter and MapResource
 	var map_resource: MapResource = MapResource.new(map_dict)
 	if map_resource.cell_count == 0:
-		push_error("[MapManager] MapResource initialization failed for map %d: cell count = 0" % map_id)
+		push_error("[MapManager] MapResource initialization failed for map %d: cell count = 0" % p_map_id)
 		return false
 
 	if map_resource.active_cells == 0:
-		push_error("[MapManager] MapResource initialization failed for map %d: no active cells" % map_id)
+		push_error("[MapManager] MapResource initialization failed for map %d: no active cells" % p_map_id)
 		return false
 
 	
@@ -112,9 +112,9 @@ func create_map(map_id: int) -> bool:
 			object2_tiles += 1
 
 	# Scripted cells init
-	var scripted_cells_data: Array[Dictionary] = database.get_scripted_cell_data(map_id)
+	var scripted_cells_data: Array[Dictionary] = database.get_scripted_cell_data(p_map_id)
 	if scripted_cells_data.is_empty():
-		push_warning("[MapManager] No scripted cells for map %d" % map_id)
+		push_warning("[MapManager] No scripted cells for map %d" % p_map_id)
 
 	for scripted_cell_data in scripted_cells_data:
 		var cell_resource = map_resource.cell_resources[scripted_cell_data["cell_id"]]

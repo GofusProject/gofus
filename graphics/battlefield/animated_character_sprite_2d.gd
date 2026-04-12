@@ -26,7 +26,7 @@ var collision_shape: CollisionShape2D
 # Visual
 var sprite_metadata_resources: Dictionary[String, SpriteMetadataResource]
 
-# Speed indexed by orientation_id
+# Speed indexed by orientation_id (Found in Sprite.as)
 const WALK_SPEEDS = [0.07,0.06,0.06,0.06,0.07,0.06,0.06,0.06]
 const MOUNT_SPEEDS = [0.23,0.2,0.2,0.2,0.23,0.2,0.2,0.2]
 const RUN_SPEEDS = [0.17,0.15,0.15,0.15,0.17,0.15,0.15,0.15]

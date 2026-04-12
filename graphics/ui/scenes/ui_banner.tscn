@@ -1,0 +1,43 @@
+[gd_scene load_steps=5 format=3 uid="uid://be50l0tbpd0py"]
+
+[ext_resource type="Texture2D" uid="uid://s3xstsgur7r5" path="res://assets/graphics/ui/heart_empty.png" id="1_8rcpt"]
+[ext_resource type="Texture2D" uid="uid://ch36rwj0pwgxo" path="res://assets/graphics/ui/heart_full.png" id="2_5ot0g"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nd7sc"]
+bg_color = Color(0.8352941, 0.8117647, 0.6666667, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0m4fx"]
+bg_color = Color(1, 1, 1, 1)
+
+[node name="UiBanner" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+offset_top = 864.4
+offset_right = 1484.0
+offset_bottom = 1112.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_nd7sc")
+
+[node name="Tchat" type="LineEdit" parent="."]
+layout_mode = 0
+offset_top = 1070.0
+offset_right = 860.0
+offset_bottom = 1112.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_0m4fx")
+
+[node name="Heart" type="TextureProgressBar" parent="."]
+layout_mode = 0
+offset_left = 833.7
+offset_top = 856.0
+offset_right = 921.7
+offset_bottom = 933.0
+value = 61.0
+fill_mode = 3
+texture_under = ExtResource("1_8rcpt")
+texture_progress = ExtResource("2_5ot0g")
